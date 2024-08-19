@@ -145,7 +145,6 @@ def getconn(instance_connection_name,user,password,db):
     )
     return conn
 
-
 def reset_password(instance_name,db_name,location,db_user,db_pass,new_db_pass):
   """Function to reset Postgresql user password.
   Args:
