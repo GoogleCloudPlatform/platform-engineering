@@ -33,7 +33,6 @@ def password_rotation_function(cloud_event: CloudEvent):
   Args:
        cloud_event (CloudEvent):  Event of type google.cloud.pubsub.topic.v1.messagePublished
   """
-
   pubsub_message = base64.b64decode(cloud_event.data["message"]["data"]).decode()
   message_data = json.loads(pubsub_message)
   project_id = get_project_id()
@@ -42,13 +41,7 @@ def password_rotation_function(cloud_event: CloudEvent):
   db_name = message_data['db_name']
   location = message_data['db_location']
   instance_name = message_data['instance_name']
-
-  print("secret_id is " + secret_id)
-  print("db_user is " + db_user)
-  print("db_name is ", db_name)
-  print("location is ", location)
   client = secretmanager.SecretManagerServiceClient()
-
   # Get and rotate the secret
   parent = f"projects/{project_id}/secrets/{secret_id}"
   response = client.access_secret_version(request={"name": f"{parent}/versions/latest"})
@@ -101,13 +94,11 @@ def get_random_string(length):
 
 def update_secret(project_id, secret_id, new_secret_value):
   """Updates the value of a secret in Google Cloud Secret Manager.
-
   Args:
       project_id (str): Your Google Cloud Project ID.
       secret_id (str): The ID of the secret to update.
       new_secret_value (bytes): The new secret value as a bytes object.
   """
-
   client = secretmanager.SecretManagerServiceClient()
 
   # Build the secret path (required format for Secret Manager)
