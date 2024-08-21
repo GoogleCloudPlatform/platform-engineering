@@ -48,12 +48,12 @@ vendor etc.
 
 Typically, rotating a password requires these steps:
 
-- Change the password in the underlying software/system (applications,
+1. Change the password in the underlying software/system (applications,
 database, SaaS, etc.)
-- Update secret manager to store the new password.
-- Restart the applications that use that password. This will make the
+2. Update secret manager to store the new password.
+3. Restart the applications that use that password. This will make the
 application source the latest passwords.
-  
+
 **Note** - In advanced architectures, an application may not need a restart and
 can source the new password on the fly. This can be done in multiple ways like
 having retry logic in the application to source the credentials if a connection
@@ -68,11 +68,11 @@ rotate password for any underlying software/system.
 
 ### Workflow
 
-- A pipeline or a [cloud scheduler job][cloud-scheduler] sends a message to a pub/sub topic. The message contains the information about the password that is to be rotated. For example, this information may include secret id in secret manager, database instance and username if it is a database password.
-- The message arriving to the pub/sub topic triggers a [Cloud Function][cloud-function] that reads the message and gathers information as supplied in the message.
-- The function changes the password in the corresponding system. For example, if the message contained a database instance, database name and  user, the function changes the password for that user in the given database.
-- The function updates the password  in secret manager to reflect the new password. It knows what secret id to update since it was provided in the pub/sub message.
-- The function publishes a message to a different pub/sub topic indicating that the password has been rotated. This topic can be subscribed any application or system that may want to know in the event of password rotation, whether to re-start themselves or perform any other task.
+* A pipeline or a [cloud scheduler job][cloud-scheduler] sends a message to a pub/sub topic. The message contains the information about the password that is to be rotated. For example, this information may include secret id in secret manager, database instance and username if it is a database password.
+* The message arriving to the pub/sub topic triggers a [Cloud Function][cloud-function] that reads the message and gathers information as supplied in the message.
+* The function changes the password in the corresponding system. For example, if the message contained a database instance, database name and  user, the function changes the password for that user in the given database.
+* The function updates the password  in secret manager to reflect the new password. It knows what secret id to update since it was provided in the pub/sub message.
+* The function publishes a message to a different pub/sub topic indicating that the password has been rotated. This topic can be subscribed any application or system that may want to know in the event of password rotation, whether to re-start themselves or perform any other task.
 
 ## Example deployment for automatic password rotation in CloudSQL
 
@@ -119,14 +119,14 @@ step 4.
 
 3. If you want to create a new GCP project run the following commands in
 Cloud Shell.
-  
+
     ```shell
      #set shell environment variable
      export PROJECT_ID=<PROJECT_ID>
     
      #create project
      gcloud projects create ${PROJECT_ID} --folder=<FOLDER_ID>
-  
+
      #associate the project with billing account
      gcloud billing projects link ${PROJECT_ID} --billing-account=<BILLING_ACCOUNT_ID> 
      ```
