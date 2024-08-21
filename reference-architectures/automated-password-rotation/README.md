@@ -3,7 +3,7 @@
 Secrets rotation is a broadly accepted best practice across the information
 technology industry. However, often times it is cumbersome and disruptive
 process.  In this guide you will use Google Cloud tools to automate the process
-of rotating passwords for a Cloud SQL instance. This method could easily be 
+of rotating passwords for a Cloud SQL instance. This method could easily be
 extended to other tools and types of secrets.
 
 ## Storing passwords in Google Cloud
@@ -59,33 +59,34 @@ can source the new password on the fly. This can be done in multiple ways like
 having retry logic in the application to source the credentials if a connection
 fails or use a [secret add-on for GKE][secret-add-on].
 
-# Generic architecture for automatic password rotation
+## Generic architecture for automatic password rotation
 
 The following architecture represents a general design for a systems that can
 rotate password for any underlying software/system.
 
 ![design](resources/generic-password-rotation-flow.png)
 
-## Workflow:
-- A pipeline or a [cloud scheduler job][cloud-scheduler] sends a message to a pub/sub topic. The message contains the information about the password that is to be rotated. For example, this information may include secret id in secret manager, database instance and username if it is a database password. 
+### Workflow
+
+- A pipeline or a [cloud scheduler job][cloud-scheduler] sends a message to a pub/sub topic. The message contains the information about the password that is to be rotated. For example, this information may include secret id in secret manager, database instance and username if it is a database password.
 - The message arriving to the pub/sub topic triggers a [Cloud Function][cloud-function] that reads the message and gathers information as supplied in the message.
 - The function changes the password in the corresponding system. For example, if the message contained a database instance, database name and  user, the function changes the password for that user in the given database.
 - The function updates the password  in secret manager to reflect the new password. It knows what secret id to update since it was provided in the pub/sub message.
 - The function publishes a message to a different pub/sub topic indicating that the password has been rotated. This topic can be subscribed any application or system that may want to know in the event of password rotation, whether to re-start themselves or perform any other task.
 
-# Example deployment for automatic password rotation in CloudSQL
+## Example deployment for automatic password rotation in CloudSQL
 
 The following architecture demonstrates a way to automatically rotate CloudSQL
-password. 
+password.
 
 ![design](resources/cloudsql-password-rotation-flow.png)
 
-## Workflow:
+### Workflow of the example deployment
 
 - A [Cloud Scheduler][cloud-scheduler] job is scheduled to run every 1st day on
 the month. The jobs publishes a message to a Pub/Sub topic containing
 secret id, Cloud SQL instance name, database, region and database user in the
-payload. 
+payload.
 - The message arrival on the pub/sub topic triggers a [Cloud Function][cloud-function], which uses the
 information provided in the message to connect to the CloudSQL instance via
 [Serverless VPC Connector][vpc-connector] and changes the password. The
@@ -97,7 +98,8 @@ required to connect to the Cloud Sql instance.
 after the password rotation as shown in thee [Generic architecture](#generic-architecture-for-automatic-password-rotation) but it can be added
 easily with minimal changes to the Terraform code.
 
-## Deploy the architecture:
+### Deploy the architecture
+
 The code to build the architecture has been provided with this repo. Follow
 these instructions to create the architecture and use it:
 
@@ -130,7 +132,6 @@ Cloud Shell.
      ```
 
     Replace `<PROJECT_ID>` with the id of the new project.
-    
     Replace `<BILLING_ACCOUNT_ID>` with the billing account id that the project
     should be associated with.
 
@@ -170,8 +171,8 @@ Confirm that `cloudsql-for-pg` is present in the instance list.
 `user1`.
 4. In the left hand menu select `Databases`. Confirm you see see a database
 named `test`.
-6. In the left hand menu select `Overview`.
-7. In the `Connect to this instance` section, note that only
+5. In the left hand menu select `Overview`.
+6. In the `Connect to this instance` section, note that only
 `Private IP address` is present and no public IP address. This restricts access
 to the instance over public network.
 
@@ -181,7 +182,7 @@ to the instance over public network.
 `Integration Services > Cloud Scheduler`. Confirm that `password-rotator-job`
 is present in the Scheduler Jobs list.
 2. Click on `password-rotator-job`, confirm it is configured to run on 1st of
-every month. 
+every month.
 3. Click `Continue` to see execution configuration. Confirm the following
 settings:
    - `Target type` is Pub/Sub
@@ -202,8 +203,8 @@ Function.
 Cloud Function.
 6. In the left hand menu select `Topic`.
 7. Click on `pswd-rotation-topic`.
-8. Click on the `Details` tab. 
-9. Click on the schema in the `Schema name` field. 
+8. Click on the `Details` tab.
+9. Click on the schema in the `Schema name` field.
 10. In the `Details`, confirm that the schema contains these keys: `secretid`,
 `instance_name`, `db_user`, `db_name` and `db_location`. These keys will be
 used to identify what database and user password is to be rotated.
@@ -263,7 +264,7 @@ select `Force run`.
 4. In the Cloud Console, using the naviagion menu select
 `Serverless > Cloud Functions`.
 5. Click function named `pswd_rotator_function`.
-6. Select the `Logs` tab. 
+6. Select the `Logs` tab.
 7. Review the logs and verify the function has run and completed without
 errors. Successful completion will be noted with log entries containing
 `DB password changed successfully` , `DB password verified successfully` and
@@ -288,12 +289,12 @@ for Cloud SQL database.
 secret.
 11. Click `Authenticate`. Confirm you were able to log in to the database.
 
-# Conclusion
+## Conclusion
 
 In this tutorial, you saw a way to automate password rotation on Google Cloud. First, you saw a generic reference architecture that can be used to automate password rotation in any password management system.
 In the later section, you saw an example deployment that uses Google Cloud services to rotate password of Cloud Sql database in Google Cloud Secret Manager.
 
-Implementing an automatic flow to rotate passwords takes away manual overhead and provide seamless way to tighten your password security. It is recommended to create an automation flow that runs on a regular schedule but can also be easily triggered manually when needed. There can be 
+Implementing an automatic flow to rotate passwords takes away manual overhead and provide seamless way to tighten your password security. It is recommended to create an automation flow that runs on a regular schedule but can also be easily triggered manually when needed. There can be
 many variations of this architecture that can be adopted. For example, you can directly trigger a Cloud Function from a Google Cloud Scheduler job without sending a message to pub/sub if you don't want to broadcast the password rotation. You should identify a flow that fits your organization requirements and modify the reference architecture to implement it.
 
 [secret-manager]: https://cloud.google.com/security/products/secret-manager
