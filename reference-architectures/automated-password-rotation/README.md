@@ -12,7 +12,9 @@ In Google Cloud, secrets including passwords can be stored using many different
 tools including common open source tools such as [Vault][vault], however in this
 guide, you will use [Secret Manager][secret-manager], Google Cloud's fully
 managed product for securely storing secrets. Regardless of the tool you use,
-passwords stored should be further secured. When using [Secret Manager][secret-manager], following are some of the ways you can further secure your secrets:
+passwords stored should be further secured. When using
+[Secret Manager][secret-manager], following are some of the ways you can
+further secure your secrets:
 
 1. **Limiting access** : The secrets should be readable/writable only through
 the [Service Accounts][service-account] via [IAM roles][iam]. The principle of
@@ -68,11 +70,22 @@ rotate password for any underlying software/system.
 
 ### Workflow
 
-* A pipeline or a [cloud scheduler job][cloud-scheduler] sends a message to a pub/sub topic. The message contains the information about the password that is to be rotated. For example, this information may include secret id in secret manager, database instance and username if it is a database password.
+* A pipeline or a [cloud scheduler job][cloud-scheduler] sends a message to a
+pub/sub topic. The message contains the information about the password that
+is to be rotated. For example, this information may include secret id in
+secret manager, database instance and username if it is a database password.
 * The message arriving to the pub/sub topic triggers a [Cloud Function][cloud-function] that reads the message and gathers information as supplied in the message.
-* The function changes the password in the corresponding system. For example, if the message contained a database instance, database name and  user, the function changes the password for that user in the given database.
-* The function updates the password  in secret manager to reflect the new password. It knows what secret id to update since it was provided in the pub/sub message.
-* The function publishes a message to a different pub/sub topic indicating that the password has been rotated. This topic can be subscribed any application or system that may want to know in the event of password rotation, whether to re-start themselves or perform any other task.
+* The function changes the password in the corresponding system.
+For example, if the message contained a database instance, database
+name and  user,the function changes the password for that user in the
+given database.
+* The function updates the password  in secret manager to reflect the =
+new password. It knows what secret id to update since it was provided in
+the pub/sub message.
+* The function publishes a message to a different pub/sub topic indicating
+that the password has been rotated. This topic can be subscribed any
+application or system that may want to know in the event of password rotation,
+ whether to re-start themselves or perform any other task.
 
 ## Example deployment for automatic password rotation in CloudSQL
 
@@ -83,20 +96,22 @@ password.
 
 ### Workflow of the example deployment
 
-- A [Cloud Scheduler][cloud-scheduler] job is scheduled to run every 1st day on
+* A [Cloud Scheduler][cloud-scheduler] job is scheduled to run every 1st day on
 the month. The jobs publishes a message to a Pub/Sub topic containing
 secret id, Cloud SQL instance name, database, region and database user in the
 payload.
-- The message arrival on the pub/sub topic triggers a [Cloud Function][cloud-function], which uses the
+* The message arrival on the pub/sub topic triggers a
+[Cloud Function][cloud-function], which uses the
 information provided in the message to connect to the CloudSQL instance via
 [Serverless VPC Connector][vpc-connector] and changes the password. The
 function uses a [service account][service-account] that has [IAM roles][iam]
 required to connect to the Cloud Sql instance.
-- The function then updates the secret in Secret Manager.
+* The function then updates the secret in Secret Manager.
 
 **Note** : The architecture doesn't show the flow to restart the application
-after the password rotation as shown in thee [Generic architecture](#generic-architecture-for-automatic-password-rotation) but it can be added
-easily with minimal changes to the Terraform code.
+after the password rotation as shown in thee
+[Generic architecture](#generic-architecture-for-automatic-password-rotation)
+but it can be added easily with minimal changes to the Terraform code.
 
 ### Deploy the architecture
 
@@ -123,7 +138,7 @@ Cloud Shell.
     ```shell
      #set shell environment variable
      export PROJECT_ID=<PROJECT_ID>
-    
+
      #create project
      gcloud projects create ${PROJECT_ID} --folder=<FOLDER_ID>
 
@@ -148,7 +163,7 @@ Cloud Shell.
    cd ~
    git clone https://github.com/cloud-maniac-temp/password-rotation-automation
    cd password-rotation-automation/terraform
-  
+
    terraform init
    terraform plan -var "project_id=$PROJECT_ID"
    terraform apply -var "project_id=$PROJECT_ID" --auto-approve
@@ -185,9 +200,9 @@ is present in the Scheduler Jobs list.
 every month.
 3. Click `Continue` to see execution configuration. Confirm the following
 settings:
-   - `Target type` is Pub/Sub
-   - `Select a Cloud Pub/Sub topic` is set to `pswd-rotation-topic`
-   - `Message body` contains a JSON object with the details of the Cloud SQL
+   * `Target type` is Pub/Sub
+   * `Select a Cloud Pub/Sub topic` is set to `pswd-rotation-topic`
+   * `Message body` contains a JSON object with the details of the Cloud SQL
    isntance and secret to be rotated.
 4. Click `Cancel`, to exit the Cloud Scheduler job details.
 
@@ -235,7 +250,8 @@ for Cloud SQL database.
 access to the Cloud SQL instance.
 
 **Note:** For the purpose of this tutorial, the secret is accessible to the
-human users and not encrypted. See [the section](#storing-passwords-in-google-cloud)
+human users and not encrypted. See
+[the section](#storing-passwords-in-google-cloud)
 and [Secret Manager best practice][secret-manager-best-practice]
 
 ### Verify that you are able to connect to the Cloud SQL instance
@@ -251,9 +267,10 @@ secret.
 
 ## Rotate the Cloud SQL password
 
-Typically, the Cloud Scheduler will automatically run on 1st day of every month triggering
-password rotation. However, for this tutorial you will run the Cloud
-Scheuler job manually, which causes the Cloud Function to generate a new password,
+Typically, the Cloud Scheduler will automatically run on 1st day of
+every month triggering password rotation. However, for this tutorial
+you will run the Cloud Scheuler job manually, which causes the Cloud Function
+to generate a new password,
 update it in Cloud SQL and store it in Secret Manager.
 
 1. In the Cloud Console, using the naviagion menu select
@@ -291,11 +308,23 @@ secret.
 
 ## Conclusion
 
-In this tutorial, you saw a way to automate password rotation on Google Cloud. First, you saw a generic reference architecture that can be used to automate password rotation in any password management system.
-In the later section, you saw an example deployment that uses Google Cloud services to rotate password of Cloud Sql database in Google Cloud Secret Manager.
+In this tutorial, you saw a way to automate password rotation on Google Cloud.
+First, you saw a generic reference architecture that can be used to automate
+ password rotation in any password management system.
+In the later section, you saw an example deployment that uses Google Cloud
+services to rotate password of Cloud Sql database in Google Cloud
+Secret Manager.
 
-Implementing an automatic flow to rotate passwords takes away manual overhead and provide seamless way to tighten your password security. It is recommended to create an automation flow that runs on a regular schedule but can also be easily triggered manually when needed. There can be
-many variations of this architecture that can be adopted. For example, you can directly trigger a Cloud Function from a Google Cloud Scheduler job without sending a message to pub/sub if you don't want to broadcast the password rotation. You should identify a flow that fits your organization requirements and modify the reference architecture to implement it.
+Implementing an automatic flow to rotate passwords takes away manual overhead
+and provide seamless way to tighten your password security. It is recommended
+to create an automation flow that runs on a regular schedule but can also be
+easily triggered manually when needed. There can be
+many variations of this architecture that can be adopted.
+For example, you can directly trigger a Cloud Function from a Google Cloud
+Scheduler job without sending a message to pub/sub if you don't want to
+broadcast the password rotation. You should identify a flow that
+fits your organization requirements and modify the reference
+architecture to implement it.
 
 [secret-manager]: https://cloud.google.com/security/products/secret-manager
 [iam]: https://cloud.google.com/security/products/iam
