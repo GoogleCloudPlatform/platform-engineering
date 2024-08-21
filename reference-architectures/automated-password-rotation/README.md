@@ -17,16 +17,16 @@ passwords stored should be further secured. When using
 further secure your secrets:
 
 1. **Limiting access** : The secrets should be readable/writable only through
-the [Service Accounts][service-account] via [IAM roles][iam]. The principle of
-least privilege must be followed while granting roles to the service accounts.
+   the [Service Accounts][service-account] via [IAM roles][iam]. The principle of
+   least privilege must be followed while granting roles to the service accounts.
 
 2. **Encryption** : The secrets should be encrypted. [Secret Manager][secret-manager]
-encrypts the secret at rest using AES-256 by default. But you can use your
-own encryption keys, customer-managed encryption keys (CMEK) to encrypt your secret
-at rest. For details, see [Enable customer-managed encryption keys for Secret Manager][enabling-customer-managed-encryption-keys-for-secret-manager].
+   encrypts the secret at rest using AES-256 by default. But you can use your
+   own encryption keys, customer-managed encryption keys (CMEK) to encrypt your secret
+   at rest. For details, see [Enable customer-managed encryption keys for Secret Manager][enabling-customer-managed-encryption-keys-for-secret-manager].
 
 3. **Password rotation** : The passwords stored in the secret manager should be
-rotated on a regular basis to reduce the risk of a security incident.
+   rotated on a regular basis to reduce the risk of a security incident.
 
 ## Why password rotation
 
