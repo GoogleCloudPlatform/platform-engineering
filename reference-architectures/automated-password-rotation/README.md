@@ -74,7 +74,9 @@ rotate password for any underlying software/system.
 pub/sub topic. The message contains the information about the password that
 is to be rotated. For example, this information may include secret id in
 secret manager, database instance and username if it is a database password.
-* The message arriving to the pub/sub topic triggers a [Cloud Function][cloud-function] that reads the message and gathers information as supplied in the message.
+* The message arriving to the pub/sub topic triggers a
+[Cloud Function][cloud-function] that reads the message and
+gathers information as supplied in the message.
 * The function changes the password in the corresponding system.
 For example, if the message contained a database instance, database
 name and  user,the function changes the password for that user in the
@@ -143,7 +145,7 @@ Cloud Shell.
      gcloud projects create ${PROJECT_ID} --folder=<FOLDER_ID>
 
      #associate the project with billing account
-     gcloud billing projects link ${PROJECT_ID} --billing-account=<BILLING_ACCOUNT_ID> 
+     gcloud billing projects link ${PROJECT_ID} --billing-account=<BILLING_ACCOUNT_ID>
      ```
 
     Replace `<PROJECT_ID>` with the id of the new project.
@@ -200,6 +202,7 @@ is present in the Scheduler Jobs list.
 every month.
 3. Click `Continue` to see execution configuration. Confirm the following
 settings:
+
    * `Target type` is Pub/Sub
    * `Select a Cloud Pub/Sub topic` is set to `pswd-rotation-topic`
    * `Message body` contains a JSON object with the details of the Cloud SQL
