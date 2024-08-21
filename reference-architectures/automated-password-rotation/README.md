@@ -51,10 +51,10 @@ vendor etc.
 Typically, rotating a password requires these steps:
 
 1. Change the password in the underlying software/system (applications,
-database, SaaS, etc.)
+   database, SaaS, etc.)
 2. Update secret manager to store the new password.
 3. Restart the applications that use that password. This will make the
-application source the latest passwords.
+   application source the latest passwords.
 
 **Note** - In advanced architectures, an application may not need a restart and
 can source the new password on the fly. This can be done in multiple ways like
@@ -71,23 +71,23 @@ rotate password for any underlying software/system.
 ### Workflow
 
 * A pipeline or a [cloud scheduler job][cloud-scheduler] sends a message to a
-pub/sub topic. The message contains the information about the password that
-is to be rotated. For example, this information may include secret id in
-secret manager, database instance and username if it is a database password.
+  pub/sub topic. The message contains the information about the password that
+  is to be rotated. For example, this information may include secret id in
+  secret manager, database instance and username if it is a database password.
 * The message arriving to the pub/sub topic triggers a
-[Cloud Function][cloud-function] that reads the message and
-gathers information as supplied in the message.
+  [Cloud Function][cloud-function] that reads the message and
+  gathers information as supplied in the message.
 * The function changes the password in the corresponding system.
-For example, if the message contained a database instance, database
-name and  user,the function changes the password for that user in the
-given database.
+  For example, if the message contained a database instance, database
+  name and  user,the function changes the password for that user in the
+  given database.
 * The function updates the password  in secret manager to reflect the =
-new password. It knows what secret id to update since it was provided in
-the pub/sub message.
+  new password. It knows what secret id to update since it was provided in
+  the pub/sub message.
 * The function publishes a message to a different pub/sub topic indicating
-that the password has been rotated. This topic can be subscribed any
-application or system that may want to know in the event of password rotation,
- whether to re-start themselves or perform any other task.
+  that the password has been rotated. This topic can be subscribed any
+  application or system that may want to know in the event of password rotation,
+  whether to re-start themselves or perform any other task.
 
 ## Example deployment for automatic password rotation in CloudSQL
 
@@ -99,15 +99,15 @@ password.
 ### Workflow of the example deployment
 
 * A [Cloud Scheduler][cloud-scheduler] job is scheduled to run every 1st day on
-the month. The jobs publishes a message to a Pub/Sub topic containing
-secret id, Cloud SQL instance name, database, region and database user in the
-payload.
+  the month. The jobs publishes a message to a Pub/Sub topic containing
+  secret id, Cloud SQL instance name, database, region and database user in the
+  payload.
 * The message arrival on the pub/sub topic triggers a
-[Cloud Function][cloud-function], which uses the
-information provided in the message to connect to the CloudSQL instance via
-[Serverless VPC Connector][vpc-connector] and changes the password. The
-function uses a [service account][service-account] that has [IAM roles][iam]
-required to connect to the Cloud Sql instance.
+  [Cloud Function][cloud-function], which uses the
+  information provided in the message to connect to the CloudSQL instance via
+  [Serverless VPC Connector][vpc-connector] and changes the password. The
+  function uses a [service account][service-account] that has [IAM roles][iam]
+  required to connect to the Cloud Sql instance.
 * The function then updates the secret in Secret Manager.
 
 **Note** : The architecture doesn't show the flow to restart the application
@@ -121,32 +121,30 @@ The code to build the architecture has been provided with this repo. Follow
 these instructions to create the architecture and use it:
 
 1. Open [Cloud Shell][cloud-shell] on Google Cloud Console and log in with
-your credentials.
+   your credentials.
 
 2. If you want to use an existing project, get `role/project.owner` role on the
-project and set the environment in Cloud Shell as shown below. Then, move to
-step 4.
+   project and set the environment in Cloud Shell as shown below. Then, move to
+   step 4.
 
-    ```shell
-     #set shell environment variable
-     export PROJECT_ID=<PROJECT_ID>
-    ```
+   ```shell
+    #set shell environment variable
+    export PROJECT_ID=<PROJECT_ID>
+   ```
 
-    Replace `<PROJECT_ID>` with the id of the existing project.
+   Replace `<PROJECT_ID>` with the id of the existing project.
 
 3. If you want to create a new GCP project run the following commands in
-Cloud Shell.
+   Cloud Shell.
 
-    ```shell
-     #set shell environment variable
-     export PROJECT_ID=<PROJECT_ID>
-
-     #create project
-     gcloud projects create ${PROJECT_ID} --folder=<FOLDER_ID>
-
-     #associate the project with billing account
-     gcloud billing projects link ${PROJECT_ID} --billing-account=<BILLING_ACCOUNT_ID>
-     ```
+   ```shell
+    #set shell environment variable
+    export PROJECT_ID=<PROJECT_ID>
+    #create project
+    gcloud projects create ${PROJECT_ID} --folder=<FOLDER_ID>
+    #associate the project with billing account
+    gcloud billing projects link ${PROJECT_ID} --billing-account=<BILLING_ACCOUNT_ID>
+    ```
 
     Replace `<PROJECT_ID>` with the id of the new project.
     Replace `<BILLING_ACCOUNT_ID>` with the billing account id that the project
@@ -154,10 +152,10 @@ Cloud Shell.
 
 4. Set the project id in Cloud Shell and enable APIs in the project:
 
-    ```shell
-    gcloud config set project ${PROJECT_ID}
-    gcloud services enable cloudresourcemanager.googleapis.com serviceusage.googleapis.com --project ${PROJECT_ID}
-    ```
+   ```shell
+   gcloud config set project ${PROJECT_ID}
+   gcloud services enable cloudresourcemanager.googleapis.com serviceusage.googleapis.com --project ${PROJECT_ID}
+   ```
 
 5. Download the git repo containing the code to build the example architecture:
 
@@ -182,26 +180,26 @@ rotation process, review and verify the deployment in the Google Cloud Console.
 ### Review Cloud SQL database
 
 1. In the Cloud Console, using the naviagion menu select `Databases > SQL`.
-Confirm that `cloudsql-for-pg` is present in the instance list.
+   Confirm that `cloudsql-for-pg` is present in the instance list.
 2. Click on `cloudsql-for-pg`, to open the instance details page.
 3. In the left hand menu select `Users`. Confirm you see a user with the name
-`user1`.
+   `user1`.
 4. In the left hand menu select `Databases`. Confirm you see see a database
-named `test`.
+   named `test`.
 5. In the left hand menu select `Overview`.
 6. In the `Connect to this instance` section, note that only
-`Private IP address` is present and no public IP address. This restricts access
-to the instance over public network.
+   `Private IP address` is present and no public IP address. This restricts access
+   to the instance over public network.
 
 ### Review Cloud Scheduler job
 
 1. In the Cloud Console, using the naviagion menu select
-`Integration Services > Cloud Scheduler`. Confirm that `password-rotator-job`
-is present in the Scheduler Jobs list.
+   `Integration Services > Cloud Scheduler`. Confirm that `password-rotator-job`
+   is present in the Scheduler Jobs list.
 2. Click on `password-rotator-job`, confirm it is configured to run on 1st of
-every month.
+   every month.
 3. Click `Continue` to see execution configuration. Confirm the following
-settings:
+   settings:
 
    * `Target type` is Pub/Sub
    * `Select a Cloud Pub/Sub topic` is set to `pswd-rotation-topic`
@@ -213,44 +211,44 @@ settings:
 
 1. In the Cloud Console, using the naviagion menu select `Analytics > Pub/Sub`.
 2. In the left hand menu select `Topic`. Confirm that `pswd-rotation-topic` is
-present in the topics list.
+   present in the topics list.
 3. Click on `pswd-rotation-topic`.
 4. In the `Subscriptions` tab, click on Subscription ID for the rotator Cloud
-Function.
+   Function.
 5. Click on the `Details` tab. Confirm, the `Audience` tag shows the rotator
-Cloud Function.
+   Cloud Function.
 6. In the left hand menu select `Topic`.
 7. Click on `pswd-rotation-topic`.
 8. Click on the `Details` tab.
 9. Click on the schema in the `Schema name` field.
 10. In the `Details`, confirm that the schema contains these keys: `secretid`,
-`instance_name`, `db_user`, `db_name` and `db_location`. These keys will be
-used to identify what database and user password is to be rotated.
+   `instance_name`, `db_user`, `db_name` and `db_location`. These keys will be
+   used to identify what database and user password is to be rotated.
 
 ### Review Cloud Function
 
 1. In the Cloud Console, using the naviagion menu select
-`Serverless > Cloud Functions`. Confirm that `pswd_rotator_function` is present
-in the list.
+  `Serverless > Cloud Functions`. Confirm that `pswd_rotator_function` is present
+  in the list.
 2. Click on `pswd_rotator_function`.
 3. Click on the `Trigger` tab. Confirm that the field `Receive events from` has
-the Pub/Sub topic `pswd-rotation-topic`. This indicates that the function will
-run when a message arrives to that topic.
+   the Pub/Sub topic `pswd-rotation-topic`. This indicates that the function will
+   run when a message arrives to that topic.
 4. Click on the `Details` tab. Confirm that under `Network Settings` VPC
-connector is set to `connector-for-sql`. This allows the function to connect
-to the CloudSQL over private IPs.
+   connector is set to `connector-for-sql`. This allows the function to connect
+   to the CloudSQL over private IPs.
 5. Click on the `Source` tab to see the python code that the function executes.
 
 ### Review Secret Manager
 
 1. In the Cloud Console, using the naviagion menu select
-`Security > Secret Manager`. Confirm that `cloudsql-pswd` is present in the
-list.
+   `Security > Secret Manager`. Confirm that `cloudsql-pswd` is present in the
+   list.
 2. Click on `cloudsql-pswd`.
 3. Click three dots icon and select `View secret value` to view the password
-for Cloud SQL database.
+   for Cloud SQL database.
 4. Copy the secret value, you will use this in the next section to confirm
-access to the Cloud SQL instance.
+   access to the Cloud SQL instance.
 
 **Note:** For the purpose of this tutorial, the secret is accessible to the
 human users and not encrypted. See
@@ -265,7 +263,7 @@ and [Secret Manager best practice][secret-manager-best-practice]
 4. In `Database` dropdown, choose `test`.
 5. In `User` dropdown, choose `user1`.
 6. In `Password` textbox paste the password copied from the `cloudsql-pswd`
-secret.
+   secret.
 7. Click `Authenticate`. Confirm you were able to log in to the database.
 
 ## Rotate the Cloud SQL password
@@ -277,28 +275,28 @@ to generate a new password,
 update it in Cloud SQL and store it in Secret Manager.
 
 1. In the Cloud Console, using the naviagion menu select
-`Integration Services > Cloud Scheduler`.
+   `Integration Services > Cloud Scheduler`.
 2. For the scheduler job `password-rotator-job`. Click the three dots icon and
-select `Force run`.
+   select `Force run`.
 3. Verify that the `Status of last execution` shows `Success`.
 4. In the Cloud Console, using the naviagion menu select
-`Serverless > Cloud Functions`.
+   `Serverless > Cloud Functions`.
 5. Click function named `pswd_rotator_function`.
 6. Select the `Logs` tab.
 7. Review the logs and verify the function has run and completed without
-errors. Successful completion will be noted with log entries containing
-`DB password changed successfully` , `DB password verified successfully` and
-`Secret cloudsql-pswd rotated successfully!`.
+   errors. Successful completion will be noted with log entries containing
+   `DB password changed successfully` , `DB password verified successfully` and
+   `Secret cloudsql-pswd rotated successfully!`.
 
 ## Test the new password
 
 1. In the Cloud Console, using the naviagion menu select
-`Security > Secret Manager`. Confirm that `cloudsql-pswd` is present in the
-list.
+   `Security > Secret Manager`. Confirm that `cloudsql-pswd` is present in the
+   list.
 2. Click on `cloudsql-pswd`. Note you should now see a new version, version 2
-of the secret.
+   of the secret.
 3. Click three dots icon and select `View secret value` to view the password
-for Cloud SQL database.
+   for Cloud SQL database.
 4. Copy the secret value.
 5. In the Cloud Console, using the naviagion menu select `Databases > SQL`
 6. Click on `cloudsql-for-pg`
@@ -306,14 +304,14 @@ for Cloud SQL database.
 8. In `Database` dropdown, choose `test`.
 9. In `User` dropdown, choose `user1`.
 10. In `Password` textbox paste the password copied from the `cloudsql-pswd`
-secret.
+    secret.
 11. Click `Authenticate`. Confirm you were able to log in to the database.
 
 ## Conclusion
 
 In this tutorial, you saw a way to automate password rotation on Google Cloud.
 First, you saw a generic reference architecture that can be used to automate
- password rotation in any password management system.
+password rotation in any password management system.
 In the later section, you saw an example deployment that uses Google Cloud
 services to rotate password of Cloud Sql database in Google Cloud
 Secret Manager.
