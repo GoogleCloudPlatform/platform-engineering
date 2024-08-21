@@ -1,6 +1,8 @@
 # Google Cloud Platform Engineering Resources
-This repository is a collection of sample resources related to Platform Engineering on Google Cloud
-All code is provided as is with no expectation of support, issues may or may not be fixed in a timely manner.
+
+This repository is a collection of sample resources related to Platform
+Engineering on Google Cloud. All code is provided as is with no expectation
+of support, issues may or may not be fixed in a timely manner.
 
 ## Depending on samples
 
@@ -17,5 +19,6 @@ requests or as GitHub issues.
 See [CONTRIBUTING.md](docs/contributing.md) for details on how to contribute.
 
 ## Licensing
-Copyright 2023 Google LLC
+
+Copyright 2024 Google LLC
 Code in this repository is licensed under the Apache 2.0. See [LICENSE](LICENSE).
