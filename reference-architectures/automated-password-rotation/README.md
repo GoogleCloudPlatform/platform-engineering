@@ -66,7 +66,6 @@ Typically, rotating a password requires these steps:
 4. Copy the secret value, you will use this in the next section to confirm
    access to the Cloud SQL instance.
 
-
 The following architecture represents a general design for a systems that can
 rotate password for any underlying software/system.
 
@@ -116,7 +115,7 @@ password.
 
 **Note** : The architecture doesn't show the flow to restart the application
 after the password rotation as shown in thee
-[Generic architecture](#generic-architecture-for-automatic-password-rotation)
+[Generic architecture](#workflow)
 but it can be added easily with minimal changes to the Terraform code.
 
 ### Deploy the architecture
