@@ -16,14 +16,17 @@ passwords stored should be further secured. When using
 [Secret Manager][secret-manager], following are some of the ways you can
 further secure your secrets:
 
-1. **Limiting access** : The secrets should be readable/writable only through
+1. **Limiting access** : The secrets should be 
+   readable writable only through
    the [Service Accounts][service-account] via [IAM roles][iam]. The principle of
    least privilege must be followed while granting roles to the service accounts.
 
-2. **Encryption** : The secrets should be encrypted. [Secret Manager][secret-manager]
+2. **Encryption** : The secrets should be encrypted. 
+   [Secret Manager][secret-manager]
    encrypts the secret at rest using AES-256 by default. But you can use your
    own encryption keys, customer-managed encryption keys (CMEK) to encrypt your secret
-   at rest. For details, see [Enable customer-managed encryption keys for Secret Manager][enabling-customer-managed-encryption-keys-for-secret-manager].
+   at rest. For details, see
+   [Enable customer-managed encryption keys for Secret Manager][enabling-customer-managed-encryption-keys-for-secret-manager].
 
 3. **Password rotation** : The passwords stored in the secret manager should be
    rotated on a regular basis to reduce the risk of a security incident.
@@ -201,9 +204,9 @@ rotation process, review and verify the deployment in the Google Cloud Console.
 3. Click `Continue` to see execution configuration. Confirm the following
    settings:
 
-   * `Target type` is Pub/Sub
-   * `Select a Cloud Pub/Sub topic` is set to `pswd-rotation-topic`
-   * `Message body` contains a JSON object with the details of the Cloud SQL
+    * `Target type` is Pub/Sub
+    * `Select a Cloud Pub/Sub topic` is set to `pswd-rotation-topic`
+    * `Message body` contains a JSON object with the details of the Cloud SQL
    isntance and secret to be rotated.
 4. Click `Cancel`, to exit the Cloud Scheduler job details.
 
