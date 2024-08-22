@@ -16,12 +16,12 @@ passwords stored should be further secured. When using
 [Secret Manager][secret-manager], following are some of the ways you can
 further secure your secrets:
 
-1. **Limiting access** : The secrets should be 
-   readable writable only through
-   the [Service Accounts][service-account] via [IAM roles][iam]. The principle of
-   least privilege must be followed while granting roles to the service accounts.
+1. **Limiting access** : The secrets should be
+                         readable writable only through
+                         the [Service Accounts][service-account] via [IAM roles][iam]. The principle of
+                         least privilege must be followed while granting roles to the service accounts.
 
-2. **Encryption** : The secrets should be encrypted. 
+2. **Encryption** : The secrets should be encrypted.
    [Secret Manager][secret-manager]
    encrypts the secret at rest using AES-256 by default. But you can use your
    own encryption keys, customer-managed encryption keys (CMEK) to encrypt your secret
