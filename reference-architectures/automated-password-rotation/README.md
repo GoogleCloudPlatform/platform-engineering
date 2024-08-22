@@ -18,8 +18,10 @@ further secure your secrets:
 
 1. **Limiting access** : The secrets should be
                          readable writable only through
-                         the [Service Accounts][service-account] via [IAM roles][iam]. The principle of
-                         least privilege must be followed while granting roles to the service accounts.
+                         the [Service Accounts][service-account] via [IAM roles][iam].
+                         The principle of
+                         least privilege must be followed while granting roles
+                         to the service accounts.
 
 2. **Encryption** : The secrets should be encrypted.
    [Secret Manager][secret-manager]
@@ -53,18 +55,17 @@ vendor etc.
 
 Typically, rotating a password requires these steps:
 
-1. Change the password in the underlying software/system (applications,
-   database, SaaS, etc.)
-2. Update secret manager to store the new password.
-3. Restart the applications that use that password. This will make the
-   application source the latest passwords.
+### Review Secret Manager
 
-**Note** - In advanced architectures, an application may not need a restart and
-can source the new password on the fly. This can be done in multiple ways like
-having retry logic in the application to source the credentials if a connection
-fails or use a [secret add-on for GKE][secret-add-on].
+1. In the Cloud Console, using the naviagion menu select
+   `Security > Secret Manager`. Confirm that `cloudsql-pswd` is present in the
+   list.
+2. Click on `cloudsql-pswd`.
+3. Click three dots icon and select `View secret value` to view the password
+   for Cloud SQL database.
+4. Copy the secret value, you will use this in the next section to confirm
+   access to the Cloud SQL instance.
 
-## Generic architecture for automatic password rotation
 
 The following architecture represents a general design for a systems that can
 rotate password for any underlying software/system.
@@ -241,18 +242,7 @@ rotation process, review and verify the deployment in the Google Cloud Console.
    connector is set to `connector-for-sql`. This allows the function to connect
    to the CloudSQL over private IPs.
 5. Click on the `Source` tab to see the python code that the function executes.
-
-### Review Secret Manager
-
-1. In the Cloud Console, using the naviagion menu select
-   `Security > Secret Manager`. Confirm that `cloudsql-pswd` is present in the
-   list.
-2. Click on `cloudsql-pswd`.
-3. Click three dots icon and select `View secret value` to view the password
-   for Cloud SQL database.
-4. Copy the secret value, you will use this in the next section to confirm
-   access to the Cloud SQL instance.
-
+ghcr.io/actionshub/markdownlint
 **Note:** For the purpose of this tutorial, the secret is accessible to the
 human users and not encrypted. See
 [the section](#storing-passwords-in-google-cloud)
