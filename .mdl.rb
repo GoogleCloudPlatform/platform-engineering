@@ -35,4 +35,4 @@ rule 'MD013', :ignore_code_blocks => true, :tables => false
 rule 'MD029', :style => :ordered
 
 # Spaces after list markers
-rule 'MD030', :ul_single => 1, :ul_multi => 1, :ol_single => 1, :ol_multi => 1
+rule 'MD030', :ul_single => 3, :ul_multi => 3, :ol_single => 2, :ol_multi => 2
