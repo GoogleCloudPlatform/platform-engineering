@@ -78,7 +78,7 @@ rotate password for any underlying software/system.
   is to be rotated. For example, this information may include secret id in
   secret manager, database instance and username if it is a database password.
 * The message arriving to the pub/sub topic triggers a
-  [Cloud Function][cloud-function] that reads the message and
+  [Cloud Run Function][cloud-function] that reads the message and
   gathers information as supplied in the message.
 * The function changes the password in the corresponding system.
   For example, if the message contained a database instance, database
@@ -106,7 +106,7 @@ password.
   secret id, Cloud SQL instance name, database, region and database user in the
   payload.
 * The message arrival on the pub/sub topic triggers a
-  [Cloud Function][cloud-function], which uses the
+  [Cloud Run Function][cloud-function], which uses the
   information provided in the message to connect to the CloudSQL instance via
   [Serverless VPC Connector][vpc-connector] and changes the password. The
   function uses a [service account][service-account] that has [IAM roles][iam]
@@ -164,7 +164,7 @@ these instructions to create the architecture and use it:
 
    ```shell
    cd ~
-   git clone https://github.com/cloud-maniac-temp/password-rotation-automation
+   git clone https://github.com/GoogleCloudPlatform/platform-engineering
    cd password-rotation-automation/terraform
 
    terraform init
@@ -228,10 +228,10 @@ rotation process, review and verify the deployment in the Google Cloud Console.
    `instance_name`, `db_user`, `db_name` and `db_location`. These keys will be
    used to identify what database and user password is to be rotated.
 
-### Review Cloud Function
+### Review Cloud Run Function
 
 1. In the Cloud Console, using the naviagion menu select
-  `Serverless > Cloud Functions`. Confirm that `pswd_rotator_function` is present
+  `Serverless > Cloud Run Functions`. Confirm that `pswd_rotator_function` is present
   in the list.
 2. Click on `pswd_rotator_function`.
 3. Click on the `Trigger` tab. Confirm that the field `Receive events from` has
@@ -241,7 +241,7 @@ rotation process, review and verify the deployment in the Google Cloud Console.
    connector is set to `connector-for-sql`. This allows the function to connect
    to the CloudSQL over private IPs.
 5. Click on the `Source` tab to see the python code that the function executes.
-ghcr.io/actionshub/markdownlint
+
 **Note:** For the purpose of this tutorial, the secret is accessible to the
 human users and not encrypted. See
 [the section](#storing-passwords-in-google-cloud)
@@ -262,7 +262,7 @@ and [Secret Manager best practice][secret-manager-best-practice]
 
 Typically, the Cloud Scheduler will automatically run on 1st day of
 every month triggering password rotation. However, for this tutorial
-you will run the Cloud Scheuler job manually, which causes the Cloud Function
+you will run the Cloud Scheuler job manually, which causes the Cloud Run Function
 to generate a new password,
 update it in Cloud SQL and store it in Secret Manager.
 
@@ -272,7 +272,7 @@ update it in Cloud SQL and store it in Secret Manager.
    select `Force run`.
 3. Verify that the `Status of last execution` shows `Success`.
 4. In the Cloud Console, using the naviagion menu select
-   `Serverless > Cloud Functions`.
+   `Serverless > Cloud Run Functions`.
 5. Click function named `pswd_rotator_function`.
 6. Select the `Logs` tab.
 7. Review the logs and verify the function has run and completed without
@@ -313,7 +313,7 @@ and provide seamless way to tighten your password security. It is recommended
 to create an automation flow that runs on a regular schedule but can also be
 easily triggered manually when needed. There can be
 many variations of this architecture that can be adopted.
-For example, you can directly trigger a Cloud Function from a Google Cloud
+For example, you can directly trigger a Cloud Run Function from a Google Cloud
 Scheduler job without sending a message to pub/sub if you don't want to
 broadcast the password rotation. You should identify a flow that
 fits your organization requirements and modify the reference
