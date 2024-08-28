@@ -1,4 +1,4 @@
-# Overview
+# Platform Engineering on Google Cloud
 
 Platform engineering is an emerging practice in organizations to enable cross
 functional collaboration in order to deliver business value faster. It treats
@@ -12,7 +12,7 @@ consumers. Platform engineering is more effective in cloud computing as it
 helps realize the benefits possible on cloud like automation, security,
 productivity, faster time-to-market.
 
-## Platform Engineering on Google Cloud
+## Overview
 
 Google Cloud offers decomposable, elastic, secure, scalable and cost efficient
 tools built on the guiding principles of platform engineering. With a focus on
@@ -25,9 +25,7 @@ This repo contains a collection of guides, examples and design patterns
 spanning Google Cloud products and best in class OSS tools, which you can use
 to help build an internal developer platform.
 
-## Guides and Examples
-
-### Design Patterns
+## Resources
 
 ### Guides and Building Blocks
 
@@ -50,7 +48,7 @@ to help build an internal developer platform.
     enable consistent infrastructure, automated security policies, and
     autonomous application deployment for developers.
 
-## Depending on samples
+## Usage Disclaimer
 
 **Copy any code you need from this repository into your own project.**
 
