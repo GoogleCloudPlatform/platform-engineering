@@ -38,16 +38,17 @@ to help build an internal developer platform.
 ### End-to-end Examples
 
 *   [Enterprise Application Blueprint][enterprise-app-blueprint] - Deploys an
-internal developer platform that enables cloud platform teams to provide a
-managed software development and delivery platform for their organization's
-application development groups. EAB builds upon the infrastructure foundation
-deployed using the [Enterprise Foundation blueprint][enterprise-foundation-blueprint].
+    internal developer platform that enables cloud platform teams to provide a
+    managed software development and delivery platform for their organization's
+    application development groups. EAB builds upon the infrastructure
+    foundation deployed using the
+    [Enterprise Foundation blueprint][enterprise-foundation-blueprint].
 *   [Software Delivery Blueprint][software-delivery-blueprint] - An opinionated
-approach using platform engineering to improve software delivery, specifically
-for Infrastructure admins, Operators, Securityspecialists, and Application
-developers. It utilizes GitOps and self-service workflows to enable consistent
-infrastructure, automated security policies, and autonomous application
-deployment for developers.
+    approach using platform engineering to improve software delivery,
+    specifically for Infrastructure admins, Operators, Security specialists, and
+    Application developers. It utilizes GitOps and self-service workflows to
+    enable consistent infrastructure, automated security policies, and
+    autonomous application deployment for developers.
 
 ## Depending on samples
 
