@@ -33,6 +33,10 @@ to help build an internal developer platform.
 
 *   [Backstage Plugin for Cloud Workstations][backstage-cloudworkstations]
 
+#### Self-service and Automation patterns
+
+*   [Automatic password rotation][automatic-password-rotation]
+
 ### End-to-end Examples
 
 *   [Enterprise Application Blueprint][enterprise-app-blueprint] - Deploys an
@@ -73,3 +77,4 @@ Code in this repository is licensed under the Apache 2.0. See [LICENSE](LICENSE)
 [enterprise-app-blueprint]: https://github.com/GoogleCloudPlatform/terraform-google-enterprise-application
 [enterprise-foundation-blueprint]: https://github.com/terraform-google-modules/terraform-example-foundation/tree/master
 [software-delivery-blueprint]: https://github.com/GoogleCloudPlatform/software-delivery-blueprint
+[automatic-password-rotation]: ./reference-architectures/automated-password-rotation/README.md
