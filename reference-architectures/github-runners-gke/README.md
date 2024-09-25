@@ -77,7 +77,7 @@ Clicking this button will clone the repo into Cloud Shell, change into the examp
         1.  Copy the `.pem` file to example directory, alongside the `main.tf` file
         2.  Insert the `.pem` file name you downloaded after generating the private key for the app, like so:
             1.  `gh_app_private_key = file("example.private-key.pem")`
-        1.  Warning: Terraform will store the private key in state as plaintext. It’s recommended to secure your state file by using a backend such as a GCS bucket with encryption. You can do so by following [these instructions](https://cloud.google.com/docs/terraform/best-practices/security).
+        3.  Warning: Terraform will store the private key in state as plaintext. It’s recommended to secure your state file by using a backend such as a GCS bucket with encryption. You can do so by following [these instructions](https://cloud.google.com/docs/terraform/best-practices/security).
 3.  Modify the value of `gh_config_url` with the URL of your GitHub organization. It will be in the format of `https://github.com/ORGANIZATION`
 4.  (Optional) Specify any other parameters that you wish. For a full list of variables you can modify, refer to the [module documentation](https://github.com/terraform-google-modules/terraform-google-github-actions-runners/tree/master/modules/gh-runner-gke#inputs).
 
@@ -103,17 +103,16 @@ You should see the runners appear as “arc-runners”
 4.  Under “Choose workflow” click **set up a workflow yourself**
 5.  Paste the following configuration into the text editor:
 
-```yaml
-name: Actions Runner Controller Demo
-on:
- workflow_dispatch:
-jobs:
- Explore-GitHub-Actions:
-   runs-on: arc-runners
-   steps:
-   - run: echo "This job uses runner scale set runners!"
-```
-
+    ```yaml
+    name: Actions Runner Controller Demo
+    on:
+    workflow_dispatch:
+    jobs:
+    Explore-GitHub-Actions:
+       runs-on: arc-runners
+       steps:
+       - run: echo "This job uses runner scale set runners!"
+    ```
 6.  Click **Commit changes** to save the workflow to your repo.
 
 ### Test the GitHub Actions Workflow
@@ -129,15 +128,14 @@ jobs:
 
 1.  Navigate back into the example directory you previously ran `terraform apply`
 
-```bash
-cd terraform-google-github-actions-runners/examples/gh-runner-gke-simple/
-```
-
+    ```bash
+    cd terraform-google-github-actions-runners/examples/gh-runner-gke-simple/
+    ```
 2.  Destroy Terraform-managed infrastructure
 
-```bash
-terraform destroy
-```
+    ```bash
+    terraform destroy
+    ```
 
 Warning: this will destroy the GKE cluster, example VPC, service accounts, and the Helm-managed workloads previously deployed by this example.
 
