@@ -8,10 +8,10 @@ This guide walks you through the process of setting up self-hosted GitHub Action
 
 *   **Terraform:** Install Terraform on your local machine or use Cloud Shell  
 *   **Google Cloud Project:** Have a Google Cloud project with a Billing Account linked and the following APIs enabled:  
-   *   Cloud Resource Manager API `cloudresourcemanager.googleapis.com`  
-   *   Identity and Access Management API `iam.googleapis.com`  
-   *   Kubernetes Engine API `container.googleapis.com`  
-   *   Service Usage API `serviceusage.googleapis.com`  
+    *   Cloud Resource Manager API `cloudresourcemanager.googleapis.com`  
+    *   Identity and Access Management API `iam.googleapis.com`  
+    *   Kubernetes Engine API `container.googleapis.com`  
+    *   Service Usage API `serviceusage.googleapis.com`  
 *   **GitHub Account:** Have a GitHub organization, either personal or enterprise, where you have administrator access.
 
 ## Register a GitHub App for Authenticating ARC
@@ -40,22 +40,22 @@ You will need 3 values from this section to use as inputs in the Terraform modul
 3.  Under “Homepage URL” enter `https://github.com/actions/actions-runner-controller`
 4.  Under “Webhook,” uncheck **Active**.  
 5.  Under “Permissions,” click **Repository permissions** and use the dropdown menu to select the following permissions:
-   1.  **Metadata**: Read-only
+    1.  **Metadata**: Read-only
 6.  Under “Permissions,” click **Organization permissions** and use the dropdown menu to select the following permissions:
-   1.  **Self-hosted runners**: Read and write
+    1.  **Self-hosted runners**: Read and write
 7.  Click the **Create GitHub App** button
 
 ### Gather required IDs and keys
 
 1.  On the GitHub App’s page, save the value for “App ID”
-   1.  You will use this as the value for `gh_app_id` in the Terraform module
+    1.  You will use this as the value for `gh_app_id` in the Terraform module
 2.  Under “Private keys” click **Generate a private key**. Save the `.pem` file for later.
-   1.  You will use this as the value for `gh_app_private_key` in the Terraform module
+    1.  You will use this as the value for `gh_app_private_key` in the Terraform module
 3.  In the menu at the top-left corner of the page, click **Install App**, and next to your organization, click **Install** to install the app on your organization.
-   1.  Choose **All repositories** to allow any repo in your org to have access to your runners
-   2.  Choose **Only select repositories** to allow specific repos to have access to your runners
+    1.  Choose **All repositories** to allow any repo in your org to have access to your runners
+    2.  Choose **Only select repositories** to allow specific repos to have access to your runners
 4.  Note the app installation ID, which you can find on the app installation page, which has the following URL format: [`https://github.com/organizations/ORGANIZATION/settings/installations/INSTALLATION_ID`](https://github.com/organizations/ORGANIZATION/settings/installations/INSTALLATION_ID)
-   1.  You will use this as the value for `gh_app_installation_id` in the Terraform module.
+    1.  You will use this as the value for `gh_app_installation_id` in the Terraform module.
 
 ## Configure Terraform example
 
@@ -71,13 +71,13 @@ Clicking this button will clone the repo into Cloud Shell, change into the examp
 
 1.  Insert your Google Cloud Project ID as the value of `project_id`
 2.  Modify the sample values of the following variables with the values you saved from earlier.
-   1.  `gh_app_id`: insert the value of the App ID from the GitHub App page
-   2.  `gh_app_installation_id`: insert the value from the URL of the app installation page
-   3.  `gh_app_private_key`:
-      1.  Copy the `.pem` file to example directory, alongside the `main.tf` file
-      2.  Insert the `.pem` file name you downloaded after generating the private key for the app, like so:
-         1.  `gh_app_private_key = file("example.private-key.pem")`
-      1.  Warning: Terraform will store the private key in state as plaintext. It’s recommended to secure your state file by using a backend such as a GCS bucket with encryption. You can do so by following [these instructions](https://cloud.google.com/docs/terraform/best-practices/security).
+    1.  `gh_app_id`: insert the value of the App ID from the GitHub App page
+    2.  `gh_app_installation_id`: insert the value from the URL of the app installation page
+    3.  `gh_app_private_key`:
+        1.  Copy the `.pem` file to example directory, alongside the `main.tf` file
+        2.  Insert the `.pem` file name you downloaded after generating the private key for the app, like so:
+            1.  `gh_app_private_key = file("example.private-key.pem")`
+        1.  Warning: Terraform will store the private key in state as plaintext. It’s recommended to secure your state file by using a backend such as a GCS bucket with encryption. You can do so by following [these instructions](https://cloud.google.com/docs/terraform/best-practices/security).
 3.  Modify the value of `gh_config_url` with the URL of your GitHub organization. It will be in the format of `https://github.com/ORGANIZATION`
 4.  (Optional) Specify any other parameters that you wish. For a full list of variables you can modify, refer to the [module documentation](https://github.com/terraform-google-modules/terraform-google-github-actions-runners/tree/master/modules/gh-runner-gke#inputs).
 
@@ -100,7 +100,7 @@ You should see the runners appear as “arc-runners”
 1.  Create a new GitHub repository within your organization.  
 2.  In your GitHub repository, click the **Actions** tab.  
 3.  Click **New workflow**  
-4.  Under “Choose workflow” click **set up a workflow yourself** 
+4.  Under “Choose workflow” click **set up a workflow yourself**
 5.  Paste the following configuration into the text editor:
 
 ```yaml
@@ -146,12 +146,12 @@ Warning: this will destroy the GKE cluster, example VPC, service accounts, and t
 If you created a new GitHub App for testing purposes of this walkthrough, you can delete it via the following instructions. Note that any services authenticating via this GitHub App will lose access.
 
 1.  Navigate to your Organization GitHub App settings  
-   1.  Click your profile picture in the top-right  
-   2.  Click **Your organizations**  
-   3.  Select the organization you used for this walkthrough  
-   4. Click **Settings**  
-   5.  Click the \<\> **Developer settings** drop-down  
-   6. Click **GitHub Apps**  
+    1.  Click your profile picture in the top-right  
+    2.  Click **Your organizations**  
+    3.  Select the organization you used for this walkthrough  
+    4.  Click **Settings**  
+    5.  Click the \<\> **Developer settings** drop-down  
+    6.  Click **GitHub Apps**  
 2.  In the row where your GitHub App is listed, click **Edit**  
 3.  In the left-side menu, click **Advanced**  
 4.  Click **Delete GitHub App**  
