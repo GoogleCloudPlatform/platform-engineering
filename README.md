@@ -27,6 +27,10 @@ to help build an internal developer platform.
 
 ## Resources
 
+### Design Patterns
+
+*   [Platform Engineering: 5 Implemenation Myths][myths-webinar]
+
 ### Guides and Building Blocks
 
 #### Manage Developer Environments at Scale
@@ -73,8 +77,9 @@ Code in this repository is licensed under the Apache 2.0. See [LICENSE](LICENSE)
 
 <!-- LINKS: https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
+[automatic-password-rotation]: ./reference-architectures/automated-password-rotation/README.md
 [backstage-cloudworkstations]: https://github.com/googlecloudplatform/google-cloud-backstage-plugins
 [enterprise-app-blueprint]: https://github.com/GoogleCloudPlatform/terraform-google-enterprise-application
 [enterprise-foundation-blueprint]: https://github.com/terraform-google-modules/terraform-example-foundation/tree/master
+[myths-webinar]: https://www.youtube.com/watch?v=jDBOiYvXVZI&t=2s
 [software-delivery-blueprint]: https://github.com/GoogleCloudPlatform/software-delivery-blueprint
-[automatic-password-rotation]: ./reference-architectures/automated-password-rotation/README.md
