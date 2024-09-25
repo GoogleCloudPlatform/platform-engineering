@@ -12,13 +12,13 @@ to leverage these runners.
 
 *   **Terraform:** Install Terraform on your local machine or use Cloud Shell  
 *   **Google Cloud Project:** Have a Google Cloud project with a Billing Account
-linked and the following APIs enabled:  
+    linked and the following APIs enabled:  
     *   Cloud Resource Manager API `cloudresourcemanager.googleapis.com`  
     *   Identity and Access Management API `iam.googleapis.com`  
     *   Kubernetes Engine API `container.googleapis.com`  
     *   Service Usage API `serviceusage.googleapis.com`  
 *   **GitHub Account:** Have a GitHub organization, either personal or
-enterprise, where you have administrator access.
+    enterprise, where you have administrator access.
 
 ## Register a GitHub App for Authenticating ARC
 
@@ -48,10 +48,10 @@ You will need 3 values from this section to use as inputs in the Terraform modul
 3.  Under “Homepage URL” enter `https://github.com/actions/actions-runner-controller`
 4.  Under “Webhook,” uncheck **Active**.  
 5.  Under “Permissions,” click **Repository permissions** and use the dropdown
-menu to select the following permissions:
+    menu to select the following permissions:
     1.  **Metadata**: Read-only
 6.  Under “Permissions,” click **Organization permissions** and use the dropdown
-menu to select the following permissions:
+    menu to select the following permissions:
     1.  **Self-hosted runners**: Read and write
 7.  Click the **Create GitHub App** button
 
@@ -60,19 +60,19 @@ menu to select the following permissions:
 1.  On the GitHub App’s page, save the value for “App ID”
     1.  You will use this as the value for `gh_app_id` in the Terraform module
 2.  Under “Private keys” click **Generate a private key**. Save the `.pem` file
-for later.
+    for later.
     1.  You will use this as the value for `gh_app_private_key` in the Terraform
-    module
+        module
 3.  In the menu at the top-left corner of the page, click **Install App**, and
-next to your organization, click **Install** to install the app on your organization.
+    next to your organization, click **Install** to install the app on your organization.
     1.  Choose **All repositories** to allow any repo in your org to have access
-    to your runners
+        to your runners
     2.  Choose **Only select repositories** to allow specific repos to have
-    access to your runners
+        access to your runners
 4.  Note the app installation ID, which you can find on the app installation
-page, which has the following URL format: [`https://github.com/organizations/ORGANIZATION/settings/installations/INSTALLATION_ID`](https://github.com/organizations/ORGANIZATION/settings/installations/INSTALLATION_ID)
+    page, which has the following URL format: [`https://github.com/organizations/ORGANIZATION/settings/installations/INSTALLATION_ID`](https://github.com/organizations/ORGANIZATION/settings/installations/INSTALLATION_ID)
     1.  You will use this as the value for `gh_app_installation_id` in the
-    Terraform module.
+        Terraform module.
 
 ## Configure Terraform example
 
@@ -89,22 +89,22 @@ example directory, and open the `main.tf` file in the Cloud Shell Editor.
 
 1.  Insert your Google Cloud Project ID as the value of `project_id`
 2.  Modify the sample values of the following variables with the values you
-saved from earlier.
+    saved from earlier.
     1.  `gh_app_id`: insert the value of the App ID from the GitHub App page
     2.  `gh_app_installation_id`: insert the value from the URL of the app
-    installation page
+        installation page
     3.  `gh_app_private_key`:
         1.  Copy the `.pem` file to example directory, alongside the `main.tf` file
         2.  Insert the `.pem` file name you downloaded after generating the
-        private key for the app, like so:
+            private key for the app, like so:
             1.  `gh_app_private_key = file("example.private-key.pem")`
         3.  Warning: Terraform will store the private key in state as plaintext.
-        It’s recommended to secure your state file by using a backend such as a
-        GCS bucket with encryption. You can do so by following [these instructions](https://cloud.google.com/docs/terraform/best-practices/security).
+            It’s recommended to secure your state file by using a backend such
+            as a GCS bucket with encryption. You can do so by following [these instructions](https://cloud.google.com/docs/terraform/best-practices/security).
 3.  Modify the value of `gh_config_url` with the URL of your GitHub
-organization. It will be in the format of `https://github.com/ORGANIZATION`
+    organization. It will be in the format of `https://github.com/ORGANIZATION`
 4.  (Optional) Specify any other parameters that you wish. For a full list of
-variables you can modify, refer to the [module documentation](https://github.com/terraform-google-modules/terraform-google-github-actions-runners/tree/master/modules/gh-runner-gke#inputs).
+    variables you can modify, refer to the [module documentation](https://github.com/terraform-google-modules/terraform-google-github-actions-runners/tree/master/modules/gh-runner-gke#inputs).
 
 ### Deploy the example
 
@@ -145,11 +145,11 @@ You should see the runners appear as “arc-runners”
 
 1.  Go back to the **Actions** tab in your repo.  
 2.  In the left menu, select the name of your workflow. This should be “Actions
-Runner Controller Demo” if you left the above configuration unchanged
+    Runner Controller Demo” if you left the above configuration unchanged
 3.  Click **Run workflow** to open the drop-down menu, and click
-**Run workflow**  
+    **Run workflow**  
 4.  The sample workflow executes on your GKE-hosted ARC runner set. You can view
-the output within the GitHub Actions run history.
+    the output within the GitHub Actions run history.
 
 ## Cleanup
 
