@@ -37,6 +37,10 @@ to help build an internal developer platform.
 
 *   [Automatic password rotation][automatic-password-rotation]
 
+#### Run 3rd party CI/CD tools on Google Cloud infrastructure
+
+*   [Host GitHub Actions Runners on GKE][github-runners-gke]
+
 ### End-to-end Examples
 
 *   [Enterprise Application Blueprint][enterprise-app-blueprint] - Deploys an
@@ -78,3 +82,4 @@ Code in this repository is licensed under the Apache 2.0. See [LICENSE](LICENSE)
 [enterprise-foundation-blueprint]: https://github.com/terraform-google-modules/terraform-example-foundation/tree/master
 [software-delivery-blueprint]: https://github.com/GoogleCloudPlatform/software-delivery-blueprint
 [automatic-password-rotation]: ./reference-architectures/automated-password-rotation/README.md
+[github-runners-gke]: ./reference-architectures/github-runners-gke/README.md
