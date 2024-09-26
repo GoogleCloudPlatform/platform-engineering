@@ -20,6 +20,17 @@ to leverage these runners.
 *   **GitHub Account:** Have a GitHub organization, either personal or
     enterprise, where you have administrator access.
 
+Run the following command to enable the prerequisite APIs:
+
+```bash
+gcloud services enable \
+  cloudresourcemanager.googleapis.com \
+  iam.googleapis.com \
+  container.googleapis.com \
+  serviceusage.googleapis.com \
+  --project <YOUR_PROJECT_ID>
+```
+
 ## Register a GitHub App for Authenticating ARC
 
 Using a GitHub App for authentication allows you to make your self-hosted
