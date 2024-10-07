@@ -30,6 +30,7 @@ to help build an internal developer platform.
 ### Design Patterns
 
 *   [Platform Engineering: 5 Implemenation Myths][myths-webinar]
+*   [Business continuity planning for CI/CD][cicd-business-continuity]
 
 ### Guides and Building Blocks
 
@@ -83,6 +84,7 @@ Code in this repository is licensed under the Apache 2.0. See [LICENSE](LICENSE)
 
 [automatic-password-rotation]: ./reference-architectures/automated-password-rotation/README.md
 [backstage-cloudworkstations]: https://github.com/googlecloudplatform/google-cloud-backstage-plugins
+[cicd-business-continuity]: https://cloud.google.com/architecture/business-continuity-with-cicd-on-google-cloud
 [enterprise-app-blueprint]: https://github.com/GoogleCloudPlatform/terraform-google-enterprise-application
 [enterprise-foundation-blueprint]: https://github.com/terraform-google-modules/terraform-example-foundation/tree/master
 [github-runners-gke]: ./reference-architectures/github-runners-gke/README.md
