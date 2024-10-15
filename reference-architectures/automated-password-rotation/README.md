@@ -63,6 +63,7 @@ Typically, rotating a password requires these steps:
 *   Restart the applications that use that password. This will make the
 application source the latest passwords.
 
+
 ### Review Secret Manager
 
 1.  In the Cloud Console, using the naviagion menu select
