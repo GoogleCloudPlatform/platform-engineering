@@ -55,13 +55,13 @@ vendor etc.
 
 Typically, rotating a password requires these steps:
 
-*   Change the password in the underlying software or system  (such as applications,
-databases, SaaS).
+*   Change the password in the underlying software or system  
+    (such as applications,databases, SaaS).
 
 *   Update Secret Manager to store the new password.
 
-*   Restart the applications that use that password. This will make the application
-source the latest passwords.
+*   Restart the applications that use that password. This will make the
+application source the latest passwords.
 
 ### Review Secret Manager
 
