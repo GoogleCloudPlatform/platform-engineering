@@ -59,8 +59,7 @@ Typically, rotating a password requires these steps:
     (such as applications,databases, SaaS).
 
 *   Update Secret Manager to store the new password.
-
-
+  
 *   Restart the applications that use that password. This will make the
 application source the latest passwords.
 
