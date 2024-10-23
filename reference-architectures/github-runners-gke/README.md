@@ -8,7 +8,7 @@ Actions Runners on Google Kubernetes Engine (GKE) using the Terraform module
 It then provides instructions on how to create a basic GitHub Actions workflow
 to leverage these runners.
 
-[GitHub ARC on GKE architecture diagram](./gh-runners-gke.png)
+![GitHub ARC on GKE architecture diagram](./gh-runners-gke.png)
 
 ## Prerequisites
 
