@@ -83,7 +83,7 @@ You will need 3 values from this section to use as inputs in the Terraform modul
     2.  Choose **Only select repositories** to allow specific repos to have
         access to your runners
 4.  Note the app installation ID, which you can find on the app installation
-    page, which has the following URL format: [`https://github.com/organizations/ORGANIZATION/settings/installations/INSTALLATION_ID`](https://github.com/organizations/ORGANIZATION/settings/installations/INSTALLATION_ID)
+    page, which has the following URL format: `https://github.com/organizations/ORGANIZATION/settings/installations/INSTALLATION_ID`
     1.  You will use this as the value for `gh_app_installation_id` in the
         Terraform module.
 
