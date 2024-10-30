@@ -22,7 +22,7 @@ This demo illustrates the end-to-end deployment process, starting from the conta
 
 6. **Deployment**: Once approved, the rollout proceeds, and the new application is deployed.
 
-![Workflow Diagram](insert-link-to-svg-here)
+![Workflow Diagram](architecture.svg)
 
 ## Getting Started
 
