@@ -6,6 +6,9 @@ terraform {
       version = "~> 4.0"
     }
   }
+  provider_meta "google" {
+    module_name = "cloud-solutions/platform-engineering-cloud-deploy-pipeline-v1
+  }
 }
 
 variable "gcp_service_list" {
