@@ -14,6 +14,7 @@ import (
 	"github.com/GoogleCloudPlatform/functions-framework-go/functions"
 	"github.com/cloudevents/sdk-go/v2/event"
 	"github.com/codingconcepts/env"
+	"google.golang.org/api/option"
 )
 
 // Config struct for storing environment variables
@@ -85,7 +86,9 @@ func deployTrigger(ctx context.Context, e event.Event) error {
 	log.Printf("Received Image from Cloud Build: %s", image)
 
 	// Create a Cloud Deploy client for further interactions
-	deployClient, err := deploy.NewCloudDeployClient(ctx)
+	deployClient, err := deploy.NewCloudDeployClient(ctx,
+		option.WithUserAgent("cloud-solutions/platform-engineering-cloud-deploy-pipeline-code-v1"),
+	)
 	if err != nil {
 		return fmt.Errorf("error creating Cloud Deploy client: %v", err)
 	}
@@ -153,6 +156,41 @@ func generateRandomID(length int) (string, error) {
 	return hex.EncodeToString(bytes), nil
 }
 
-// Publishes the command message to a Pub/Sub topic
+// sendCommandPubSub publishes a CommandMessage to a specified Pub/Sub topic to trigger further actions.
 func sendCommandPubSub(ctx context.Context, m *CommandMessage) error {
-	// Create a new Pub/Sub client
+	// Create a new Pub/Sub client to publish messages.
+	client, err := pubsub.NewClient(ctx,
+		c.ProjectId,
+		option.WithUserAgent("cloud-solutions/platform-engineering-cloud-deploy-pipeline-code-v1"),
+	)
+	if err != nil {
+		return fmt.Errorf("pubsub.NewClient: %v", err)
+	}
+	defer client.Close() // Ensure client is closed when done
+
+	// Define the topic for message publication based on environment configuration.
+	t := client.Topic(c.SendTopicID)
+
+	// Marshal the CommandMessage into JSON format for the Pub/Sub message data payload.
+	jsonData, err := json.Marshal(m)
+	if err != nil {
+		return fmt.Errorf("json.Marshal: %v", err)
+	}
+
+	log.Printf("Sending message to PubSub")
+	// Publish the JSON data as a Pub/Sub message and wait for the message ID.
+	result := t.Publish(ctx, &pubsub.Message{
+		Data: jsonData, // Serialized JSON command message
+	})
+
+	// Block until the result returns the server-generated ID for the published message.
+	id, err := result.Get(ctx)
+	log.Printf("ID: %s, err: %v", id, err)
+	if err != nil {
+		fmt.Printf("Get: %v", err)
+		return nil
+	}
+
+	log.Printf("Published a message; msg ID: %v\n", id)
+	return nil
+}

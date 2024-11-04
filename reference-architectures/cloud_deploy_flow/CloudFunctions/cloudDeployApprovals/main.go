@@ -2,18 +2,19 @@ package example
 
 import (
 	// Importing necessary packages for the code
-	"context"                    // For managing request contexts
-	"encoding/json"              // For JSON encoding and decoding
-	"fmt"                        // For formatted I/O
-	"log"                        // For logging messages
-	"strings"                    // For string manipulation
-	"time"                       // For time management
+	"context"       // For managing request contexts
+	"encoding/json" // For JSON encoding and decoding
+	"fmt"           // For formatted I/O
+	"log"           // For logging messages
+	"strings"       // For string manipulation
+	"time"          // For time management
 
-	"cloud.google.com/go/deploy/apiv1/deploypb" // Google Cloud Deploy library for managing deployment processes
-	"cloud.google.com/go/pubsub"                // Pub/Sub for messaging in Google Cloud
+	"cloud.google.com/go/deploy/apiv1/deploypb"                       // Google Cloud Deploy library for managing deployment processes
+	"cloud.google.com/go/pubsub"                                      // Pub/Sub for messaging in Google Cloud
 	"github.com/GoogleCloudPlatform/functions-framework-go/functions" // Framework for creating Cloud Functions
-	"github.com/cloudevents/sdk-go/v2/event"    // CloudEvents SDK for event handling
-	"github.com/codingconcepts/env"             // For managing environment variables in Go
+	"github.com/cloudevents/sdk-go/v2/event"                          // CloudEvents SDK for event handling
+	"github.com/codingconcepts/env"                                   // For managing environment variables in Go
+	"google.golang.org/api/option"
 )
 
 // Struct for storing configuration data pulled from environment variables
@@ -61,7 +62,7 @@ type ApprovalsData struct {
 
 // Struct for creating command messages for Pub/Sub
 type CommandMessage struct {
-	Commmand       string                         `json:"command"`            // Command type, e.g., "ApproveRollout"
+	Commmand       string                         `json:"command"`               // Command type, e.g., "ApproveRollout"
 	ApproveRollout deploypb.ApproveRolloutRequest `json:"approveRolloutRequest"` // Request details for approving rollout
 }
 
@@ -81,7 +82,7 @@ func init() {
 func cloudDeployApprovals(ctx context.Context, e event.Event) error {
 	log.Printf("Deploy Approvals function invoked") // Logs function invocation
 
-	var msg Message // Struct to hold the decoded event data
+	var msg Message                       // Struct to hold the decoded event data
 	err := json.Unmarshal(e.Data(), &msg) // Decodes the JSON event data into msg
 	if err != nil {
 		// If data is malformed, log the error and continue to avoid reprocessing
@@ -105,8 +106,8 @@ func cloudDeployApprovals(ctx context.Context, e event.Event) error {
 		var command = CommandMessage{
 			Commmand: "ApproveRollout",
 			ApproveRollout: deploypb.ApproveRolloutRequest{
-				Name:     a.Rollout,   // Rollout name as per received message
-				Approved: true,        // Approves the rollout
+				Name:     a.Rollout, // Rollout name as per received message
+				Approved: true,      // Approves the rollout
 			},
 		}
 
@@ -114,7 +115,7 @@ func cloudDeployApprovals(ctx context.Context, e event.Event) error {
 		err = sendCommandPubSub(ctx, &command)
 		if err != nil {
 			_ = fmt.Errorf("failed to send pubsub command: %v", err) // Logs error if Pub/Sub message fails to send
-			return nil // Returns nil to acknowledge message even if there's an error
+			return nil                                               // Returns nil to acknowledge message even if there's an error
 		}
 		log.Printf("Deployment triggered successfully") // Logs success
 	}
@@ -125,7 +126,10 @@ func cloudDeployApprovals(ctx context.Context, e event.Event) error {
 // Function to publish messages to Pub/Sub
 func sendCommandPubSub(ctx context.Context, m *CommandMessage) error {
 	// Initializes Pub/Sub client using the project ID from config
-	client, err := pubsub.NewClient(ctx, c.ProjectId)
+	client, err := pubsub.NewClient(ctx,
+		c.ProjectId,
+		option.WithUserAgent("cloud-solutions/platform-engineering-cloud-deploy-pipeline-code-v1"),
+	)
 	if err != nil {
 		return fmt.Errorf("pubsub.NewClient: %v", err) // Returns error if client creation fails
 	}

@@ -10,6 +10,7 @@ import (
 	"cloud.google.com/go/deploy/apiv1/deploypb"
 	"github.com/GoogleCloudPlatform/functions-framework-go/functions"
 	"github.com/cloudevents/sdk-go/v2/event"
+	"google.golang.org/api/option"
 )
 
 // init registers the cloudDeployInteractions function as an event listener
@@ -57,7 +58,9 @@ func cloudDeployInteractions(ctx context.Context, e event.Event) error {
 	}
 
 	// Create a new Cloud Deploy client to interact with Cloud Deploy services
-	deployClient, err := deploy.NewCloudDeployClient(ctx)
+	deployClient, err := deploy.NewCloudDeployClient(ctx,
+		option.WithUserAgent("cloud-solutions/platform-engineering-cloud-deploy-pipeline-code-v1"),
+	)
 	if err != nil {
 		return fmt.Errorf("error creating Cloud Deploy client: %v", err)
 	}

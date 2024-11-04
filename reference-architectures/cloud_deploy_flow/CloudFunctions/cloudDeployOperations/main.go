@@ -12,6 +12,7 @@ import (
 	"github.com/GoogleCloudPlatform/functions-framework-go/functions"
 	"github.com/cloudevents/sdk-go/v2/event"
 	"github.com/codingconcepts/env"
+	"google.golang.org/api/option"
 )
 
 // Config struct for environment variables; contains details necessary for deployment.
@@ -24,11 +25,11 @@ type config struct {
 
 // PubsubMessage represents the structure for a Pub/Sub message.
 type PubsubMessage struct {
-	Data        []byte        `json:"data"`        // Payload of the message.
+	Data        []byte         `json:"data"`        // Payload of the message.
 	Attributes  OperationsData `json:"attributes"`  // Metadata attributes for the message.
-	MessageID   string        `json:"messageId"`    // Server-generated message ID.
-	PublishTime time.Time     `json:"publishTime"`  // Timestamp for when the message was published.
-	OrderingKey string        `json:"orderingKey"`  // Ordering key for message ordering.
+	MessageID   string         `json:"messageId"`   // Server-generated message ID.
+	PublishTime time.Time      `json:"publishTime"` // Timestamp for when the message was published.
+	OrderingKey string         `json:"orderingKey"` // Ordering key for message ordering.
 }
 
 // Message wraps the PubsubMessage structure in the JSON object expected by the Cloud Function.
@@ -90,8 +91,8 @@ func cloudDeployOperations(ctx context.Context, e event.Event) error {
 		var command = CommandMessage{
 			Commmand: "CreateRollout",
 			CreateRollout: deploypb.CreateRolloutRequest{
-				Parent:    a.Resource,   // The deployment resource to associate with this rollout
-				RolloutId: a.ReleaseId,  // The ID of the release
+				Parent:    a.Resource,  // The deployment resource to associate with this rollout
+				RolloutId: a.ReleaseId, // The ID of the release
 				Rollout: &deploypb.Rollout{
 					// TODO: TargetId should ideally come from the Pub/Sub message rather than hardcoded.
 					TargetId: "random-date-service",
@@ -114,7 +115,10 @@ func cloudDeployOperations(ctx context.Context, e event.Event) error {
 // sendCommandPubSub publishes a CommandMessage to a specified Pub/Sub topic to trigger further actions.
 func sendCommandPubSub(ctx context.Context, m *CommandMessage) error {
 	// Create a new Pub/Sub client to publish messages.
-	client, err := pubsub.NewClient(ctx, c.ProjectId)
+	client, err := pubsub.NewClient(ctx,
+		c.ProjectId,
+		option.WithUserAgent("cloud-solutions/platform-engineering-cloud-deploy-pipeline-code-v1"),
+	)
 	if err != nil {
 		return fmt.Errorf("pubsub.NewClient: %v", err)
 	}

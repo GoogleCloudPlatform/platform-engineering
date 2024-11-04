@@ -7,7 +7,7 @@ terraform {
     }
   }
   provider_meta "google" {
-    module_name = "cloud-solutions/platform-engineering-cloud-deploy-pipeline-v1
+    module_name = "cloud-solutions/platform-engineering-cloud-deploy-pipeline-deploy-v1"
   }
 }
 
