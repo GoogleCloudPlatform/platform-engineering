@@ -8,7 +8,6 @@ This project demonstrates a Google Cloud Function that triggers deployments base
 - [Env](#environment-variables)
 - [Function Overview](#function-overview)
 - [Deploying the Function](#deploying-the-function)
-- [License](#license)
 
 ## Prerequisites
 

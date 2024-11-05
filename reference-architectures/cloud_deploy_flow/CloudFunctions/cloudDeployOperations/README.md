@@ -45,6 +45,7 @@ The function relies on environment variables to specify project configuration. E
 
 1. Clone the repository and set up your local environment with the necessary environment variables.
 2. Run the Cloud Functions framework locally to test the function:
+
    ```bash
    functions-framework --target=cloudDeployOperations
    ```
@@ -52,10 +53,13 @@ The function relies on environment variables to specify project configuration. E
 ### Deployment to Google Cloud Functions
 
 1. Set up your Google Cloud environment and enable the necessary APIs:
+
    ```bash
    gcloud services enable cloudfunctions.googleapis.com pubsub.googleapis.com clouddeploy.googleapis.com
    ```
+
 2. Deploy the function to Google Cloud:
+
    ```bash
    gcloud functions deploy cloudDeployOperations \
        --runtime go120 \

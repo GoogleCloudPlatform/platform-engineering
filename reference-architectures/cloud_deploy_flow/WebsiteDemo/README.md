@@ -17,25 +17,17 @@ This project is a simple demonstration of a Pub/Sub system using Google Cloud Pu
 
 ## Installation
 
-1. Clone the repository:
-
-   git clone <repository-url>
-
-2. Navigate to the project directory:
-
-   cd <project-directory>
-
-3. Install the required dependencies:
+1. Install the required dependencies:
 
    npm install
 
-4. Set your Google Cloud project ID and subscription names in the `index.js` file.
+2. Set your Google Cloud project ID and subscription names in the `index.js` file.
 
-5. Start the server:
+3. Start the server:
 
    node index.js
 
-6. Open your web browser and go to `http://localhost:8080` to access the demo.
+4. Open your web browser and go to `http://localhost:8080` to access the demo.
 
 ## Usage
 

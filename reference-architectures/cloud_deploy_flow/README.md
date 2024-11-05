@@ -28,16 +28,21 @@ This demo illustrates the end-to-end deployment process, starting from the conta
 
 To run this demo, follow these steps:
 
-1. **Initialize Terraform**: 
-   ```
-   terraform init
-   ```
-2. **Apply Terraform Configuration**:
+1. **Initialize Terraform**:
+
+    ```bash
+    terraform init
     ```
+
+2. **Apply Terraform Configuration**:
+
+    ```bash
     terraform apply
     ```
+
 3. **Connecting Github Repo**:
     You may encounter issues when connecting your GitHub repository to Cloud Build. You will need to manually attach the repository to Cloud Build.
+
 ## Conclusion
 
 This demo encapsulates the essential components and workflow for deploying applications using platform engineering practices. It illustrates how various services interact to ensure a smooth deployment process.
