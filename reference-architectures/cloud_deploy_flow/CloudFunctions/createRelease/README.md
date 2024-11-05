@@ -1,6 +1,8 @@
 # Example Cloud Function
 
-This project demonstrates a Google Cloud Function that triggers deployments based on Pub/Sub messages. The function listens for build notifications from Google Cloud Build and initiates a release in Google Cloud Deploy when a build succeeds.
+This project demonstrates a Google Cloud Function that triggers deployments
+based on Pub/Sub messages. The function listens for build notifications from
+Google Cloud Build and initiates a release in Google Cloud Deploy when a build succeeds.
 
 ## Table of Contents
 
@@ -18,19 +20,21 @@ This project demonstrates a Google Cloud Function that triggers deployments base
 
 ## Environment Variables
 
-The function relies on environment variables to specify project configuration. Ensure these are set before deploying the function:
+The function relies on environment variables to specify project configuration.
+Ensure these are set before deploying the function:
 
 | Variable Name  | Description                             | Required |
 |----------------|-----------------------------------------|----------|
 | `PROJECTID`    | Google Cloud project ID                | Yes      |
 | `LOCATION`     | The deployment location (region)       | Yes      |
-| `PIPELINE`     | The name of the delivery pipeline in Cloud Deploy.              | Yes      |
+| `PIPELINE`     | The name of the delivery pipeline in Cloud Deploy.| Yes     |
 | `TRIGGER`     | The ID of the build trigger in Cloud Build.       | Yes      |
 | `SENDTOPICID`  | Pub/Sub topic ID for sending commands  | Yes      |
 
 ## Function Overview
 
-The `deployTrigger` function is invoked by Pub/Sub events. Here's a breakdown of its key components:
+The `deployTrigger` function is invoked by Pub/Sub events. Here's a breakdown of
+its key components:
 
 1.  **Initialization**:
 
@@ -40,7 +44,8 @@ The `deployTrigger` function is invoked by Pub/Sub events. Here's a breakdown of
 2.  **Message Handling**:
 
       *   Parses incoming Pub/Sub messages.
-      *   Validates build notifications based on specified criteria (trigger ID and build status).
+      *   Validates build notifications based on specified criteria (trigger ID
+      and build status).
 
 3.  **Release Creation**:
 
@@ -56,7 +61,8 @@ The `deployTrigger` function is invoked by Pub/Sub events. Here's a breakdown of
 
 To deploy the function, follow these steps:
 
-1.  Ensure that your Google Cloud SDK is authenticated and configured with the correct project.
+1.  Ensure that your Google Cloud SDK is authenticated and configured with the
+correct project.
 2.  Use the following command to deploy the function:
 
    ```bash

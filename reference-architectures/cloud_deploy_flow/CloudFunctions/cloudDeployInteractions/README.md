@@ -1,11 +1,16 @@
 
 # Cloud Deploy Interactions with Pub/Sub
 
-This project demonstrates a Google Cloud Function to manage deployments by creating releases, rollouts, or approving rollouts based on incoming Pub/Sub messages. The function leverages Google Cloud Deploy and listens for deployment-related commands sent via Pub/Sub, executing appropriate actions based on the command type.
+This project demonstrates a Google Cloud Function to manage deployments by
+creating releases, rollouts, or approving rollouts based on incoming Pub/Sub
+messages. The function leverages Google Cloud Deploy and listens for
+deployment-related commands sent via Pub/Sub, executing appropriate actions
+based on the command type.
 
 ## Features
 
-*   Listens for Pub/Sub messages with deployment commands (CreateRelease, CreateRollout, ApproveRollout) Messages should include protobuf request.
+*   Listens for Pub/Sub messages with deployment commands (CreateRelease,
+CreateRollout, ApproveRollout) Messages should include protobuf request.
 *   Initiates Google Cloud Deploy actions based on the received command.
 *   Logs each step of the deployment process for better traceability.
 
@@ -33,12 +38,16 @@ This project demonstrates a Google Cloud Function to manage deployments by creat
     Deploy the function using Google Cloud SDK:
 
     ```bash
-    gcloud functions deploy cloudDeployInteractions --runtime go116 --trigger-event-type google.cloud.pubsub.topic.v1.messagePublished --trigger-resource YOUR_TOPIC_NAME
+    gcloud functions deploy cloudDeployInteractions --runtime go116 
+    --trigger-event-type google.cloud.pubsub.topic.v1.messagePublished 
+    --trigger-resource YOUR_TOPIC_NAME
     ```
 
 ### Pub/Sub Message Format
 
-The Pub/Sub message should include a JSON payload with a `command` field specifying the type of deployment action to execute. Examples of the command types include:
+The Pub/Sub message should include a JSON payload with a `command` field
+specifying the type of deployment action to execute. Examples of the command
+types include:
 
 *   `CreateRelease`: Creates a new release for deployment.
 *   `CreateRollout`: Initiates a rollout of the release.
@@ -75,12 +84,16 @@ The JSON inside `data` should follow the format for `DeployCommand`:
 
 ## Code Structure
 
-*   **DeployCommand struct**: Defines the command to be executed and the parameters for each deploy action (create release, create rollout, or approve rollout).
-*   **cloudDeployInteractions function**: Main function triggered by Pub/Sub messages. It parses the message and calls the respective deployment function based on the command.
+*   **DeployCommand struct**: Defines the command to be executed and the
+parameters for each deploy action (create release, create rollout, or approve rollout).
+*   **cloudDeployInteractions function**: Main function triggered by Pub/Sub
+messages. It parses the message and calls the respective deployment function
+based on the command.
 *   **cdCreateRelease**: Creates a release in Google Cloud Deploy.
 *   **cdCreateRollout**: Initiates a rollout for a specified release.
 *   **cdApproveRollout**: Approves an existing rollout.
 
 ## Logging
 
-Each function logs key steps, from initialization to message handling and completion of deployments, helping in troubleshooting and monitoring.
+Each function logs key steps, from initialization to message handling and
+completion of deployments, helping in troubleshooting and monitoring.
