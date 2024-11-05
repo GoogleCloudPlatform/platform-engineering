@@ -6,41 +6,41 @@ The function processes deployment requests, checks conditions for rollout approv
 
 ## Features
 
-- Listens to Pub/Sub messages for deployment approvals
-- Validates deployment conditions (manual approval, rollout ID, etc.)
-- Publishes approval commands to another Pub/Sub topic if conditions are met
+*   Listens to Pub/Sub messages for deployment approvals
+*   Validates deployment conditions (manual approval, rollout ID, etc.)
+*   Publishes approval commands to another Pub/Sub topic if conditions are met
 
 ## Setup
 
 ### Requirements
 
-- Go 1.16 or later
-- Google Cloud SDK
-- Access to Google Cloud Pub/Sub
-- Environment variables to configure project details
+*   Go 1.16 or later
+*   Google Cloud SDK
+*   Access to Google Cloud Pub/Sub
+*   Environment variables to configure project details
 
 ### Installation
 
-1. **Clone the repository**:
+1.  **Clone the repository**:
 
-   ```bash
-   git clone <repository-url>
-   cd <repository-folder>
-   ```
+    ```bash
+    git clone <repository-url>
+    cd <repository-folder>
+    ```
 
-2. **Enable APIs**:
-   Enable the Google Cloud Pub/Sub and Deploy APIs for your project:
+2.  **Enable APIs**:
+    Enable the Google Cloud Pub/Sub and Deploy APIs for your project:
 
-   ```bash
-   gcloud services enable pubsub.googleapis.com deploy.googleapis.com
-   ```
+    ```bash
+    gcloud services enable pubsub.googleapis.com deploy.googleapis.com
+    ```
 
-3. **Deploy the Function**:
-   Use Google Cloud SDK to deploy the function:
+3.  **Deploy the Function**:
+    Use Google Cloud SDK to deploy the function:
 
-   ```bash
-   gcloud functions deploy cloudDeployApprovals --runtime go116 --trigger-event-type google.cloud.pubsub.topic.v1.messagePublished --trigger-resource YOUR_SUBSCRIBE_TOPIC
-   ```
+    ```bash
+    gcloud functions deploy cloudDeployApprovals --runtime go116 --trigger-event-type google.cloud.pubsub.topic.v1.messagePublished --trigger-resource YOUR_SUBSCRIBE_TOPIC
+    ```
 
 ## Environment Variables
 
@@ -54,18 +54,18 @@ The function relies on environment variables to specify project configuration. E
 
 ## Code Structure
 
-- **config struct**: Holds configuration for the environment variables.
-- **PubsubMessage and ApprovalsData structs**: Define the structure of messages received from Pub/Sub and attributes within them.
-- **cloudDeployApprovals function**: Entry point for handling messages. Validates the conditions and, if met, triggers the `sendCommandPubSub` function to send an approval command.
-- **sendCommandPubSub function**: Publishes a command message to the Pub/Sub topic to approve a deployment rollout.
+*   **config struct**: Holds configuration for the environment variables.
+*   **PubsubMessage and ApprovalsData structs**: Define the structure of messages received from Pub/Sub and attributes within them.
+*   **cloudDeployApprovals function**: Entry point for handling messages. Validates the conditions and, if met, triggers the `sendCommandPubSub` function to send an approval command.
+*   **sendCommandPubSub function**: Publishes a command message to the Pub/Sub topic to approve a deployment rollout.
 
 ## Usage
 
 The function `cloudDeployApprovals` is invoked whenever a message is published to the configured Pub/Sub topic. Upon receiving a message, the function will:
 
-1. Parse and validate the message.
-2. Check if the action is `Required`, if a rollout ID is provided, and if manual approval is marked as "true."
-3. If conditions are met, it will publish an approval command to the `SENDTOPICID` topic.
+1.  Parse and validate the message.
+2.  Check if the action is `Required`, if a rollout ID is provided, and if manual approval is marked as "true."
+3.  If conditions are met, it will publish an approval command to the `SENDTOPICID` topic.
 
 ### Sample Pub/Sub Message
 
