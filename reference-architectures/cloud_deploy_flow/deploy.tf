@@ -40,8 +40,6 @@ resource "google_clouddeploy_delivery_pipeline" "primary" {
 
 # Create a Cloud Deploy target
 resource "google_clouddeploy_target" "primary" {
-  # TODO(Ghaun): Figure out how to set Cloud Run Service name via Terraform
-  # Currently had to set the delivery pipeline and target to the service name to make it work
   name     = "random-date-service"
   project = var.project_id
   location = "us-central1"
