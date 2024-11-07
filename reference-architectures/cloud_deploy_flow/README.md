@@ -36,28 +36,28 @@ This demo illustrates the end-to-end deployment process, starting from the
 container build phase. Here's a high-level overview of the workflow:
 
 1.  **Container Build Process**: The demo begins when a container is built in
-Cloud Build. Upon completion, a notification is sent to a Pub/Sub message queue.
+    Cloud Build. Upon completion, a notification is sent to a Pub/Sub message queue.
 
 2.  **Release Logic**: A Cloud Function subscribes to this message queue,
-assessing whether a release should be created. If a release is warranted, a
-message is sent to a "Command Queue" (another Pub/Sub topic).
+    assessing whether a release should be created. If a release is warranted, a
+    message is sent to a "Command Queue" (another Pub/Sub topic).
 
 3.  **Creating a Release**: A dedicated function listens to the "Command Queue"
-and communicates with Cloud Deploy to create a new release. Once the release is
-created, a notification is dispatched to the Pub/Sub Operations topic.
+    and communicates with Cloud Deploy to create a new release. Once the release
+    is created, a notification is dispatched to the Pub/Sub Operations topic.
 
 4.  **Rollout Process**: Another Cloud Function picks up this notification and
-initiates the rollout process by sending a `createRolloutRequest` to the
-"Command Queue."
+    initiates the rollout process by sending a `createRolloutRequest` to the
+    "Command Queue."
 
 5.  **Approval Process**: Since rollouts typically require approval, a
-notification is sent to the `cloud-deploy-approvals` Pub/Sub queue. An approval
-function then picks up this message, allowing you to implement your custom logic
-or utilize the provided Website Demo to return JSON, such as
-`{ "manualApproval": "true" }`.
+    notification is sent to the `cloud-deploy-approvals` Pub/Sub queue. An approval
+    function then picks up this message, allowing you to implement your custom logic
+    or utilize the provided Website Demo to return JSON, such as
+    `{ "manualApproval": "true" }`.
 
 6.  **Deployment**: Once approved, the rollout proceeds, and the new application
-is deployed.
+    is deployed.
 
 ![Workflow Diagram](architecture.svg)
 

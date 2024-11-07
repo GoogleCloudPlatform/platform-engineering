@@ -36,21 +36,21 @@ Key aspects to note include:
 
 *   **Service Name**: This defines the name of the service as `random-date-service`.
 *   **Image Specification**: The `image` field under `spec` is set to `pizza`.
-This is crucial, as it indicates to Cloud Deploy where to substitute the image.
-This substitution occurs based on the `createRelease` function in `main.go`,
-specifically noted on line 122.
+    This is crucial, as it indicates to Cloud Deploy where to substitute the image.
+    This substitution occurs based on the `createRelease` function in `main.go`,
+    specifically noted on line 122.
 
 ## Usage
 
 To deploy and test this application:
 
 1.  **Build the Docker Image**: Use the provided Dockerfile to create a
-container image.
+    container image.
 2.  **Deploy to Cloud Run**: Utilize the `run.yaml` configuration to deploy the service.
 3.  **Monitor Deployments**: Use Cloud Deploy to observe the deployment pipeline
-and ensure the service is running as expected.
+    and ensure the service is running as expected.
 4.  **Access the Service**: After deployment, access the service through its
-endpoint to receive a random date.
+    endpoint to receive a random date.
 
 ## Conclusion
 

@@ -8,21 +8,21 @@ demonstration purposes and is not intended for production use.
 ## Features
 
 *   **Real-time Message Display**: Messages from various Pub/Sub subscriptions
-are fetched and displayed in a web interface.
+      are fetched and displayed in a web interface.
 *   **Clear Messages**: Users can clear all displayed messages from the UI.
 *   **Send Messages**: Users can send messages to the Pub/Sub topic via the
-input area.
+      input area.
 
 ## Project Structure
 
 *   **public/index.html**: The main HTML file that provides the structure for
-the web interface.
+      the web interface.
 *   **public/script.js**: Contains JavaScript logic for fetching messages,
-sending new messages, and clearing messages.
+      sending new messages, and clearing messages.
 *   **public/styles.css**: Contains styling for the web interface to ensure a
-clean and responsive layout.
+      clean and responsive layout.
 *   **index.js**: The main server file that handles Pub/Sub operations and
-serves static files.
+      serves static files.
 
 ## Installation
 
@@ -41,11 +41,11 @@ serves static files.
 ## Usage
 
 *   **Sending Messages**: Enter a message in the textarea and click "Submit" to
-send it to the Pub/Sub topic.
+      send it to the Pub/Sub topic.
 *   **Viewing Messages**: The messages received from the Pub/Sub subscriptions
-will be displayed in their respective boxes.
+      will be displayed in their respective boxes.
 *   **Clearing Messages**: Click the "Clear" button to remove all messages from
-the display.
+      the display.
 
 ## Disclaimer
 

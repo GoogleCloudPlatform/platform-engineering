@@ -38,31 +38,31 @@ its key components:
 
 1.  **Initialization**:
 
-      *   Loads environment variables into a configuration struct.
-      *   Registers the function to be triggered by CloudEvents.
+    *   Loads environment variables into a configuration struct.
+    *   Registers the function to be triggered by CloudEvents.
 
 2.  **Message Handling**:
 
-      *   Parses incoming Pub/Sub messages.
-      *   Validates build notifications based on specified criteria (trigger ID
-      and build status).
+    *   Parses incoming Pub/Sub messages.
+    *   Validates build notifications based on specified criteria
+    (trigger ID and build status).
 
 3.  **Release Creation**:
 
-      *   Extracts relevant image information from the build notification.
-      *   Constructs a `CreateReleaseRequest` for Cloud Deploy.
-      *   Sends the request to the specified Pub/Sub topic.
+    *   Extracts relevant image information from the build notification.
+    *   Constructs a `CreateReleaseRequest` for Cloud Deploy.
+    *   Sends the request to the specified Pub/Sub topic.
 
 4.  **Random ID Generation**:
 
-      *   Generates a unique release ID to ensure each deployment is distinct.
+    *   Generates a unique release ID to ensure each deployment is distinct.
 
 ## Deploying the Function
 
 To deploy the function, follow these steps:
 
 1.  Ensure that your Google Cloud SDK is authenticated and configured with the
-correct project.
+      correct project.
 2.  Use the following command to deploy the function:
 
    ```bash
