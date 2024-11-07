@@ -40,7 +40,7 @@ approval, and publishes an approval command if the requirements are met.
 3.  **Deploy the Function**:
     Use Google Cloud SDK to deploy the function:
 
-    ```bash
+```bash
     gcloud functions deploy cloudDeployApprovals --runtime go116 
     --trigger-event-type google.cloud.pubsub.topic.v1.messagePublished 
     --trigger-resource YOUR_SUBSCRIBE_TOPIC
