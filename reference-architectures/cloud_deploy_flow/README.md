@@ -61,6 +61,9 @@ container build phase. Here's a high-level overview of the workflow:
 
 ![Workflow Diagram](architecture.svg)
 
+## Prerequisites
+* GCP project with billing enabled
+* [basic roles / APIs required]
 ## Getting Started
 
 To run this demo, follow these steps:
@@ -71,7 +74,7 @@ To run this demo, follow these steps:
     change your directory to the deployment demo:
 
     ```bash
-    cd platform-engineering/reference-architectures/cloud-deploy-flow
+    cd platform-engineering/reference-architectures/cloud_deploy_flow
     ```
 
 2.  **Set Up Environment Variables**:

@@ -3,7 +3,7 @@ terraform {
   required_providers {
     google = {
       source  = "hashicorp/google"
-      version = "~> 4.0"
+      version = "> 4.0"
     }
   }
   provider_meta "google" {
@@ -17,7 +17,12 @@ variable "gcp_service_list" {
   default = [
     "pubsub.googleapis.com",
     "clouddeploy.googleapis.com",
-    "cloudbuild.googleapis.com"
+    "cloudbuild.googleapis.com",
+    "compute.googleapis.com",
+    "cloudresourcemanager.googleapis.com",
+    "run.googleapis.com",
+    "cloudfunctions.googleapis.com",
+    "eventarc.googleapis.com"
   ]
 }
 
@@ -120,7 +125,8 @@ variable "sa_roles_list" {
     "roles/storage.objectUser",
     "roles/clouddeploy.jobRunner",
     "roles/clouddeploy.releaser",
-    "roles/run.developer"
+    "roles/run.developer",
+    "roles/cloudbuild.builds.builder"
   ]
 }
 

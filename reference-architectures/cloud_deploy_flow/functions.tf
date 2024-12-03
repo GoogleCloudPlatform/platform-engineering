@@ -60,6 +60,7 @@ resource "google_cloudfunctions2_function" "create-release" {
   build_config {
     entry_point = "deployTrigger"
     runtime     = "go122" # Or your preferred runtime
+    service_account = google_service_account.cloudbuild_service_account.id
     source {
       storage_source {
         bucket = google_storage_bucket.function_bucket.name # Replace with your bucket name
