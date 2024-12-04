@@ -1,7 +1,7 @@
 
 # Cloud Deployment Approvals with Pub/Sub
 
-This project provides a Google Cloud Function to automate deployment approvals
+This project provides a Google Cloud Run Function to automate deployment approvals
 based on messages received via Google Cloud Pub/Sub.
 The function processes deployment requests, checks conditions for rollout
 approval, and publishes an approval command if the requirements are met.

@@ -2,34 +2,29 @@
 terraform {
   required_providers {
     google = {
-      source  = "hashicorp/google"
-      version = "> 4.0"
+      source = "hashicorp/google"
     }
   }
+  
   provider_meta "google" {
     module_name = "cloud-solutions/platform-engineering-cloud-deploy-pipeline-deploy-v1"
   }
+
+  precondition {
+    condition     = data.google_project.project.project_id != ""
+    error_message = "The specified project does not exist. Please verify the project ID."
+  }
 }
 
-variable "gcp_service_list" {
-  description = "List of GCP Services to enable (WIP)"
-  type = list(string)
-  default = [
-    "pubsub.googleapis.com",
-    "clouddeploy.googleapis.com",
-    "cloudbuild.googleapis.com",
-    "compute.googleapis.com",
-    "cloudresourcemanager.googleapis.com",
-    "run.googleapis.com",
-    "cloudfunctions.googleapis.com",
-    "eventarc.googleapis.com"
-  ]
+
+data "google_project" "project" {
+  project_id = data.google_project.project.project_id
 }
 
-# Enable Services (Work in Progress)
+# Enable Services
 resource "google_project_service" "project" {
-  for_each = toset(var.gcp_service_list)
-  project = var.project_id
+  for_each = toset(local.gcp_service_list)
+  project = data.google_project.project.project_id
   service = each.key
 
   timeouts {
@@ -40,55 +35,21 @@ resource "google_project_service" "project" {
   disable_on_destroy = false
 }
 
-# Create a Pub/Sub topic for commands sent to CF to interact with Cloud Deploy
-resource "google_pubsub_topic" "deploy-commands" {
-  name = "deploy-commands"
-  project = var.project_id
+# Create Pub/Sub topics using a for_each loop
+resource "google_pubsub_topic" "topics" {
+  for_each = local.pubsub_config
+
+  name    = each.key
+  project = data.google_project.project.project_id
 }
 
-# Create a Pub/Sub subscription for deploy-commands topic
-resource "google_pubsub_subscription" "deploy_commands_subscription" {
-  name  = "deploy-commands-subscription"
-  topic = google_pubsub_topic.deploy-commands.id
-  project = var.project_id
-}
+# Create Pub/Sub subscriptions using a for_each loop, referencing the topics
+resource "google_pubsub_subscription" "subscriptions" {
+  for_each = local.pubsub_config
 
-# Create a Pub/Sub topic to receive Cloud Deploy Operations Notifications
-resource "google_pubsub_topic" "deploy_operations" {
-  name = "clouddeploy-operations"
-  project = var.project_id
-}
-
-# Create a Pub/Sub subscription for clouddeploy-operations topic
-resource "google_pubsub_subscription" "deploy_operations_subscription" {
-  name  = "clouddeploy-operations-subscription"
-  topic = google_pubsub_topic.deploy_operations.id
-  project = var.project_id
-}
-
-resource "google_pubsub_topic" "deploy_approvals" {
-  name = "clouddeploy-approvals"
-  project = var.project_id
-}
-
-# Create a Pub/Sub subscription for clouddeploy-approvals topic
-resource "google_pubsub_subscription" "deploy_approvals_subscription" {
-  name  = "clouddeploy-approvals-subscription"
-  topic = google_pubsub_topic.deploy_approvals.id
-  project = var.project_id
-}
-
-# Create a Pub/Sub topic to receive Cloud Build Notifications
-resource "google_pubsub_topic" "build_notifications" {
-  name = "cloud-builds"
-  project = var.project_id
-}
-
-# Create a Pub/Sub subscription for clouddeploy-approvals topic
-resource "google_pubsub_subscription" "build_notifications_subscription" {
-  name  = "build_notifications_subscription"
-  topic = google_pubsub_topic.build_notifications.id
-  project = var.project_id
+  name    = each.value
+  topic   = google_pubsub_topic.topics[each.key].id
+  project = data.google_project.project.project_id
 }
 
 # Create a repo inside Artifact Registry to store container images
@@ -103,7 +64,7 @@ resource "google_artifact_registry_repository" "random-date-app" {
 # Create a Cloud Run service (Random Date Service)
 resource "google_cloud_run_v2_service" "main" {
   name     = "random-date-service"
-  project = var.project_id
+  project = data.google_project.project.project_id
   location = var.region
   ingress = "INGRESS_TRAFFIC_ALL"
 
@@ -115,21 +76,6 @@ resource "google_cloud_run_v2_service" "main" {
   }
 }
 
-variable "sa_roles_list" {
-  description = "List of roles for Cloud Build SA"
-  type = list(string)
-  default = [
-    "roles/iam.serviceAccountUser",
-    "roles/logging.logWriter",
-    "roles/artifactregistry.writer",
-    "roles/storage.objectUser",
-    "roles/clouddeploy.jobRunner",
-    "roles/clouddeploy.releaser",
-    "roles/run.developer",
-    "roles/cloudbuild.builds.builder"
-  ]
-}
-
 //Create CloudBuild SA
 resource "google_service_account" "cloudbuild_service_account" {
   account_id   = "cloudbuild-sa"
@@ -138,15 +84,15 @@ resource "google_service_account" "cloudbuild_service_account" {
 }
 
 resource "google_project_iam_member" "act_as" {
-  for_each = toset(var.sa_roles_list)
-  project = var.project_id
+  for_each = toset(local.sa_roles_list)
+  project = data.google_project.project.project_id
   role    = each.key
   member  = "serviceAccount:${google_service_account.cloudbuild_service_account.email}"
 }
 
 # Data source to get the default compute engine service account
 data "google_compute_default_service_account" "default" {
-  project = var.project_id
+  project = data.google_project.project.project_id
 }
 
 
@@ -172,7 +118,7 @@ resource "google_cloudbuild_trigger" "build-cloudrun-deploy" {
 }
 
 resource "google_storage_bucket" "deploy_resources_bucket" {
-  name = "${var.project_id}-deploy-resources-bucket"
+  name = "${data.google_project.project.project_id}-deploy-resources-bucket"
   location = "US"
   uniform_bucket_level_access = true 
   force_destroy = true

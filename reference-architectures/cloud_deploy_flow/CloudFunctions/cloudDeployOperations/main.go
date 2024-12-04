@@ -32,7 +32,7 @@ type PubsubMessage struct {
 	OrderingKey string         `json:"orderingKey"` // Ordering key for message ordering.
 }
 
-// Message wraps the PubsubMessage structure in the JSON object expected by the Cloud Function.
+// Message wraps the PubsubMessage structure in the JSON object expected by the Cloud Run Function.
 type Message struct {
 	Message PubsubMessage `json:"message"`
 }

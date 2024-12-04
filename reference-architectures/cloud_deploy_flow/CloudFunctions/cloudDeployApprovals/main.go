@@ -11,7 +11,7 @@ import (
 
 	"cloud.google.com/go/deploy/apiv1/deploypb"                       // Google Cloud Deploy library for managing deployment processes
 	"cloud.google.com/go/pubsub"                                      // Pub/Sub for messaging in Google Cloud
-	"github.com/GoogleCloudPlatform/functions-framework-go/functions" // Framework for creating Cloud Functions
+	"github.com/GoogleCloudPlatform/functions-framework-go/functions" // Framework for creating Cloud Run Functions
 	"github.com/cloudevents/sdk-go/v2/event"                          // CloudEvents SDK for event handling
 	"github.com/codingconcepts/env"                                   // For managing environment variables in Go
 	"google.golang.org/api/option"
@@ -78,7 +78,7 @@ func init() {
 	}
 }
 
-// Cloud Function to process deployment approval requests
+// Cloud Run Function to process deployment approval requests
 func cloudDeployApprovals(ctx context.Context, e event.Event) error {
 	log.Printf("Deploy Approvals function invoked") // Logs function invocation
 

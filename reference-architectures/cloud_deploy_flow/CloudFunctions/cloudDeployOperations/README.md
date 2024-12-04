@@ -1,7 +1,7 @@
 
 # Cloud Deploy Operations Function
 
-This project contains a Google Cloud Function written in Go, designed to
+This project contains a Google Cloud Run Function written in Go, designed to
 interact with Google Cloud Deploy. The function listens for deployment events on
 a Pub/Sub topic, processes those events, and triggers specific deployment
 operations based on the event details. For instance, when a deployment release
@@ -36,7 +36,7 @@ Ensure these are set before deploying the function:
       `Data` payload and `Attributes` metadata.
 *   **OperationsData**: Metadata that describes deployment action and resource details.
 *   **CommandMessage**: Structure for deployment commands, like `CreateRollout`.
-*   **cloudDeployOperations**: Main Cloud Function triggered by a deployment
+*   **cloudDeployOperations**: Main Cloud Run Function triggered by a deployment
       event, processes release successes to initiate rollouts.
 *   **sendCommandPubSub**: Publishes a `CommandMessage` to a specified Pub/Sub
       topic, which triggers deployment operations.
@@ -58,13 +58,13 @@ Ensure these are set before deploying the function:
 
 1.  Clone the repository and set up your local environment with the necessary
       environment variables.
-2.  Run the Cloud Functions framework locally to test the function:
+2.  Run the Cloud Run Functions framework locally to test the function:
 
    ```bash
    functions-framework --target=cloudDeployOperations
    ```
 
-### Deployment to Google Cloud Functions
+### Deployment to Google Cloud Run Functions
 
 1.  Set up your Google Cloud environment and enable the necessary APIs:
 

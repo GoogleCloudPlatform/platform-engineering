@@ -1,7 +1,7 @@
 
 # Cloud Deploy Interactions with Pub/Sub
 
-This project demonstrates a Google Cloud Function to manage deployments by
+This project demonstrates a Google Cloud Run Function to manage deployments by
 creating releases, rollouts, or approving rollouts based on incoming Pub/Sub
 messages. The function leverages Google Cloud Deploy and listens for
 deployment-related commands sent via Pub/Sub, executing appropriate actions

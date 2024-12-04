@@ -38,7 +38,7 @@ container build phase. Here's a high-level overview of the workflow:
 1.  **Container Build Process**: The demo begins when a container is built in
     Cloud Build. Upon completion, a notification is sent to a Pub/Sub message queue.
 
-2.  **Release Logic**: A Cloud Function subscribes to this message queue,
+2.  **Release Logic**: A Cloud Run Function subscribes to this message queue,
     assessing whether a release should be created. If a release is warranted, a
     message is sent to a "Command Queue" (another Pub/Sub topic).
 
@@ -61,9 +61,40 @@ container build phase. Here's a high-level overview of the workflow:
 
 ![Workflow Diagram](architecture.svg)
 
-## Prerequisites
-* GCP project with billing enabled
-* [basic roles / APIs required]
+## Prerequisites  
+* A GCP project with billing enabled  
+* The following APIs must be enabled in your GCP project:  
+  - `compute.googleapis.com`  
+  - `iam.googleapis.com`  
+  - `cloudresourcemanager.googleapis.com`  
+* Ensure you have the necessary IAM roles to manage these resources.
+
+## IAM Roles used by Terraform
+
+To run this demo, the following IAM roles will be granted to the service account created by the Terraform configuration:
+
+- `roles/iam.serviceAccountUser`: Allows management of service accounts.  
+- `roles/logging.logWriter`: Grants permission to write logs.  
+- `roles/artifactregistry.writer`: Enables writing to Artifact Registry.  
+- `roles/storage.objectUser`: Provides access to Cloud Storage objects.  
+- `roles/clouddeploy.jobRunner`: Allows execution of Cloud Deploy jobs.  
+- `roles/clouddeploy.releaser`: Grants permissions to release configurations in Cloud Deploy.  
+- `roles/run.developer`: Enables deploying and managing Cloud Run services.  
+- `roles/cloudbuild.builds.builder`: Allows triggering and managing Cloud Build processes.
+
+## GCP Services enabled by Terraform
+
+The following Google Cloud services must be enabled in your project to run this demo:
+
+- `pubsub.googleapis.com`: Enables Pub/Sub for messaging between services.  
+- `clouddeploy.googleapis.com`: Allows use of Cloud Deploy for managing deployments.  
+- `cloudbuild.googleapis.com`: Enables Cloud Build for building and deploying applications.  
+- `compute.googleapis.com`: Provides access to Compute Engine resources.  
+- `cloudresourcemanager.googleapis.com`: Allows management of project-level permissions and resources.  
+- `run.googleapis.com`: Enables Cloud Run for deploying and running containerized applications.  
+- `cloudfunctions.googleapis.com`: Allows use of Cloud Functions for event-driven functions.  
+- `eventarc.googleapis.com`: Enables Eventarc for routing events from sources to targets.
+
 ## Getting Started
 
 To run this demo, follow these steps:
@@ -77,9 +108,24 @@ To run this demo, follow these steps:
     cd platform-engineering/reference-architectures/cloud_deploy_flow
     ```
 
-2.  **Set Up Environment Variables**:
-   Define the environment variables of which details can be found in in
-   [variables.tf](variables.tf) to match your Google Cloud project and GitHub configuration:
+2. **Set Up Environment Variables or Variables File**:  
+   You can set the necessary variables either by exporting them as environment variables or by creating a `terraform.tfvars` file. Refer to [variables.tf](variables.tf) for more details on each variable. Ensure the values match your Google Cloud project and GitHub configuration.
+
+   - **Option 1**: Set environment variables manually in your shell:  
+     ```bash
+     export TF_VAR_project_id="your-google-cloud-project-id"
+     export TF_VAR_region="your-preferred-region"
+     export TF_VAR_github_owner="your-github-repo-owner"
+     export TF_VAR_github_repo="your-github-repo-name"
+     ```
+
+   - **Option 2**: Create a `terraform.tfvars` file in the same directory as your Terraform configuration and populate it with the following:  
+     ```hcl
+     project_id  = "your-google-cloud-project-id"
+     region      = "your-preferred-region"
+     github_owner = "your-github-repo-owner"
+     github_repo = "your-github-repo-name"
+     ```
 
 3.  **Initialize and Apply Terraform**:
     With the environment variables set, initialize and apply the Terraform configuration:
@@ -106,6 +152,8 @@ To run this demo, follow these steps:
     ```
 
 6.  **Authenticate and Run the Demo Website**:
+
+    * Ensure you are running these commands on a **local machine** or a machine with **GUI/web browser access**, as Cloud Shell may not fully support running the demo website.
 
     *   Set your Google Cloud project by running:
 

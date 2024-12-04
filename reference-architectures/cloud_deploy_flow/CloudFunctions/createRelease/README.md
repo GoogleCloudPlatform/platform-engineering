@@ -1,6 +1,6 @@
-# Example Cloud Function
+# Example Cloud Run Function
 
-This project demonstrates a Google Cloud Function that triggers deployments
+This project demonstrates a Google Cloud Run Function that triggers deployments
 based on Pub/Sub messages. The function listens for build notifications from
 Google Cloud Build and initiates a release in Google Cloud Deploy when a build succeeds.
 

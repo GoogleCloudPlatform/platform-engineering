@@ -54,51 +54,6 @@ let lastMessageData = {}; // Store last fetched messages to compare updates
       .catch(error => console.error('Error clearing messages:', error));
     }
 
-    /*function updateMessages() {
-        fetch('/messages')
-          .then(response => response.json())
-          .then(data => {
-            // Clear previous messages from each box
-            document.getElementById('clouddeploy-approvals-subscription').innerHTML = '';
-            document.getElementById('deploy-commands-subscription').innerHTML = '';
-            document.getElementById('clouddeploy-operations-subscription').innerHTML = '';
-            document.getElementById('build_notifications_subscription').innerHTML = '';
-      
-            // Update each subscription box with the respective messages
-            if (data.clouddeploy_approvals_subscription) {
-              const approvalsMessages = data.clouddeploy_approvals_subscription;
-              const approvalsBox = document.getElementById('clouddeploy-approvals-subscription');
-              approvalsMessages.forEach(message => {
-                approvalsBox.innerHTML += `<p>${JSON.stringify(message, null, 2)}</p>`;
-              });
-            }
-      
-            if (data.deploy_commands_subscription) {
-              const deployMessages = data.deploy_commands_subscription;
-              const deployBox = document.getElementById('deploy-commands-subscription');
-              deployMessages.forEach(message => {
-                deployBox.innerHTML += `<p>${JSON.stringify(message, null, 2)}</p>`;
-              });
-            }
-      
-            if (data.clouddeploy_operations_subscription) {
-              const operationsMessages = data.clouddeploy_operations_subscription;
-              const operationsBox = document.getElementById('clouddeploy-operations-subscription');
-              operationsMessages.forEach(message => {
-                operationsBox.innerHTML += `<p>${JSON.stringify(message, null, 2)}</p>`;
-              });
-            }
-      
-            if (data.build_notifications_subscription) {
-              const buildMessages = data.build_notifications_subscription;
-              const buildBox = document.getElementById('build_notifications_subscription');
-              buildMessages.forEach(message => {
-                buildBox.innerHTML += `<p>${JSON.stringify(message, null, 2)}</p>`;
-              });
-            }
-          });
-      }*/
-
   function sendMessage() {
     const messageInput = document.getElementById('message-input');
     let message = messageInput.value; 
