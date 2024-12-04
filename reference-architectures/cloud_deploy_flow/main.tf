@@ -9,16 +9,11 @@ terraform {
   provider_meta "google" {
     module_name = "cloud-solutions/platform-engineering-cloud-deploy-pipeline-deploy-v1"
   }
-
-  precondition {
-    condition     = data.google_project.project.project_id != ""
-    error_message = "The specified project does not exist. Please verify the project ID."
-  }
 }
 
-
+# Ensure the project is created
 data "google_project" "project" {
-  project_id = data.google_project.project.project_id
+  project_id = var.project_id
 }
 
 # Enable Services
@@ -33,6 +28,7 @@ resource "google_project_service" "project" {
   }
 
   disable_on_destroy = false
+  depends_on = [data.google_project.project]
 }
 
 # Create Pub/Sub topics using a for_each loop

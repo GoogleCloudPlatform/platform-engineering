@@ -1,7 +1,3 @@
-data "google_compute_default_service_account" "default" {
-  project = data.google_project.project.project_id
-}
-
 locals {
   iam_roles = {
     "cloud_deploy_admin_binding" = "roles/clouddeploy.admin"

@@ -6,10 +6,10 @@ resource "google_storage_bucket" "function_bucket" {
 
 locals {
   functions = {
-    createRelease          = "CloudFunctions/createRelease/"
-    cloudDeployInteractions = "CloudFunctions/cloudDeployInteractions/"
-    cloudDeployOperations   = "CloudFunctions/cloudDeployOperations/"
-    cloudDeployApprovals    = "CloudFunctions/cloudDeployApprovals/"
+    "create-release"          = "CloudFunctions/createRelease/"
+    "cloud-deploy-interactions" = "CloudFunctions/cloudDeployInteractions/"
+    "cloud-deploy-operations"   = "CloudFunctions/cloudDeployOperations/"
+    "cloud-deploy-approvals"    = "CloudFunctions/cloudDeployApprovals/"
   }
 }
 

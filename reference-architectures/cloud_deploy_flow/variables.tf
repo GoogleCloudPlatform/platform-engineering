@@ -25,7 +25,7 @@ locals {
     "clouddeploy-operations" = "clouddeploy-operations-subscription"
     "clouddeploy-approvals"  = "clouddeploy-approvals-subscription"
     "cloud-builds"           = "build-notifications-subscription"
-  },
+  }
   # List of services required
   gcp_service_list = [
     "pubsub.googleapis.com",
@@ -36,7 +36,7 @@ locals {
     "run.googleapis.com",
     "cloudfunctions.googleapis.com",
     "eventarc.googleapis.com"
-  ],
+  ]
   # List of roles for Cloud Build SA
   sa_roles_list = [
     "roles/iam.serviceAccountUser",
