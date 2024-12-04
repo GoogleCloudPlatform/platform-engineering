@@ -252,6 +252,7 @@ You only need to complete the section for the option that you have selected.
   ```bash
   cd ${BACKSTAGE_QS_BASE_DIR} && \
   cp backstage-qs-auto.tfvars.local backstage-qs.auto.tfvars
+```
 
 *   Remove the environment variables
 
