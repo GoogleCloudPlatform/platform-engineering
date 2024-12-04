@@ -1,4 +1,5 @@
-### Quickstart Tasks
+# Quickstart Tasks
+
 - [ ] Create main TF directory
 - [ ] Move TF into main TF directory
 - [ ] Refactor TF to use main TF directory when referencing TF files
@@ -27,6 +28,7 @@
 - [ ] Incorporate GH token requirements into README
 - [ ] Incorpoate GH token into TF secret code
 
-### Completed Tasks ✓
+## Completed Tasks ✓
+
 - [x] Add solutions tracking metadata
 - [x] Verify the local exec functioanlity and ensure files are cleaned up when action is destroy
