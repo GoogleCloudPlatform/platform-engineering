@@ -12,4 +12,4 @@
 ## Completed Tasks ✓
 
 *   [x] Verify the local exec functionality and ensure files are cleaned up  
-when action is destroy
+    when action is destroy

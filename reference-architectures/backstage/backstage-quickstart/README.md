@@ -33,7 +33,7 @@ option that you choose.
 *   Organization or folder ID
 *   `roles/billing.user` IAM permissions on the billing account specified
 *   `roles/resourcemanager.projectCreator` IAM permissions on the organization  
-or folder specified
+    or folder specified
 *   GitHub Personal Access Token, steps to create the token are provided below
 
 ## Pull the source code
@@ -124,11 +124,11 @@ You can now the [Create the resources](#create-the-resources).
 
 *   `environment_name`: the name of the environment (defaults to qs for quickstart)
 *   `iapUserDomain`: the root domain of the GCP Org that the Backstage users  
-will be in
+    will be in
 *   `iapSupportEmail`: support contact for the IAP brand
 *   `project.billing_account_id`: the billing account ID
 *   `project.name`: the prefix for the display name of the project, the full  
-name will be `<project.name>-<environment_name>`
+    name will be `<project.name>-<environment_name>`
 
   Enter either `project.folder_id` **OR** `project.org_id`
 
@@ -165,8 +165,8 @@ You can now the [Create the resources](#create-the-resources).
 ## Create the resources
 
 *   In situations where you have run this quickstart before and then  
-cleaned-up the resources but are re-using the project, it might be  
-neccasary to restore the endpoints from a deleted state first.
+    cleaned-up the resources but are re-using the project, it might be  
+    neccasary to restore the endpoints from a deleted state first.
 
   ```bash
   BACKSTAGE_QS_PREFIX=$(grep environment_name  

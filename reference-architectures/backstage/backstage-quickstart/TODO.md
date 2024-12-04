@@ -32,4 +32,4 @@
 
 *   [x] Add solutions tracking metadata
 *   [x] Verify the local exec functioanlity and ensure files are cleaned up  
-when action is destroy
+    when action is destroy
