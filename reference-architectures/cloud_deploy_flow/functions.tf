@@ -52,6 +52,7 @@ locals {
 
 # Create Cloud Functions using for_each
 resource "google_cloudfunctions2_function" "functions" {
+  depends_on = [ google_project_iam_member.act_as ]
   for_each = local.cloud_functions
 
   name    = each.key

@@ -6,6 +6,15 @@ based on messages received via Google Cloud Pub/Sub.
 The function processes deployment requests, checks conditions for rollout
 approval, and publishes an approval command if the requirements are met.
 
+## Usage Note
+
+This code is designed to integrate with the Terraform configuration for the
+[cloud_deploy_flow](../../README.md) demo. While you can deploy this component
+individually, it's primarily intended to be used as part of the full
+Terraform-managed workflow. Please note that this section of the README may be
+less actively maintained, as the preferred deployment method relies on the
+Terraform setup.
+
 ## Features
 
 *   Listens to Pub/Sub messages for deployment approvals

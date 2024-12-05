@@ -63,6 +63,7 @@ resource "google_cloud_run_v2_service" "main" {
   project = data.google_project.project.project_id
   location = var.region
   ingress = "INGRESS_TRAFFIC_ALL"
+  deletion_protection=false
 
   template {
     containers {
@@ -111,6 +112,8 @@ resource "google_cloudbuild_trigger" "build-cloudrun-deploy" {
   substitutions = {
     "_DEPLOY_GCS" = google_storage_bucket.deploy_resources_bucket.url
   }
+
+  depends_on = [ google_project_iam_member.act_as ]
 }
 
 resource "google_storage_bucket" "deploy_resources_bucket" {

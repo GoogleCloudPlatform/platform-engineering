@@ -47,6 +47,7 @@ to help build an internal developer platform.
 *   [Host GitHub Actions Runners on GKE][github-runners-gke]
 
 #### Enterprise change management
+
 *   [Integrate Cloud Deploy with enterprise change management systems][cloud-deploy-flow]
 
 ### End-to-end Examples

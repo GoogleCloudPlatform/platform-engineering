@@ -7,6 +7,15 @@ messages. The function leverages Google Cloud Deploy and listens for
 deployment-related commands sent via Pub/Sub, executing appropriate actions
 based on the command type.
 
+## Usage Note
+
+This code is designed to integrate with the Terraform configuration for the
+[cloud_deploy_flow](../../README.md) demo. While you can deploy this component
+individually, it's primarily intended to be used as part of the full
+Terraform-managed workflow. Please note that this section of the README may be
+less actively maintained, as the preferred deployment method relies on the
+Terraform setup.
+
 ## Features
 
 *   Listens for Pub/Sub messages with deployment commands (CreateRelease,

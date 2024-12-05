@@ -4,6 +4,15 @@ This project demonstrates a Google Cloud Run Function that triggers deployments
 based on Pub/Sub messages. The function listens for build notifications from
 Google Cloud Build and initiates a release in Google Cloud Deploy when a build succeeds.
 
+## Usage Note
+
+This code is designed to integrate with the Terraform configuration for the
+[cloud_deploy_flow](../../README.md) demo. While you can deploy this component
+individually, it's primarily intended to be used as part of the full
+Terraform-managed workflow. Please note that this section of the README may be
+less actively maintained, as the preferred deployment method relies on the
+Terraform setup.
+
 ## Table of Contents
 
 *   [Prerequisites](#prerequisites)

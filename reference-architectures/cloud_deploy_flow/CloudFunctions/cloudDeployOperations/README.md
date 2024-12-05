@@ -8,6 +8,15 @@ operations based on the event details. For instance, when a deployment release
 succeeds, it triggers a rollout creation and sends the relevant command to
 another Pub/Sub topic.
 
+## Usage Note
+
+This code is designed to integrate with the Terraform configuration for the
+[cloud_deploy_flow](../../README.md) demo. While you can deploy this component
+individually, it's primarily intended to be used as part of the full
+Terraform-managed workflow. Please note that this section of the README may be
+less actively maintained, as the preferred deployment method relies on the
+Terraform setup.
+
 ## Requirements
 
 *   Go 1.20 or later

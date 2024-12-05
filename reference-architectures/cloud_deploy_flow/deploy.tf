@@ -55,5 +55,7 @@ resource "google_clouddeploy_target" "primary" {
   run {
     location = "projects/${data.google_project.project.project_id}/locations/${var.region}"
   }
-  depends_on = [ google_cloud_run_v2_service.main ]
+  depends_on = [ 
+    google_cloud_run_v2_service.main,
+    google_project_iam_member.act_as ]
 }
