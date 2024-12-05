@@ -1,0 +1,9 @@
+# Terraform
+**/tfplan
+*.terraform/
+*.terraform-*/
+*.terraform.lock.hcl
+# Local Dev
+scratchpad.txt
+notes.txt
+spike/
