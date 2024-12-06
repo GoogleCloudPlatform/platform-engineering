@@ -1,0 +1,10 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  # Service Name
+  name: random-date-service
+spec:
+  template:
+    spec:
+      containers:
+      - image: pizza

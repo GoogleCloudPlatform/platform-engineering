@@ -46,6 +46,10 @@ to help build an internal developer platform.
 
 *   [Host GitHub Actions Runners on GKE][github-runners-gke]
 
+#### Enterprise change management
+
+*   [Integrate Cloud Deploy with enterprise change management systems][cloud-deploy-flow]
+
 ### End-to-end Examples
 
 *   [Enterprise Application Blueprint][enterprise-app-blueprint] - Deploys an
@@ -88,5 +92,6 @@ Code in this repository is licensed under the Apache 2.0. See [LICENSE](LICENSE)
 [enterprise-app-blueprint]: https://github.com/GoogleCloudPlatform/terraform-google-enterprise-application
 [enterprise-foundation-blueprint]: https://github.com/terraform-google-modules/terraform-example-foundation/tree/master
 [github-runners-gke]: ./reference-architectures/github-runners-gke/README.md
+[cloud-deploy-flow]: ./reference-architectures/cloud_deploy_flow/
 [myths-webinar]: https://www.youtube.com/watch?v=jDBOiYvXVZI&t=2s
 [software-delivery-blueprint]: https://github.com/GoogleCloudPlatform/software-delivery-blueprint
