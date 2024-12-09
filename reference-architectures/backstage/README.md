@@ -11,4 +11,5 @@ A repository for various plugins can be found here ->
 ## Backstage Quickstart
 
 This is an [example deployment](/reference-architectures/backstage/backstage-quickstart/README.md)  
-of Backstage on Google Cloud with various Google Cloud services providing the infrastructure.
+of Backstage on Google Cloud with various  
+Google Cloud services providing the infrastructure.
