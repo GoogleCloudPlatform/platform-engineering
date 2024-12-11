@@ -2,14 +2,15 @@ resource "google_storage_bucket" "function_bucket" {
   name                       = "${data.google_project.project.project_id}-gcf-source"
   location                   = "US"
   uniform_bucket_level_access = true
+  public_access_prevention    = "enforced"
 }
 
 locals {
   functions = {
-    "create-release"          = "CloudFunctions/createRelease/"
-    "cloud-deploy-interactions" = "CloudFunctions/cloudDeployInteractions/"
-    "cloud-deploy-operations"   = "CloudFunctions/cloudDeployOperations/"
-    "cloud-deploy-approvals"    = "CloudFunctions/cloudDeployApprovals/"
+    createRelease          = "CloudFunctions/createRelease/"
+    cloudDeployInteractions = "CloudFunctions/cloudDeployInteractions/"
+    cloudDeployOperations   = "CloudFunctions/cloudDeployOperations/"
+    cloudDeployApprovals    = "CloudFunctions/cloudDeployApprovals/"
   }
 }
 
@@ -52,7 +53,6 @@ locals {
 
 # Create Cloud Functions using for_each
 resource "google_cloudfunctions2_function" "functions" {
-  depends_on = [ google_project_iam_member.act_as ]
   for_each = local.cloud_functions
 
   name    = each.key

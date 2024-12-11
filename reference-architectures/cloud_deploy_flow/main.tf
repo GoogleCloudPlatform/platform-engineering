@@ -3,6 +3,7 @@ terraform {
   required_providers {
     google = {
       source = "hashicorp/google"
+      version = ">= 6.0"
     }
   }
   
@@ -50,7 +51,7 @@ resource "google_pubsub_subscription" "subscriptions" {
 
 # Create a repo inside Artifact Registry to store container images
 resource "google_artifact_registry_repository" "random-date-app" {
-  location      = "us-central1"
+  location      = var.region
   repository_id = "random-date-app"
   description   = "Docker repo for random-date-app"
   format        = "DOCKER"
