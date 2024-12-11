@@ -1,0 +1,8 @@
+apiVersion: skaffold/v3alpha1
+kind: Config
+deploy:
+  cloudrun: {} # You can use other deploy types like 'kubectl' for Kubernetes deployments
+  # Or 'gke' for direct deployments to GKE
+manifests:
+  rawYaml:
+  - run.yaml
