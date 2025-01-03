@@ -10,6 +10,8 @@ terraform {
   provider_meta "google" {
     module_name = "cloud-solutions/platform-engineering-cloud-deploy-pipeline-deploy-v1"
   }
+
+  required_version = ">= 1.5.7"
 }
 
 # Ensure the project is created
