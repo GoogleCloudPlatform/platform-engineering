@@ -42,8 +42,7 @@ resource "google_clouddeploy_delivery_pipeline" "primary" {
 resource "google_clouddeploy_target" "primary" {
   name     = "random-date-service"
   project = data.google_project.project.project_id
-  location = "us-central1"
-  #location = var.region
+  location = var.region
   require_approval = true # Set to true if you want manual approval for deployments
 
   # Configure Service Account 
