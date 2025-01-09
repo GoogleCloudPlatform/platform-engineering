@@ -25,6 +25,7 @@ Terraform setup.
 
 ### Requirements
 
+*   POSIX compliant Bash Shell
 *   Go 1.16 or later
 *   Google Cloud SDK
 *   Access to Google Cloud Pub/Sub
