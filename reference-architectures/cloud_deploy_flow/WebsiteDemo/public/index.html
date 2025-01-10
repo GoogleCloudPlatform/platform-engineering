@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pub/Sub Local Demo</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS file -->
+</head>
+<body>
+    <h1>Pub/Sub Local Demo</h1>
+
+    <div class="message-grid">
+
+          <div id="top-left" class="subscription-box">
+            <h2 class="subscription-title">build_notifications_subscription</h2>
+            <div id="build_notifications_subscription" class="message-box"></div>
+        </div>
+
+        <div id="top-right" class="subscription-box">
+            <h2 class="subscription-title">deploy-commands-subscription</h2>
+            <div id="deploy-commands-subscription" class="message-box"></div>
+        </div>
+
+        <div id="bottom-left" class="subscription-box">
+            <h2 class="subscription-title">clouddeploy-operations-subscription</h2>
+            <div id="clouddeploy-operations-subscription" class="message-box"></div>
+        </div>
+        <div id="bottom-right" class="subscription-box">
+            <h2 class="subscription-title">clouddeploy-approvals-subscription</h2>
+            <div id="clouddeploy-approvals-subscription" class="message-box"></div>
+        </div>
+
+    </div>
+
+    <div class="input-area">
+        <textarea id="message-input" rows="4" placeholder="Enter your message here..."></textarea>
+        <button onclick="sendMessage()">Submit</button>
+        <button onclick="clearMessages()">Clear</button>
+    </div>
+
+    <script src="script.js"></script> <!-- Link to your JavaScript file -->
+</body>
+</html>

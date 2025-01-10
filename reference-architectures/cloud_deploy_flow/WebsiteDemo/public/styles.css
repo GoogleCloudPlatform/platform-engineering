@@ -1,0 +1,77 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100vh;
+    margin: 0;
+  }
+  
+  .message-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 10px;
+    max-height: 75vh; /* Sets max height to 75% of the screen height */
+    overflow-y: auto; /* Allow scrolling if content overflows */
+  }
+  
+  .subscription-box {
+    border: 1px solid #ccc;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: auto; /* Ensures that content is scrollable */
+    height: 100%;
+  }
+  
+  .subscription-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .message {
+    background-color: #f1f1f1;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+    white-space: pre-wrap; /* Ensures that JSON formatting displays correctly */
+  }
+  
+  .control-panel {
+    display: flex;
+    flex-direction: column; /* Change to column layout */
+    justify-content: space-between; /* Space out elements */
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-top: 1px solid #ccc;
+    height: 25vh; /* Makes control panel take up remaining height */
+  }
+  
+  textarea {
+    width: 100%; /* Make the textarea full width */
+    padding: 10px;
+    font-size: 1em;
+    resize: none; /* Prevent resizing */
+    box-sizing: border-box; /* Ensures padding doesn't affect width */
+  }
+  
+  button {
+    padding: 10px 20px;
+    margin-top: 10px; /* Add some spacing above buttons */
+    font-size: 1em;
+    cursor: pointer;
+  }
+  
+  button.clear-btn {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+  }
+  
+  button.submit-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+  }
+  

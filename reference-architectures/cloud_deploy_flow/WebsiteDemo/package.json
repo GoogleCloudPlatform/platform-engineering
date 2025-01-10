@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "@google-cloud/pubsub": "^4.8.0",
+    "body-parser": "^1.20.3",
+    "express": "^4.21.1"
+  }
+}

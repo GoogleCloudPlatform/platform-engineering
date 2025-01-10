@@ -1,0 +1,27 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker:20.10:24'
+  dir: 'CloudRun/'
+  args: ['build',
+   '--tag',
+   'us-central1-docker.pkg.dev/$PROJECT_ID/random-date-app/app:latest',
+   '.'
+   ]
+- name: 'gcr.io/cloud-builders/docker:20.10:24'
+  dir: 'CloudRun/'
+  args: ['push',
+  'us-central1-docker.pkg.dev/$PROJECT_ID/random-date-app/app:latest'
+  ]
+- name: 'gcr.io/cloud-builders/gcloud:129345068'
+  dir: 'CloudRun/'
+  waitFor: ['-']
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+    set -o errexit -o nounset -o pipefail
+    tar --create --gzip --verbose --file="$COMMIT_SHA.tar.gz" skaffold.yaml run.yaml
+    gcloud storage cp "$COMMIT_SHA.tar.gz" "${_DEPLOY_GCS}"
+images:
+- us-central1-docker.pkg.dev/$PROJECT_ID/random-date-app/app:latest
+options:
+  logging: CLOUD_LOGGING_ONLY
