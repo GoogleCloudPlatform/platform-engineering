@@ -1,0 +1,13 @@
+---
+# yaml-language-server: $schema=https://squidfunk.github.io/mkdocs-material/schema.json
+docs_dir: "../../docs-src"
+repo_url: https://github.com/GoogleCloudPlatform/platform-engineering
+site_dir: "../../docs"
+site_name: Platform Engineering on Google Cloud
+site_url: https://googlecloudplatform.github.io/platform-engineering
+strict: true
+theme:
+  name: material
+  features:
+    - navigation.top
+    - navigation.tracking

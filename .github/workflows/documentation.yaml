@@ -1,0 +1,48 @@
+---
+name: Build and publish documentation site
+
+on: # yamllint disable-line rule:truthy
+  push:
+    paths:
+      - ".github/workflows/documentation.yaml"
+      - "docs-src/**"
+      - "config/mkdocs/**"
+      - scripts/run-mkdocs.sh
+  pull_request:
+    paths:
+      - ".github/workflows/documentation.yaml"
+      - "docs-src/**"
+      - "config/mkdocs/**"
+      - scripts/run-mkdocs.sh
+  workflow_call: null
+
+permissions:
+  contents: read
+
+jobs:
+  build-push-documentation-site:
+    concurrency:
+      # Ref: https://docs.github.com/en/actions/learn-github-actions/contexts#github-context
+      # github.head_ref: head_ref or source branch of the pull request
+      # github.ref: ref of the branch that triggered the workflow
+      group: ${{ github.workflow }}-build-documentation-sites-${{ github.head_ref || github.ref }}-${{ github.event_name }}
+      cancel-in-progress: true
+    permissions:
+      # To commit the newly built documentation site
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the documentation site
+        run: |
+          scripts/run-mkdocs.sh "build"
+      - name: Commit and push updates to the documentation site
+        if: >
+          github.event_name == 'pull_request' &&
+          github.ref_name != github.event.repository.default_branch
+        uses: stefanzweifel/git-auto-commit-action@v5.1.0
+        with:
+          branch: ${{ github.event.pull_request.head.ref || github.head_ref || github.ref }}
+          commit_message: "chore: update documentation site"
+          commit_user_name: github-actions[bot]
+          commit_user_email: 41898282+github-actions[bot]@users.noreply.github.com
