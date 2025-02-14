@@ -31,3 +31,34 @@ All submissions, including submissions by project members, require review. We
 use GitHub pull requests for this purpose. Consult
 [GitHub Help](https://help.github.com/articles/about-pull-requests/) for more
 information on using pull requests.
+
+## Development guide
+
+This document contains technical information to contribute to this repository.
+
+### Website
+
+This repository includes scripts and configuration to build a website using
+[Material for MkDocs](https://squidfunk.github.io/mkdocs-material/):
+
+*   `config/mkdocs`: MkDocs configuration files
+*   `scripts/run-mkdocssh`: script to build the website
+*   `.github/workflows/documentation.yaml`: GitHub Actions workflow that builds
+    the website, and pushes a commit with changes on the current branch.
+
+#### Build the website
+
+To build the website, run the following command from the root of the repository:
+
+```bash
+scripts/run-mkdocs.sh
+```
+
+#### Preview the website
+
+To preview the website, run the following command from the root of the
+repository:
+
+```bash
+scripts/run-mkdocs.sh "serve"
+```

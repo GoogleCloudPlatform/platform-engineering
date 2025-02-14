@@ -1,13 +1,47 @@
 ---
 # yaml-language-server: $schema=https://squidfunk.github.io/mkdocs-material/schema.json
-docs_dir: "../../docs-src"
+copyright: |
+  The projects contained in this repository are maintained by the Google Cloud Solutions Architects team.<br>
+  Copyright &copy; 2019-2025 Google LLC<br>
+  <a href='https://cloud.google.com/'><img src='https://googlecloudplatform.github.io/platform-engineering/common/images/cloud.svg' width='240' height='160'/></a>
+docs_dir: "/docs"
+extra_css:
+  - stylesheets/extra.css
+markdown_extensions:
+  - admonition
+  - attr_list
+  - fenced_code
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - def_list
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.snippets
+  - pymdownx.details
+  - pymdownx.highlight:
+      pygments_lang_class: true
+      line_spans: __span
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.inlinehilite
+  - toc:
+      permalink: true
 repo_url: https://github.com/GoogleCloudPlatform/platform-engineering
-site_dir: "../../docs"
+site_dir: "/mkdocs-output"
 site_name: Platform Engineering on Google Cloud
 site_url: https://googlecloudplatform.github.io/platform-engineering
 strict: true
 theme:
   name: material
   features:
+    - content.code.copy
+    - content.code.annotate
     - navigation.top
     - navigation.tracking
+  icon:
+    repo: fontawesome/brands/github
+    admonition:
+      info: fontawesome/solid/user-shield
