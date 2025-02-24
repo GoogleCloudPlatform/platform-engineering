@@ -121,7 +121,7 @@ To run this demo, follow these steps:
 2.  **Set Up Environment Variables or Variables File**:  
    You can set the necessary variables either by exporting them as environment
    variables or by creating a `terraform.tfvars` file. Refer to
-   [variables.tf](variables.tf) for more details on each variable. Ensure the
+   `variables.tf` for more details on each variable. Ensure the
    values match your Google Cloud project and GitHub configuration.
 
     *   **Option 1**: Set environment variables manually in your shell:  

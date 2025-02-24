@@ -77,7 +77,7 @@ may be made at any time without warning.
 Entirely new samples are not accepted. Bug fixes are welcome, either as pull
 requests or as GitHub issues.
 
-See [CONTRIBUTING.md](docs/contributing.md) for details on how to contribute.
+See [CONTRIBUTING.md](./contributing.md) for details on how to contribute.
 
 ## Licensing
 
@@ -92,6 +92,6 @@ Code in this repository is licensed under the Apache 2.0. See [LICENSE](LICENSE)
 [enterprise-app-blueprint]: https://github.com/GoogleCloudPlatform/terraform-google-enterprise-application
 [enterprise-foundation-blueprint]: https://github.com/terraform-google-modules/terraform-example-foundation/tree/master
 [github-runners-gke]: ./reference-architectures/github-runners-gke/README.md
-[cloud-deploy-flow]: ./reference-architectures/cloud_deploy_flow/
+[cloud-deploy-flow]: ./reference-architectures/cloud_deploy_flow/README.md
 [myths-webinar]: https://www.youtube.com/watch?v=jDBOiYvXVZI&t=2s
 [software-delivery-blueprint]: https://github.com/GoogleCloudPlatform/software-delivery-blueprint
