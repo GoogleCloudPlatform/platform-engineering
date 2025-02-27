@@ -20,7 +20,7 @@ terraform {
   }
 
   provider_meta "google" {
-    module_name = "platform-engineering-backstage-quickstart-deploy-v1"
+    module_name = "cloud-solutions/platform-engineering-backstage-quickstart-deploy-v1"
   }
 
 }
