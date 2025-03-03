@@ -21,9 +21,12 @@ into the tools, they make a good place to begin your platform journey to
 empower the developers to enhance their experience and increase their
 productivity.
 
-This repo contains a collection of guides, examples and design patterns
+This repository contains a collection of guides, examples and design patterns
 spanning Google Cloud products and best in class OSS tools, which you can use
 to help build an internal developer platform.
+
+For more information, see
+[Platform Engineering on Google Cloud](https://googlecloudplatform.github.io/platform-engineering/).
 
 ## Resources
 
