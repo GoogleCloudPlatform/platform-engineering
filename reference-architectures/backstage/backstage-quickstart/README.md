@@ -169,12 +169,12 @@ You can now the [Create the resources](#create-the-resources).
     neccasary to restore the endpoints from a deleted state first.
 
   ```bash
-  BACKSTAGE_QS_PREFIX=$(grep environment_name  
+  BACKSTAGE_QS_PREFIX=$(grep environment_name \
   ${BACKSTAGE_QS_BASE_DIR}/backstage-qs.auto.tfvars | awk -F"=" '{print $2}' | xargs)
-  BACKSTAGE_QS_PROJECT_ID=$(grep environment_project_id  
+  BACKSTAGE_QS_PROJECT_ID=$(grep environment_project_id \
   ${BACKSTAGE_QS_BASE_DIR}/backstage-qs.auto.tfvars | awk -F"=" '{print $2}' | xargs)
-  gcloud endpoints services undelete  
-  ${BACKSTAGE_QS_PREFIX}.endpoints.${BACKSTAGE_QS_PROJECT_ID}.cloud.goog  
+  gcloud endpoints services undelete \
+  ${BACKSTAGE_QS_PREFIX}.endpoints.${BACKSTAGE_QS_PROJECT_ID}.cloud.goog \
   --quiet 2>/dev/null
   ```
 
