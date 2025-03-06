@@ -156,7 +156,7 @@ You can now the [Create the resources](#create-the-resources).
 *   Set the project environment variables in Cloud Shell
 
   ```bash
-  BACKSTAGE_QS_PROJECT_ID=$(grep environment_project_id  
+  BACKSTAGE_QS_PROJECT_ID=$(grep environment_project_id \
   ${BACKSTAGE_QS_BASE_DIR}/backstage-qs.auto.tfvars | awk -F"=" '{print $2}' | xargs)
   ```
 
