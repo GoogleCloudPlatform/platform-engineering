@@ -15,7 +15,7 @@
 
 resource "google_compute_network" "backstageHostingVpc" {
   project                 = var.environment_project_id
-  name                    = var.backstageHostingProjectVpcName
+  name                    = var.backstage_hosting_project_vpc_name
   auto_create_subnetworks = false
 }
 
@@ -23,30 +23,30 @@ resource "google_compute_subnetwork" "backstageHostingNodeSubnet" {
   project       = var.environment_project_id
   region        = var.region
   network       = google_compute_network.backstageHostingVpc.self_link
-  name          = var.hostingSubnetName
-  ip_cidr_range = var.hostingNodeCidr
+  name          = var.hosting_subnet_name
+  ip_cidr_range = var.hosting_node_cidr
 }
 
 resource "google_compute_subnetwork" "pscConsumerSubnet" {
   project       = var.environment_project_id
   region        = var.region
   network       = google_compute_network.backstageHostingVpc.self_link
-  name          = var.pscConsumerSubnetName
-  ip_cidr_range = var.pscConsumerCidr
+  name          = var.psc_consumer_subnet_name
+  ip_cidr_range = var.psc_consumer_cidr
 }
 
 resource "google_compute_address" "cloudSqlPscConsumerIp" {
-  name         = var.cloudSqlPscConsumerIpName
+  name         = var.cloudsql_psc_consumer_ip_name
   project      = var.environment_project_id
   subnetwork   = google_compute_subnetwork.pscConsumerSubnet.id
   address_type = "INTERNAL"
-  address      = var.cloudSqlPscConsumerIp
+  address      = var.cloudsql_psc_consumer_ip
   region       = var.region
 }
 
 resource "google_compute_router" "cloudRouter" {
   project = var.environment_project_id
-  name    = var.cloudRouterName
+  name    = var.cloud_router_name
   region  = google_compute_subnetwork.backstageHostingNodeSubnet.region
   network = google_compute_network.backstageHostingVpc.id
 
@@ -57,7 +57,7 @@ resource "google_compute_router" "cloudRouter" {
 
 resource "google_compute_router_nat" "nat" {
   project                            = var.environment_project_id
-  name                               = var.natRouterName
+  name                               = var.nat_router_name
   router                             = google_compute_router.cloudRouter.name
   region                             = google_compute_router.cloudRouter.region
   nat_ip_allocate_option             = "AUTO_ONLY"
@@ -71,9 +71,9 @@ resource "google_compute_router_nat" "nat" {
 
 resource "google_dns_managed_zone" "cloudSqlPscZone" {
   project     = var.environment_project_id
-  name        = var.cloudSqlPscZoneName
-  dns_name    = var.cloudSqlPscZoneDnsName
-  description = var.cloudSqlPscZoneDescription
+  name        = var.cloudsql_psc_zone_name
+  dns_name    = var.cloudsql_psc_zone_dns_name
+  description = var.cloudsql_psc_zone_description
 
   visibility = "private"
 
@@ -91,7 +91,7 @@ resource "google_dns_record_set" "cloudSqlPscRecord" {
   type         = "A"
   ttl          = 1
 
-  rrdatas = [var.cloudSqlPscConsumerIp]
+  rrdatas = [var.cloudsql_psc_consumer_ip]
 }
 
 resource "google_compute_forwarding_rule" "cloudSqlPscForwardingRule" {
@@ -99,12 +99,12 @@ resource "google_compute_forwarding_rule" "cloudSqlPscForwardingRule" {
   project               = var.environment_project_id
   region                = var.region
   network               = google_compute_network.backstageHostingVpc.id
-  ip_address            = google_compute_address.cloudSqlPscConsumerIp.id
+  ip_address            = google_compute_address.cloudsql_psc_consumer_ip.id
   load_balancing_scheme = ""
   target                = google_sql_database_instance.instance.psc_service_attachment_link
 }
 
 resource "google_compute_global_address" "backstageQsEndpointAddress" {
-  name    = var.backstageQsEndpointAddressName
+  name    = var.backstageqs_endpoint_address_name
   project = var.environment_project_id
 }

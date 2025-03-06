@@ -26,16 +26,16 @@ terraform {
 }
 
 locals {
-  backend_file             = "../backend.tf"
-  project_id_prefix        = "${var.project.name}-${var.environment_name}"
-  project_id_suffix_length = 29 - length(local.project_id_prefix)
-  tfvars_file              = "../backstage-qs.auto.tfvars"
-  tfvars_contents          = <<-EOT
-    environment_name       = "${var.environment_name}"
-    iapUserDomain          = "${var.iapUserDomain}"
-    environment_project_id = "${google_project.environment.project_id}"
-    project_id_suffix      = "${random_string.project_id_suffix.result}"
-    iapSupportEmail        = "${var.iapSupportEmail}"
+  backend_file              = "../backend.tf"
+  project_id_prefix         = "${var.project.name}-${var.environment_name}"
+  project_id_suffix_length  = 29 - length(local.project_id_prefix)
+  tfvars_file               = "../backstage-qs.auto.tfvars"
+  tfvars_contents           = <<-EOT
+    environment_name        = "${var.environment_name}"
+    iap_user_domain         = "${var.iap_user_domain}"
+    environment_project_id  = "${google_project.environment.project_id}"
+    project_id_suffix       = "${random_string.project_id_suffix.result}"
+    iap_support_email       = "${var.iap_support_email}"
   EOT
 }
 
@@ -62,7 +62,7 @@ resource "google_project" "environment" {
 }
 
 resource "google_project_service" "backstageHostingProjectServices" {
-  for_each                   = toset(var.backstageHostingProjectServices)
+  for_each                   = toset(var.backstage_hosting_project_services)
   project                    = google_project.environment.project_id
   service                    = each.value
   disable_on_destroy         = false

@@ -18,13 +18,13 @@ variable "environment_name" {
   type        = string
 }
 
-variable "iapSupportEmail" {
+variable "iap_support_email" {
   description = "The email address for the IAP support contact"
   type        = string
   default     = ""
 }
 
-variable "iapUserDomain" {
+variable "iap_user_domain" {
   description = "The base domain name for the GCP org users accessing Backstage through IAP"
   type        = string
   default     = ""
@@ -45,7 +45,7 @@ variable "environment_project_id" {
   }
 }
 
-variable "backstageHostingProjectServices" {
+variable "backstage_hosting_project_services" {
   description = "Service APIs to enable"
   type        = list(string)
   default = ["artifactregistry.googleapis.com",
@@ -68,201 +68,201 @@ variable "region" {
   default     = "us-central1"
 }
 
-variable "backstageTechDocsBucket" {
+variable "backstage_tech_docs_bucket" {
   description = "The name for GCS bucket used with techdocs"
   type        = string
   default     = "backstage-qs-techdocs"
 }
 
-variable "backstageTechDocsBucketLocation" {
+variable "backstage_tech_docs_bucket_location" {
   description = "The GCS location for the bucket used with techdocs"
   type        = string
   default     = "US"
 }
 
-variable "backstageHostingProjectVpcName" {
+variable "backstage_hosting_project_vpc_name" {
   description = "Backstage Hosting VPC Name"
   type        = string
   default     = "backstage-qs"
 }
 
-variable "hostingSubnetName" {
+variable "hosting_subnet_name" {
   description = "Backstage Hosting Subnet Name"
   type        = string
   default     = "backstage-qs"
 }
 
-variable "hostingNodeCidr" {
+variable "hosting_node_cidr" {
   description = "Backstage Hosting Node CIDR"
   type        = string
   default     = "192.168.1.0/24"
 }
 
-variable "pscConsumerSubnetName" {
+variable "psc_consumer_subnet_name" {
   description = "PSC Consumer Subnet Name"
   type        = string
   default     = "backstage-psc-consumer"
 }
 
-variable "pscConsumerCidr" {
+variable "psc_consumer_cidr" {
   description = "PSC Consumer CIDR"
   type        = string
   default     = "192.168.2.0/24"
 }
 
-variable "cloudSqlPscConsumerIpName" {
+variable "cloudsql_psc_consumer_ip_name" {
   description = "CloudSQL PSC Consumer IP Name"
   type        = string
   default     = "backstage-qs-db-psc"
 }
 
-variable "cloudSqlPscConsumerIp" {
+variable "cloudsql_psc_consumer_ip" {
   description = "CloudSQL PSC Consumer IP"
   type        = string
   default     = "192.168.2.10"
 }
 
-variable "cloudsqlPscConsumerServicePolicyName" {
+variable "cloudsql_psc_consumer_service_policy_name" {
   description = "CloudSQL PSC Consumer Service Policy Name"
   type        = string
   default     = "cloudsql-psc"
 }
 
-variable "cloudsqlPscConsumerServicePolicyDescription" {
+variable "cloudsql_psc_consumer_service_policy_description" {
   description = "CloudSQL PSC Consumer Service Policy Description"
   type        = string
   default     = "cloudsql-psc-policy"
 }
 
-variable "cloudSqlPscZoneName" {
+variable "cloudsql_psc_zone_name" {
   description = "CloudSQL PSC Zone Name"
   type        = string
   default     = "cloudsql-psc"
 }
 
-variable "cloudSqlPscZoneDnsName" {
+variable "cloudsql_psc_zone_dns_name" {
   description = "CloudSQL PSC Zone DNS Name"
   type        = string
   default     = "sql.goog."
 }
 
-variable "cloudSqlPscZoneDnsSuffix" {
+variable "cloudsql_psc_zone_dns_suffix" {
   description = "CloudSQL PSC Zone DNS Suffix"
   type        = string
   default     = ".sql.goog."
 }
 
-variable "cloudSqlPscZoneDescription" {
+variable "cloudsql_psc_zone_description" {
   description = "CloudSQL PSC Zone Description"
   type        = string
   default     = "CloudSQL PSC Zone"
 }
 
-variable "privateCloudSqlIpName" {
+variable "private_cloudsql_ip_name" {
   description = "Connection for private CloudSql"
   type        = string
   default     = "backstage-qs"
 
 }
 
-variable "backstageQsEndpointAddressName" {
+variable "backstageqs_endpoint_address_name" {
   description = "Backstage QS Endpoint Address Name"
   type        = string
   default     = "backstage-qs-endpoint"
 }
 
-variable "cloudRouterName" {
+variable "cloud_router_name" {
   description = "name of cloud router"
   type        = string
   default     = "backstage-qs"
 }
 
-variable "natRouterName" {
+variable "nat_router_name" {
   description = "name of nat router"
   type        = string
   default     = "backstage-qs"
 }
 
-variable "backstageHostingRepo" {
+variable "backstage_hosting_repo_name" {
   description = "Name for backstage container repo"
   type        = string
   default     = "backstage-qs"
 }
 
-variable "backstageRepoDescription" {
+variable "backstage_hosting_repo_description" {
   description = "Description for repo"
   type        = string
   default     = "Backstage Quick Start"
 }
 
-variable "cloudSqlInstanceName" {
+variable "cloudsql_instance_name" {
   description = "Name for backstage DB instance"
   type        = string
   default     = "backstage-qs"
 }
 
-variable "hostingClusterName" {
+variable "hosting_cluster_name" {
   description = "The name of the GKE cluster"
   type        = string
   default     = "backstage-qs"
 }
 
-variable "hostingSaId" {
+variable "hosting_sa_id" {
   description = "The name of the backstage node SA"
   type        = string
   default     = "backstage-qs-hosting"
 }
 
 
-variable "hostingSaDisplayName" {
+variable "hosting_sa_display_name" {
   description = "The display name for the backstage node SA"
   type        = string
   default     = "Backstage Hosting Node"
 }
 
-variable "workloadSaId" {
+variable "workload_sa_id" {
   description = "The name of the backstage workload SA"
   type        = string
   default     = "backstage-qs-workload"
 }
 
-variable "workloadSaDisplayName" {
+variable "workload_sa_display_name" {
   description = "The display name for the backstage workload SA"
   type        = string
   default     = "Backstage Workload"
 }
 
-variable "dbPasswordSecretName" {
+variable "db_password_secret_name" {
   description = "The name of the DB PW secret"
   type        = string
   default     = "backstage-qs-postgres-pw"
 }
 
-variable "dbIpSecretName" {
+variable "db_ip_secret_name" {
   description = "The name of the DB IP secret"
   type        = string
   default     = "backstage-qs-postgres-ip"
 }
 
-variable "dbIamUserSecretName" {
+variable "db_iam_user_secret_name" {
   description = "The name of the IAM Username secret"
   type        = string
   default     = "backstage-qs-postgres-iam-user"
 }
 
-variable "dbInstanceSecretName" {
+variable "db_instance_secret_name" {
   description = "The name of the DB instance name secret"
   type        = string
   default     = "backstage-qs-postgres-instance-name"
 }
 
-variable "backstageIapApplicationTitle" {
+variable "backstage_iap_application_title" {
   description = "The title of the IAP protected Backstage application"
   type        = string
   default     = "IAP Protected Backstage on GCP"
 }
 
-variable "backstageIapDisplayName" {
+variable "backstage_iap_display_name" {
   description = "The display name of the IAP protected Backstage application"
   type        = string
   default     = "Backstage on GCP"

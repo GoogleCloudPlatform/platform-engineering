@@ -15,8 +15,8 @@
 resource "google_artifact_registry_repository" "backstageHostingRepo" {
   project       = var.environment_project_id
   location      = var.region
-  repository_id = var.backstageHostingRepo
-  description   = var.backstageRepoDescription
+  repository_id = var.backstage_hosting_repo_name
+  description   = var.backstage_hosting_repo_description
   format        = "DOCKER"
 
   docker_config {

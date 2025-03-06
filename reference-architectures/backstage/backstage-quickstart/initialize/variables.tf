@@ -17,12 +17,12 @@ variable "environment_name" {
   type        = string
 }
 
-variable "iapSupportEmail" {
+variable "iap_support_email" {
   description = "The email address for the IAP support contact"
   type        = string
 }
 
-variable "iapUserDomain" {
+variable "iap_user_domain" {
   description = "The base domain name for the GCP org users accessing Backstage through IAP"
   type        = string
 }
@@ -84,7 +84,7 @@ variable "state_storage_bucket_location" {
   type        = string
 }
 
-variable "backstageHostingProjectServices" {
+variable "backstage_hosting_project_services" {
   description = "Service APIs to enable"
   type        = list(string)
   default = ["artifactregistry.googleapis.com",

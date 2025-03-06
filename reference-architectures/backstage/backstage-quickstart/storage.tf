@@ -14,9 +14,9 @@
 
 
 resource "google_storage_bucket" "backstageTechDocsBucket" {
-  name                        = "${var.backstageTechDocsBucket}-${var.project_id_suffix}"
+  name                        = "${var.backstage_tech_docs_bucket}-${var.project_id_suffix}"
   project                     = var.environment_project_id
-  location                    = var.backstageTechDocsBucketLocation
+  location                    = var.backstage_tech_docs_bucket_location
   storage_class               = "STANDARD"
   uniform_bucket_level_access = true
   public_access_prevention    = "enforced"
