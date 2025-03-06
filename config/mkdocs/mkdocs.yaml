@@ -5,6 +5,10 @@ copyright: |
   Copyright &copy; 2019-2025 Google LLC<br>
   <a href='https://cloud.google.com/'><img src='https://googlecloudplatform.github.io/platform-engineering/common/images/cloud.svg' width='240' height='160'/></a>
 docs_dir: "/docs"
+extra:
+  analytics:
+    provider: google
+    property: G-DMWFJ8NNHF
 extra_css:
   - stylesheets/extra.css
 markdown_extensions:
