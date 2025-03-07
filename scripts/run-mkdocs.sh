@@ -19,7 +19,7 @@ set -o nounset
 set -o pipefail
 
 PATH_TO_THIS_SCRIPT="${0}"
-REPOSITORY_ROOT_DIRECTORY_PATH="$(readlink -f "$(dirname "$0")/../")"
+REPOSITORY_ROOT_DIRECTORY_PATH="$(readlink -f "$(dirname "${PATH_TO_THIS_SCRIPT}")/../")"
 echo "Repository root directory path: ${REPOSITORY_ROOT_DIRECTORY_PATH}"
 
 # shellcheck disable=SC1091 # do not follow
@@ -116,7 +116,7 @@ for CURRENT_PROJECT_DIR in "${PROJECTS_DIR}"/*/; do
       -print0 |
       while IFS= read -r -d $'\0' file; do
         # Strip the repository path from the file path
-        FILE_RELATIVE_PATH="${file#${PROJECTS_DIR}/}"
+        FILE_RELATIVE_PATH="${file#"${PROJECTS_DIR}"/}"
         FILE_DESTINATION_PATH="${PROJECTS_DESTINATION_DIR}/${FILE_RELATIVE_PATH}"
         FILE_DESTINATION_DIRECTORY="$(dirname "${FILE_DESTINATION_PATH}")"
         mkdir --parents "${FILE_DESTINATION_DIRECTORY}"
