@@ -14,7 +14,7 @@
 
 // Enable API's
 resource "google_project_service" "backstageHostingProjectServices" {
-  for_each                   = toset(var.backstageHostingProjectServices)
+  for_each                   = toset(var.backstage_hosting_project_services)
   project                    = var.environment_project_id
   service                    = each.value
   disable_on_destroy         = false

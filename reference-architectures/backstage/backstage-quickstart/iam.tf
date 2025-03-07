@@ -14,8 +14,8 @@
 
 resource "google_service_account" "hostingSa" {
   project      = var.environment_project_id
-  account_id   = var.hostingSaId
-  display_name = var.hostingSaDisplayName
+  account_id   = var.hosting_sa_id
+  display_name = var.hosting_sa_display_name
 }
 
 resource "google_project_iam_member" "repoReaderBinding" {
@@ -76,8 +76,8 @@ data "google_iam_policy" "workloadIdentity" {
 
 resource "google_service_account" "workloadSa" {
   project      = var.environment_project_id
-  account_id   = var.workloadSaId
-  display_name = var.workloadSaDisplayName
+  account_id   = var.workload_sa_id
+  display_name = var.workload_sa_display_name
 }
 
 resource "google_project_iam_member" "cloudSqlBinding" {

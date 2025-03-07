@@ -13,7 +13,7 @@
 # limitations under the License.
 
 resource "google_container_cluster" "hostingCluster" {
-  name       = var.hostingClusterName
+  name       = var.hosting_cluster_name
   location   = var.region
   project    = var.environment_project_id
   network    = google_compute_network.backstageHostingVpc.self_link

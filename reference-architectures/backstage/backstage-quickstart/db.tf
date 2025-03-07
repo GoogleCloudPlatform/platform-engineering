@@ -13,7 +13,7 @@
 # limitations under the License.
 
 resource "google_sql_database_instance" "instance" {
-  name                = var.cloudSqlInstanceName
+  name                = var.cloudsql_instance_name
   project             = var.environment_project_id
   region              = var.region
   database_version    = "POSTGRES_15"
