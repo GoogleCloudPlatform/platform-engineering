@@ -24,5 +24,9 @@ terraform {
 provider "google" {
   project = var.project_id
   region  = var.region
+
+  provider_meta "google" {
+    module_name = "cloud-solutions/platform-engineering-pwd-rotation-deploy-v1"
+  }
 }
 
