@@ -53,7 +53,7 @@ Cloud Console.**
 
   ```bash
   export BACKSTAGE_QS_BASE_DIR=$(pwd) && \
-  sed -n -i -e '/^export BACKSTAGE_QS_BASE_DIR=/!p' -i -e '$aexport  
+  sed -n -i -e '/^export BACKSTAGE_QS_BASE_DIR=/!p' -i -e '$aexport  \
   BACKSTAGE_QS_BASE_DIR="'"${BACKSTAGE_QS_BASE_DIR}"'"' ${HOME}/.bashrc
   ```
 
@@ -163,6 +163,20 @@ You can now the [Create the resources](#create-the-resources).
 You can now the [Create the resources](#create-the-resources).
 
 ## Create the resources
+
+Before running Terraform, make sure that the Service Usage API and Service Management API are enabled.
+
+*   Enable Service Usage API
+  
+  ```bash
+  gcloud services enable serviceusage.googleapis.com
+  ```
+
+*   Enable Service Management API
+
+  ```bash
+  gcloud services enable servicemanagement.googleapis.com
+  ```
 
 *   In situations where you have run this quickstart before and then  
     cleaned-up the resources but are re-using the project, it might be  

@@ -48,7 +48,8 @@ variable "environment_project_id" {
 variable "backstage_hosting_project_services" {
   description = "Service APIs to enable"
   type        = list(string)
-  default = ["artifactregistry.googleapis.com",
+  default = ["cloudresourcemanager.googleapis.com",
+    "artifactregistry.googleapis.com",
     "compute.googleapis.com",
     "container.googleapis.com",
     "autoscaling.googleapis.com",
