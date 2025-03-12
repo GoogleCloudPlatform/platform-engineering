@@ -164,10 +164,11 @@ You can now the [Create the resources](#create-the-resources).
 
 ## Create the resources
 
-Before running Terraform, make sure that the Service Usage API and Service Management API are enabled.
+Before running Terraform, make sure that the Service Usage API and Service Management
+API are enabled.
 
 *   Enable Service Usage API
-  
+
   ```bash
   gcloud services enable serviceusage.googleapis.com
   ```
