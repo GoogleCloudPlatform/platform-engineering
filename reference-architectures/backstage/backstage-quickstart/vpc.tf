@@ -99,7 +99,7 @@ resource "google_compute_forwarding_rule" "cloudSqlPscForwardingRule" {
   project               = var.environment_project_id
   region                = var.region
   network               = google_compute_network.backstageHostingVpc.id
-  ip_address            = google_compute_address.cloudsql_psc_consumer_ip.id
+  ip_address            = google_compute_address.cloudSqlPscConsumerIp.id
   load_balancing_scheme = ""
   target                = google_sql_database_instance.instance.psc_service_attachment_link
 }
