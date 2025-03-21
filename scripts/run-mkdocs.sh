@@ -18,7 +18,8 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-REPOSITORY_ROOT_DIRECTORY_PATH="$(readlink -f "$(dirname "$0")/../")"
+PATH_TO_THIS_SCRIPT="${0}"
+REPOSITORY_ROOT_DIRECTORY_PATH="$(readlink -f "$(dirname "${PATH_TO_THIS_SCRIPT}")/../")"
 echo "Repository root directory path: ${REPOSITORY_ROOT_DIRECTORY_PATH}"
 
 # shellcheck disable=SC1091 # do not follow

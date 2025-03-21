@@ -1,0 +1,77 @@
+# Start with default values
+# Ref: https://github.com/DavidAnson/markdownlint/blob/main/schema/.markdownlint.yaml
+default: true
+
+# MD003/heading-style : Heading style : https://github.com/DavidAnson/markdownlint/blob/main/doc/md003.md
+MD003:
+  # Heading style
+  style: "atx"
+
+# MD007/ul-indent : Unordered list indentation
+# https://github.com/DavidAnson/markdownlint/blob/main/doc/md007.md
+MD007:
+  indent: 4
+
+# MD013/line-length : Line length
+# https://github.com/DavidAnson/markdownlint/blob/main/doc/md013.md
+MD013:
+  # Number of characters
+  line_length: 80
+  code_blocks: true
+  # Do not apply line length rule to tables or headings
+  # Links and images are excluded by default.
+  tables: false
+  headings: false
+  # Don't enable strict or stern modes because we might have long URLs
+  strict: false
+  stern: false
+
+# MD020/no-missing-space-closed-atx
+# https://github.com/DavidAnson/markdownlint/blob/main/doc/md021.md
+# We don't use atx-style headings, so no need to enforce this rule
+MD020: false
+
+# MD021/no-multiple-space-closed-atx
+# https://github.com/DavidAnson/markdownlint/blob/main/doc/md021.md
+# We don't use atx-style headings, so no need to enforce this rule
+MD021: false
+
+# MD029/ol-prefixt : Ordered list item prefix
+# https://github.com/DavidAnson/markdownlint/blob/main/doc/md029.md
+MD029:
+  style: ordered
+
+# MD030/list-marker-space : Spaces after list markers
+# https://github.com/DavidAnson/markdownlint/blob/main/doc/md030.md
+# Let prettier handle indentation until
+# https://github.com/prettier/prettier/issues/16929 is solved
+MD030: false
+# MD030:
+#   # Spaces for single-line unordered list items
+#   ul_single: 3
+#   # Spaces for single-line ordered list items
+#   ol_single: 2
+#   # Spaces for multi-line unordered list items
+#   ul_multi: 3
+#   # Spaces for multi-line ordered list items
+#   ol_multi: 2
+
+# MD040/fenced-code-language : Fenced code blocks should have a language
+# specified
+# https://github.com/DavidAnson/markdownlint/blob/main/doc/md040.md
+MD040:
+  # List of languages
+  allowed_languages: []
+  # Require language only
+  language_only: false
+
+# MD046/code-block-style : Code block style : https://github.com/DavidAnson/markdownlint/blob/main/doc/md046.md
+MD046:
+  # Block style
+  style: "fenced"
+
+# MD048/code-fence-style : Code fence style
+# https://github.com/DavidAnson/markdownlint/blob/main/doc/md048.md
+MD048:
+  # Code fence style
+  style: "backtick"

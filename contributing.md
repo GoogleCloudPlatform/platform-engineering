@@ -41,10 +41,10 @@ This document contains technical information to contribute to this repository.
 This repository includes scripts and configuration to build a website using
 [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/):
 
-*   `config/mkdocs`: MkDocs configuration files
-*   `scripts/run-mkdocssh`: script to build the website
-*   `.github/workflows/documentation.yaml`: GitHub Actions workflow that builds
-    the website, and pushes a commit with changes on the current branch.
+- `config/mkdocs`: MkDocs configuration files
+- `scripts/run-mkdocssh`: script to build the website
+- `.github/workflows/documentation.yaml`: GitHub Actions workflow that builds
+  the website, and pushes a commit with changes on the current branch.
 
 #### Build the website
 
@@ -61,4 +61,26 @@ repository:
 
 ```bash
 scripts/run-mkdocs.sh "serve"
+```
+
+### Linting and formatting
+
+We configured several linters and formatters for code and documentation in this
+repository. Linting and formatting checks run as part of CI workflows.
+
+Linting and formatting checks are configured to check changed files only by
+default. If you change the configuration of any linter or formatter, these
+checks run against the entire repository.
+
+To run linting and formatting checks locally, you do the following:
+
+```sh
+scripts/lint.sh
+```
+
+To automatically fix certain linting and formatting errors, you do the
+following:
+
+```sh
+LINTER_CONTAINER_FIX_MODE="true" scripts/lint.sh
 ```

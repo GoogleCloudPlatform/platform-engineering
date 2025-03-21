@@ -1,0 +1,16 @@
+---
+# Lint directives.
+lint:
+  # Linter rules option.
+  rules_option:
+    # MAX_LINE_LENGTH rule option.
+    max_line_length:
+      # Enforces a maximum line length
+      max_chars: 100
+      # Specifies the character count for tab characters
+      tab_chars: 2
+
+    # INDENT rule option.
+    indent:
+      # Available styles are 4(4-spaces), 2(2-spaces) or tab.
+      style: 2
