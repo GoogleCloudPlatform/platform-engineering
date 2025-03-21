@@ -42,7 +42,7 @@ This repository includes scripts and configuration to build a site using
 [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/):
 
 - `config/mkdocs`: MkDocs configuration files
-- `scripts/run-mkdocssh`: script to build the site
+- `scripts/run-mkdocs.sh`: script to build the site
 - `.github/workflows/documentation.yaml`: GitHub Actions workflow that builds
   the site, and pushes a commit with changes on the current branch.
 
