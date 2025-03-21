@@ -11,30 +11,38 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-ind: Namespace
 apiVersion: v1
+kind: Namespace
 metadata:
-  name: store
+  name: myapp
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: store
-  namespace: store
+  name: flask-app
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
-      app: store
-      version: v1
+      app: flask-app
   template:
     metadata:
       labels:
-        app: store
-        version: v1
+        app: flask-app
     spec:
       containers:
-      - name: whereami
-        image: us-docker.pkg.dev/google-samples/containers/gke/whereami:v1.2.20
+      - name: flask-app
+        image: us-central1-docker.pkg.dev/pe-multi-cluster-zonal23/main/myapp:latest
         ports:
-          - containerPort: 8080
+        - containerPort: 8080
+        env:
+        - name: CONFIGMAP_NAME
+          value: my-config
+        resources:
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+

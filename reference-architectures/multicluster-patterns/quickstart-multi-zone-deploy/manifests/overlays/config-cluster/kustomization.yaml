@@ -11,20 +11,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
 
-kind: Service
-metadata:
-  name: store
-  namespace: store
-spec:
-  selector:
-    app: store
-  ports:
-  - port: 8080
-    targetPort: 8080
----
-kind: ServiceExport
-apiVersion: net.gke.io/v1
-metadata:
-  name: store
-  namespace: store
+namespace: myapp
+
+resources:
+  - ../../base
+  - gateway.yaml
+  - route.yaml

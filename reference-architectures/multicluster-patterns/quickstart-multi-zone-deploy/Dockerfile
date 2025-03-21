@@ -11,17 +11,15 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-kind: Gateway
-apiVersion: gateway.networking.k8s.io/v1beta1
-metadata:
-  name: external-http
-  namespace: store
-spec:
-  gatewayClassName: gke-l7-global-external-managed-mc
-  listeners:
-  - name: http
-    protocol: HTTP
-    port: 80
-    allowedRoutes:
-      kinds:
-      - kind: HTTPRoute
+FROM python:3.9-slim-buster
+
+WORKDIR /app
+
+COPY app/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY app/ .
+
+EXPOSE 8080
+
+CMD ["gunicorn", "app:app", "-b", "0.0.0.0:8080"]

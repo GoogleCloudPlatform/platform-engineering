@@ -11,20 +11,16 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-kind: Service
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: Gateway
 metadata:
-  name: store
-  namespace: store
+  name: app-gateway
 spec:
-  selector:
-    app: store
-  ports:
-  - port: 8080
-    targetPort: 8080
----
-kind: ServiceExport
-apiVersion: net.gke.io/v1
-metadata:
-  name: store
-  namespace: store
+  gatewayClassName: gke-l7-global-external-managed-mc
+  listeners:
+  - name: http
+    protocol: HTTP
+    port: 80
+    allowedRoutes:
+      kinds:
+      - kind: HTTPRoute

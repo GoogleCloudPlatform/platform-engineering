@@ -13,9 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- resource "google_container_cluster" "primary" {
+data "google_client_config" "default" {}
+provider "kubernetes" {
+  host                   = "https://${google_container_cluster.primary.endpoint}"
+  token                  = data.google_client_config.default.access_token
+  cluster_ca_certificate = base64decode(google_container_cluster.primary.master_auth[0].cluster_ca_certificate)
+
+}
+resource "google_artifact_registry_repository" "my-repo" {
+  location      = var.region
+  repository_id = "main"
+  description   = "my docker repository"
+  format        = "DOCKER"
+}
+
+resource "google_container_cluster" "primary" {
   name               = var.cluster_1_name
-  location           = var.region_1
+  location           = var.zone_1
   initial_node_count = 3
 
   release_channel {
@@ -48,13 +62,11 @@
   resource_labels = {
     "config_cluster" = true
   }
-
-  depends_on = [module.enabled_google_apis, google_compute_network.vpc_network]
 }
 
 resource "google_container_cluster" "secondary" {
   name               = var.cluster_2_name
-  location           = var.region_2
+  location           = var.zone_2
   initial_node_count = 3
 
   release_channel {
@@ -87,43 +99,33 @@ resource "google_container_cluster" "secondary" {
   resource_labels = {
     "config_cluster" = false
   }
-
-  depends_on = [module.enabled_google_apis, google_compute_network.vpc_network]
 }
 
 resource "google_gke_hub_feature" "multiclusterservice" {
   name       = "multiclusterservicediscovery"
   location   = "global"
   project    = var.project_id
-  depends_on = [module.enabled_google_apis, google_container_cluster.primary, google_container_cluster.secondary]
+  depends_on = [google_container_cluster.primary, google_container_cluster.secondary]
 }
 
 
 
 resource "google_gke_hub_feature" "multiclustergateway" {
-  name       = "multiclusteringress"
-  location   = "global"
-  project    = var.project_id
+  name     = "multiclusteringress"
+  location = "global"
+  project  = var.project_id
 
   spec {
     multiclusteringress {
-      config_membership = "projects/${var.project_id}/locations/${var.region_1}/memberships/${google_container_cluster.primary.name}"
+      config_membership = "projects/${var.project_id}/locations/${var.region}/memberships/${google_container_cluster.primary.name}"
     }
   }
 
-  depends_on = [module.enabled_google_apis, google_container_cluster.primary, google_gke_hub_feature.multiclusterservice]
-}
-
-resource "google_artifact_registry_repository" "my-repo" {
-  location      = var.region_1
-  repository_id = "my-repository"
-  description   = "Docker repository"
-  format        = "DOCKER"
-  depends_on    = [module.enabled_google_apis]
+  depends_on = [google_container_cluster.primary, google_gke_hub_feature.multiclusterservice]
 }
 
 resource "google_clouddeploy_target" "primary_target" {
-  location         = var.region_2
+  location         = var.region
   name             = "primary-target"
   project          = var.project_id
   require_approval = true
@@ -137,11 +139,11 @@ resource "google_clouddeploy_target" "primary_target" {
     execution_timeout = "3600s"
   }
 
-  depends_on = [module.enabled_google_apis, google_container_cluster.primary]
+  depends_on = [google_container_cluster.primary]
 }
 
 resource "google_clouddeploy_target" "secondary_target" {
-  location = var.region_2
+  location = var.region
   name     = "secondary-target"
   project  = var.project_id
 
@@ -154,11 +156,11 @@ resource "google_clouddeploy_target" "secondary_target" {
     execution_timeout = "3600s"
   }
 
-  depends_on = [module.enabled_google_apis, google_container_cluster.secondary]
+  depends_on = [google_container_cluster.secondary]
 }
 
 resource "google_clouddeploy_target" "multi_target" {
-  location         = var.region_1
+  location         = var.region
   name             = "multi-target"
   project          = var.project_id
   require_approval = false
@@ -175,11 +177,11 @@ resource "google_clouddeploy_target" "multi_target" {
     execution_timeout = "3600s"
   }
 
-  depends_on = [module.enabled_google_apis, google_container_cluster.primary, google_container_cluster.secondary]
+  depends_on = [google_container_cluster.primary, google_container_cluster.secondary]
 }
 
 resource "google_clouddeploy_delivery_pipeline" "primary" {
-  location    = var.region_1
+  location    = var.region
   name        = "pipeline"
   description = "canary-delivery-pipeline"
   project     = var.project_id
