@@ -6,16 +6,10 @@ deployments across these clusters.
 
 ## Prerequisites
 
-* A Google Cloud project.
-* A pre-existing VPC network within your Google Cloud project.
-* Terraform installed and configured with appropriate GCP credentials.
-* A Git repository containing Kubernetes configurations.
-* Variables defined in `terraform.tfvars` or through other means.
-
-* Terraform installed and configured with appropriate GCP credentials.
-* A VPC network created and referenced by the
-`google_compute_network.vpc_network` dependency.
-* Variables defined in `terraform.tfvars` or through other means.
+*   A Google Cloud project.
+*   A pre-existing VPC network within your Google Cloud project.
+*   Terraform installed and configured with appropriate GCP credentials.
+*   Variables defined in `terraform.tfvars` or through other means.
 
 ## Usage
 
