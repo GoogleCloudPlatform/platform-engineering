@@ -1,6 +1,8 @@
 # Google Kubernetes Engine (GKE) Multi-Cluster Deployment with Cloud Deploy
 
-This Terraform configuration deploys a multi-cluster GKE setup on Google Cloud Platform (GCP) and configures a Cloud Deploy delivery pipeline for canary deployments across these clusters.
+This Terraform configuration deploys a multi-cluster GKE setup on Google Cloud
+Platform (GCP) and configures a Cloud Deploy delivery pipeline for canary
+deployments across these clusters.
 
 ## Overview
 
@@ -15,19 +17,24 @@ The configuration creates the following resources:
   * Enables security posture and cost management features.
   * Registers the clusters with a Fleet.
   * Applies resource labels for identification.
-  * One cluster has the label "config\_cluster" set to true, the other set to false.
+  * One cluster has the label "config\_cluster" set to true, the other set to
+  false.
 * **GKE Hub Features:**
   * Enables multi-cluster service discovery.
-  * Enables  multi-cluster gatewate, with the primary cluster designated as the config membership.
+  * Enables  multi-cluster gatewate, with the primary cluster designated as the
+  config membership.
 * **Cloud Deploy Targets:**
   * Creates individual targets for the "primary" and "secondary" clusters.
   * Creates a multi-target that combines the primary and secondary targets.
   * The primary target requires approval before deployment.
 * **Cloud Deploy Delivery Pipeline:**
   * Creates a delivery pipeline named "pipeline" for canary deployments.
-  * The pipeline deploys to the multi-target, which in turn deploys to the primary and secondary clusters.
-  * The pipeline uses a canary deployment strategy with percentages of 25%, 50%, and 75%.
-  * The pipeline configures service networking for the "store" deployment and service.
+  * The pipeline deploys to the multi-target, which in turn deploys to the
+  primary and secondary clusters.
+  * The pipeline uses a canary deployment strategy with percentages of 25%, 50%,
+  and 75%.
+  * The pipeline configures service networking for the "store" deployment and
+  service.
 
 ## Prerequisites
 
@@ -44,7 +51,8 @@ The configuration creates the following resources:
   * GKE Hub API
   * Compute Engine API
 * Terraform installed and configured with appropriate GCP credentials.
-* A VPC network created and referenced by the `google_compute_network.vpc_network` dependency.
+* A VPC network created and referenced by the
+`google_compute_network.vpc_network` dependency.
 * Variables defined in `terraform.tfvars` or through other means.
 
 ## Variables
@@ -60,55 +68,55 @@ The following variables are used in the configuration:
 
 ## Usage
 
-1.  Set project details and authenticate
-
-    ```sh
-    export PROJECT_ID=`YOUR PROJECT_ID`
-    export LOCATION=us-central1
-    export ZONE_1=us-central1-a
-    export ZONE_2=us-central1-b
-    gcloud config set project $PROJECT_ID
-    gcloud auth application-default login
-    ```
-
-1.  Enable Required APIs:**
-    * Replace `YOUR PROJECT_ID` with your Google Cloud project ID.
-    * Run the following command in your terminal:
-
-    ```sh
-    gcloud services enable \
-      aartifactregistry.googleapis.com \
-      compute.googleapis.com \
-      container.googleapis.com \
-      clouddeploy.googleapis.com \
-      cloudbuild.googleapis.com \
-      gkehub.googleapis.com \
-      trafficdirector.googleapis.com \
-      multiclusterservicediscovery.googleapis.com \
-      multiclusteringress.googleapis.com \
-      --project=$PROJECT_ID
-    ```
-
-1.  Verify VPC network exists
-
-    ```sh
-    gcloud compute networks list
-    ```
-
-1.  Navigate to the terraform directory and update the terraform.tfvars
-
-    ```sh
-    cd multicluster-patterns/quickstart-multi-zone-deploy/terraform
-    ```
-
-1.   Create resources
+Set project details and authenticate
 
 ```sh
-terraform init
+export PROJECT_ID=`YOUR PROJECT_ID`
+export LOCATION=us-central1
+export ZONE_1=us-central1-a
+export ZONE_2=us-central1-b
+gcloud config set project $PROJECT_ID
+gcloud auth application-default login
+```
+
+### Enable Required APIs
+
+Replace `YOUR PROJECT_ID` with your Google Cloud project ID.
+
+```sh
+gcloud services enable \
+  aartifactregistry.googleapis.com \
+  compute.googleapis.com \
+  container.googleapis.com \
+  clouddeploy.googleapis.com \
+  cloudbuild.googleapis.com \
+  gkehub.googleapis.com \
+  trafficdirector.googleapis.com \
+  multiclusterservicediscovery.googleapis.com \
+  multiclusteringress.googleapis.com \
+  --project=$PROJECT_ID
+```
+
+Verify VPC network exists
+
+```sh
+gcloud compute networks list
+```
+
+Navigate to the terraform directory and update the terraform.tfvars
+
+```sh
+cd multicluster-patterns/quickstart-multi-zone-deploy
+```
+
+Create resources
+
+```sh
+terraform init -chdir=terraform
 terraform apply -var-file=terraform.tfvars
 ```
 
-1. Confirm GKE Gateway controller is enabled
+Confirm GKE Gateway controller is enabled
 
 ```sh
 gcloud container fleet ingress describe --project=$PROJECT_ID
@@ -129,12 +137,13 @@ membershipStates:
     state:
       code: OK
       updateTime: '2025-03-19T18:21:22.400361885Z'
-name: projects/pe-multi-cluster-zonal22/locations/global/features/multiclusteringress
+name: projects/[PROJECT]/locations/global/features/multiclusteringress
 resourceState:
   state: ACTIVE
 spec:
   multiclusteringress:
-    configMembership: projects/pe-multi-cluster-zonal22/locations/us-central1/memberships/primary-cluster
+    configMembership: projects/[PROJECT]/locations/us-central1/memberships/
+    primary-cluster
 state:
   state:
     code: OK
@@ -145,8 +154,19 @@ updateTime: '2025-03-19T18:21:23.771948904Z'
 
 ## Deploy sample application
 
-Build the sample app located it the `app` folder
+Build the sample app located it the `app` folder and store the image in
+Artifact Registry and Deploy the k8s objects in the `manifest` folder
+to the clusters
+
+The manifest folder contains the Deployment, Services, ServiceExports, Gateway
+and HTTPRoute objects
 
 ```sh
 ./setup.sh
+```
+
+Output will include the external IP to access the application
+
+```sh
+http://34.8.69.82/
 ```
