@@ -36,28 +36,27 @@ information on using pull requests.
 
 This document contains technical information to contribute to this repository.
 
-### Website
+### Site
 
-This repository includes scripts and configuration to build a website using
+This repository includes scripts and configuration to build a site using
 [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/):
 
 - `config/mkdocs`: MkDocs configuration files
-- `scripts/run-mkdocssh`: script to build the website
+- `scripts/run-mkdocssh`: script to build the site
 - `.github/workflows/documentation.yaml`: GitHub Actions workflow that builds
-  the website, and pushes a commit with changes on the current branch.
+  the site, and pushes a commit with changes on the current branch.
 
-#### Build the website
+#### Build the site
 
-To build the website, run the following command from the root of the repository:
+To build the site, run the following command from the root of the repository:
 
 ```bash
 scripts/run-mkdocs.sh
 ```
 
-#### Preview the website
+#### Preview the site
 
-To preview the website, run the following command from the root of the
-repository:
+To preview the site, run the following command from the root of the repository:
 
 ```bash
 scripts/run-mkdocs.sh "serve"

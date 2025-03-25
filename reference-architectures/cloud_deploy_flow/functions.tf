@@ -1,13 +1,13 @@
 resource "google_storage_bucket" "function_bucket" {
-  name                       = "${data.google_project.project.project_id}-gcf-source"
-  location                   = "US"
+  name                        = "${data.google_project.project.project_id}-gcf-source"
+  location                    = "US"
   uniform_bucket_level_access = true
   public_access_prevention    = "enforced"
 }
 
 locals {
   functions = {
-    createRelease          = "CloudFunctions/createRelease/"
+    createRelease           = "CloudFunctions/createRelease/"
     cloudDeployInteractions = "CloudFunctions/cloudDeployInteractions/"
     cloudDeployOperations   = "CloudFunctions/cloudDeployOperations/"
     cloudDeployApprovals    = "CloudFunctions/cloudDeployApprovals/"
@@ -33,19 +33,19 @@ resource "google_storage_bucket_object" "functions" {
 locals {
   cloud_functions = {
     "create-release" = {
-      entry_point = "deployTrigger"
+      entry_point  = "deployTrigger"
       pubsub_topic = google_pubsub_topic.topics["cloud-builds"].id
     }
     "cloud-deploy-interactions" = {
-      entry_point = "cloudDeployInteractions"
+      entry_point  = "cloudDeployInteractions"
       pubsub_topic = google_pubsub_topic.topics["deploy-commands"].id
     }
     "cloud-deploy-operations" = {
-      entry_point = "cloudDeployOperations"
+      entry_point  = "cloudDeployOperations"
       pubsub_topic = google_pubsub_topic.topics["clouddeploy-operations"].id
     }
     "cloud-deploy-approvals" = {
-      entry_point = "cloudDeployApprovals"
+      entry_point  = "cloudDeployApprovals"
       pubsub_topic = google_pubsub_topic.topics["clouddeploy-approvals"].id
     }
   }
@@ -55,14 +55,14 @@ locals {
 resource "google_cloudfunctions2_function" "functions" {
   for_each = local.cloud_functions
 
-  name    = each.key
-  project = data.google_project.project.project_id
+  name     = each.key
+  project  = data.google_project.project.project_id
   location = var.region
 
   build_config {
-    entry_point      = each.value.entry_point
-    runtime          = "go122"
-    service_account  = google_service_account.cloudbuild_service_account.id
+    entry_point     = each.value.entry_point
+    runtime         = "go122"
+    service_account = google_service_account.cloudbuild_service_account.id
     source {
       storage_source {
         bucket = google_storage_bucket.function_bucket.name
@@ -84,9 +84,9 @@ resource "google_cloudfunctions2_function" "functions" {
   }
 
   event_trigger {
-    event_type    = "google.cloud.pubsub.topic.v1.messagePublished"
-    retry_policy  = "RETRY_POLICY_RETRY"
+    event_type     = "google.cloud.pubsub.topic.v1.messagePublished"
+    retry_policy   = "RETRY_POLICY_RETRY"
     trigger_region = var.region
-    pubsub_topic  = each.value.pubsub_topic
+    pubsub_topic   = each.value.pubsub_topic
   }
 }
