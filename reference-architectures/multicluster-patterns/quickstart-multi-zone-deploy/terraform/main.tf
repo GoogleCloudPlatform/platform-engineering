@@ -22,6 +22,7 @@ provider "kubernetes" {
 }
 resource "google_artifact_registry_repository" "my-repo" {
   location      = var.region
+  project = var.project_id
   repository_id = "main"
   description   = "my docker repository"
   format        = "DOCKER"
@@ -101,114 +102,80 @@ resource "google_container_cluster" "secondary" {
   }
 }
 
+# GKE Hub Feature: Enable multicluster service discovery.
 resource "google_gke_hub_feature" "multiclusterservice" {
-  name       = "multiclusterservicediscovery"
-  location   = "global"
-  project    = var.project_id
-  depends_on = [google_container_cluster.primary, google_container_cluster.secondary]
+  name     = "multiclusterservicediscovery"
+  location = "global"
+  project  = var.project_id
+  depends_on = [
+    google_container_cluster.primary,
+    google_container_cluster.secondary
+  ]
 }
 
-
-
+# GKE Hub Feature: Enable multicluster gateway (ingress).
 resource "google_gke_hub_feature" "multiclustergateway" {
   name     = "multiclusteringress"
   location = "global"
   project  = var.project_id
-
   spec {
     multiclusteringress {
-      config_membership = "projects/${var.project_id}/locations/${var.region}/memberships/${google_container_cluster.primary.name}"
+      config_membership = "projects/${var.project_id}/locations/${var.region}/memberships/${var.cluster_1_name}"
     }
   }
-
-  depends_on = [google_container_cluster.primary, google_gke_hub_feature.multiclusterservice]
+  depends_on = [
+    google_container_cluster.primary,
+    google_gke_hub_feature.multiclusterservice,
+  ]
 }
 
+# Cloud Deploy Target: Define the primary target for deployments.
 resource "google_clouddeploy_target" "primary_target" {
-  location         = var.region
-  name             = "primary-target"
-  project          = var.project_id
-  require_approval = true
-
+  location = var.region
+  name     = "primary-target"
+  project  = var.project_id
+  labels = {
+    "env" : "config"
+  }
   gke {
     cluster = google_container_cluster.primary.id
   }
-
   execution_configs {
     usages            = ["RENDER", "DEPLOY"]
     execution_timeout = "3600s"
   }
-
   depends_on = [google_container_cluster.primary]
 }
 
+# Cloud Deploy Target: Define the secondary target for deployments.
 resource "google_clouddeploy_target" "secondary_target" {
   location = var.region
   name     = "secondary-target"
   project  = var.project_id
-
   gke {
     cluster = google_container_cluster.secondary.id
   }
-
   execution_configs {
     usages            = ["RENDER", "DEPLOY"]
     execution_timeout = "3600s"
   }
-
   depends_on = [google_container_cluster.secondary]
 }
 
-resource "google_clouddeploy_target" "multi_target" {
-  location         = var.region
-  name             = "multi-target"
-  project          = var.project_id
-  require_approval = false
-
-  multi_target {
-    target_ids = [
-      google_clouddeploy_target.secondary_target.target_id,
-      google_clouddeploy_target.primary_target.target_id,
-    ]
-  }
-
-  execution_configs {
-    usages            = ["RENDER", "DEPLOY"]
-    execution_timeout = "3600s"
-  }
-
-  depends_on = [google_container_cluster.primary, google_container_cluster.secondary]
-}
-
-resource "google_clouddeploy_delivery_pipeline" "primary" {
+# Cloud Deploy Delivery Pipeline: Define the delivery pipeline.
+resource "google_clouddeploy_delivery_pipeline" "multi-cluster-pipeline" {
   location    = var.region
-  name        = "pipeline"
-  description = "canary-delivery-pipeline"
+  name        = "multi-cluster-pipeline"
+  description = "Delivery pipeline"
   project     = var.project_id
-
   serial_pipeline {
     stages {
-      profiles  = ["primary", "secondary"]
-      target_id = google_clouddeploy_target.multi_target.target_id
-
-      strategy {
-        canary {
-          canary_deployment {
-            percentages = [25, 50, 75]
-          }
-
-          runtime_config {
-            kubernetes {
-              service_networking {
-                deployment = "store"
-                service    = "store"
-              }
-            }
-          }
-        }
-      }
+      profiles  = ["config-cluster"]
+      target_id = google_clouddeploy_target.primary_target.target_id
+    }
+    stages {
+      profiles  = ["worker-cluster"]
+      target_id = google_clouddeploy_target.secondary_target.target_id
     }
   }
-
-  depends_on = [google_clouddeploy_target.multi_target]
 }
