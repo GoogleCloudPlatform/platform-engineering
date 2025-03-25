@@ -108,7 +108,12 @@ The manifest folder contains the Deployment, Services, ServiceExports, Gateway
 and HTTPRoute objects
 
 ```sh
-./setup.sh
+export VIP=$(kubectl get gateways.gateway.networking.k8s.io app-gateway \
+      -o=jsonpath="{.status.addresses[*].value}" \
+      --context gke_${PROJECT_ID}_${ZONE_1}_primary-cluster \
+      --namespace myapp)
+
+echo http://$VIP
 ```
 
 Output will include the external IP to access the application
