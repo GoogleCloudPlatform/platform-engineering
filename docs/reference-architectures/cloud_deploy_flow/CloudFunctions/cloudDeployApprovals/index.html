@@ -1458,15 +1458,15 @@
 
 
 <h1 id="cloud-deployment-approvals-with-pubsub">Cloud Deployment Approvals with Pub/Sub<a class="headerlink" href="#cloud-deployment-approvals-with-pubsub" title="Permanent link">&para;</a></h1>
-<p>This project provides a Google Cloud Run Function to automate deployment approvals
-based on messages received via Google Cloud Pub/Sub.
-The function processes deployment requests, checks conditions for rollout
-approval, and publishes an approval command if the requirements are met.</p>
+<p>This project provides a Google Cloud Run Function to automate deployment
+approvals based on messages received via Google Cloud Pub/Sub. The function
+processes deployment requests, checks conditions for rollout approval, and
+publishes an approval command if the requirements are met.</p>
 <h2 id="usage-note">Usage Note<a class="headerlink" href="#usage-note" title="Permanent link">&para;</a></h2>
 <p>This code is designed to integrate with the Terraform configuration for the
 <a href="../../">cloud_deploy_flow</a> demo. While you can deploy this component
 individually, it's primarily intended to be used as part of the full
-Terraform-managed workflow. Please note that this section of the README may be
+Terraform-managed workflow. Please note that this section of the readme may be
 less actively maintained, as the preferred deployment method relies on the
 Terraform setup.</p>
 <h2 id="features">Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h2>
@@ -1493,14 +1493,13 @@ Terraform setup.</p>
 </span></code></pre></div>
 </li>
 <li>
-<p><strong>Enable APIs</strong>:
-    Enable the Google Cloud Pub/Sub and Deploy APIs for your project:</p>
+<p><strong>Enable APIs</strong>: Enable the Google Cloud Pub/Sub and Deploy APIs for your
+    project:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>gcloud<span class="w"> </span>services<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>pubsub.googleapis.com<span class="w"> </span>deploy.googleapis.com
 </span></code></pre></div>
 </li>
 <li>
-<p><strong>Deploy the Function</strong>:
-    Use Google Cloud SDK to deploy the function:</p>
+<p><strong>Deploy the Function</strong>: Use Google Cloud SDK to deploy the function:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>gcloud<span class="w"> </span>functions<span class="w"> </span>deploy<span class="w"> </span>cloudDeployApprovals<span class="w"> </span>--runtime<span class="w"> </span>go116<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>--trigger-event-type<span class="w"> </span>google.cloud.pubsub.topic.v1.messagePublished<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>--trigger-resource<span class="w"> </span>YOUR_SUBSCRIBE_TOPIC
@@ -1542,17 +1541,17 @@ Ensure these are set before deploying the function:</p>
 <p><strong>config struct</strong>: Holds configuration for the environment variables.</p>
 </li>
 <li>
-<p><strong>PubsubMessage and ApprovalsData structs</strong>: Define the structure of
-      messages received from Pub/Sub and attributes within them.</p>
+<p><strong>PubsubMessage and ApprovalsData structs</strong>: Define the structure of messages
+  received from Pub/Sub and attributes within them.</p>
 </li>
 <li>
 <p><strong>cloudDeployApprovals function</strong>: Entry point for handling messages.
-    Validates the conditions and, if met, triggers the <code>sendCommandPubSub</code>
-    function to send an approval command.</p>
+  Validates the conditions and, if met, triggers the <code>sendCommandPubSub</code>
+  function to send an approval command.</p>
 </li>
 <li>
 <p><strong>sendCommandPubSub function</strong>: Publishes a command message to the Pub/Sub
-    topic to approve a deployment rollout.</p>
+  topic to approve a deployment rollout.</p>
 </li>
 </ul>
 <h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
@@ -1586,8 +1585,8 @@ placeholder for an external approval system.</p>
 <p>To integrate the approval system, you can replace or adapt this field to suit
 your existing change process workflow. For instance, you could link this field
 to an external ticketing or project management system to track and verify
-approvals. Implementing an approval system allows greater control over deployment
-rollouts, ensuring they align with your organization’s policies.</p>
+approvals. Implementing an approval system allows greater control over
+deployment rollouts, ensuring they align with your organization’s policies.</p>
 <h2 id="logging">Logging<a class="headerlink" href="#logging" title="Permanent link">&para;</a></h2>
 <p>The function logs each major step, from invocation to message processing and
 condition checking, to facilitate debugging and monitoring.</p>

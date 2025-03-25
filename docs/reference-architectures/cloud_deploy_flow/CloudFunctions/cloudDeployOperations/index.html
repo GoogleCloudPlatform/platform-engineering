@@ -1498,7 +1498,7 @@ another Pub/Sub topic.</p>
 <p>This code is designed to integrate with the Terraform configuration for the
 <a href="../../">cloud_deploy_flow</a> demo. While you can deploy this component
 individually, it's primarily intended to be used as part of the full
-Terraform-managed workflow. Please note that this section of the README may be
+Terraform-managed workflow. Please note that this section of the readme may be
 less actively maintained, as the preferred deployment method relies on the
 Terraform setup.</p>
 <h2 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">&para;</a></h2>
@@ -1542,31 +1542,32 @@ Ensure these are set before deploying the function:</p>
 <h3 id="main-components">Main Components<a class="headerlink" href="#main-components" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>config</strong>: Stores the environment configuration necessary for the function.</li>
-<li><strong>PubsubMessage</strong>: Structure representing a message from Pub/Sub, with
-      <code>Data</code> payload and <code>Attributes</code> metadata.</li>
-<li><strong>OperationsData</strong>: Metadata that describes deployment action and resource details.</li>
+<li><strong>PubsubMessage</strong>: Structure representing a message from Pub/Sub, with <code>Data</code>
+  payload and <code>Attributes</code> metadata.</li>
+<li><strong>OperationsData</strong>: Metadata that describes deployment action and resource
+  details.</li>
 <li><strong>CommandMessage</strong>: Structure for deployment commands, like <code>CreateRollout</code>.</li>
 <li><strong>cloudDeployOperations</strong>: Main Cloud Run Function triggered by a deployment
-      event, processes release successes to initiate rollouts.</li>
+  event, processes release successes to initiate rollouts.</li>
 <li><strong>sendCommandPubSub</strong>: Publishes a <code>CommandMessage</code> to a specified Pub/Sub
-      topic, which triggers deployment operations.</li>
+  topic, which triggers deployment operations.</li>
 </ul>
 <h2 id="function-workflow">Function Workflow<a class="headerlink" href="#function-workflow" title="Permanent link">&para;</a></h2>
 <ol>
 <li><strong>Trigger</strong>: The function <code>cloudDeployOperations</code> is triggered by a
-      deployment event, specifically a CloudEvent.</li>
+    deployment event, specifically a CloudEvent.</li>
 <li><strong>Event Parsing</strong>: The function parses the event data into a <code>Message</code>
-      struct, checking for deployment success events.</li>
+    struct, checking for deployment success events.</li>
 <li><strong>Rollout Creation</strong>: If a release success is detected, it creates a
-      <code>CommandMessage</code> for a rollout and calls <code>sendCommandPubSub</code>.</li>
+    <code>CommandMessage</code> for a rollout and calls <code>sendCommandPubSub</code>.</li>
 <li><strong>Command Publish</strong>: The <code>sendCommandPubSub</code> function publishes the
-      <code>CommandMessage</code> to a designated Pub/Sub topic to initiate the rollout.</li>
+    <code>CommandMessage</code> to a designated Pub/Sub topic to initiate the rollout.</li>
 </ol>
 <h2 id="setup-and-deployment">Setup and Deployment<a class="headerlink" href="#setup-and-deployment" title="Permanent link">&para;</a></h2>
 <h3 id="local-development">Local Development<a class="headerlink" href="#local-development" title="Permanent link">&para;</a></h3>
 <ol>
 <li>Clone the repository and set up your local environment with the necessary
-      environment variables.</li>
+    environment variables.</li>
 <li>Run the Cloud Run Functions framework locally to test the function:</li>
 </ol>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>functions-framework<span class="w"> </span>--target<span class="o">=</span>cloudDeployOperations
@@ -1591,19 +1592,21 @@ Ensure these are set before deploying the function:</p>
 <h2 id="error-handling">Error Handling<a class="headerlink" href="#error-handling" title="Permanent link">&para;</a></h2>
 <ul>
 <li>If message parsing fails, the function logs an error but acknowledges the
-      message to prevent retries.</li>
+  message to prevent retries.</li>
 <li>Command failures are logged, and the function acknowledges the message to
-      prevent reprocessing of erroneous commands.</li>
+  prevent reprocessing of erroneous commands.</li>
 </ul>
 <h2 id="license">License<a class="headerlink" href="#license" title="Permanent link">&para;</a></h2>
-<p>This project is licensed under the MIT License. See the <code>LICENSE</code> file for details.</p>
+<p>This project is licensed under the MIT License. See the <code>LICENSE</code> file for
+details.</p>
 <hr />
 <h3 id="notes">Notes<a class="headerlink" href="#notes" title="Permanent link">&para;</a></h3>
 <ul>
 <li>For production environments, consider validating that the <code>TargetId</code> within
-      <code>CommandMessage</code> is dynamically populated based on actual Pub/Sub message data.</li>
-<li>The function relies on <code>pubsub.NewClient</code> which should be carefully
-      monitored in production for connection management.</li>
+  <code>CommandMessage</code> is dynamically populated based on actual Pub/Sub message
+  data.</li>
+<li>The function relies on <code>pubsub.NewClient</code> which should be carefully monitored
+  in production for connection management.</li>
 </ul>
 
 
