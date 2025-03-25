@@ -12,7 +12,43 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 steps:
-- name: 'gcr.io/cloud-builders/docker'
-  args: [ 'build', '-t', '${_LOCATION}-docker.pkg.dev/$PROJECT_ID/main/myapp', '.' ]
+  # Build and push the Docker image to Artifact Registry
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/main/myapp:${_VERSION}",
+        ".",
+      ]
+    id: "build-push-image"
+
+  # Push the Docker image to Artifact Registry
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "push",
+        "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/main/myapp:${_VERSION}",
+      ]
+    id: "push-image"
+    waitFor: ["build-push-image"]
+  # Deploy to Cloud Deploy
+  - name: "gcr.io/cloud-builders/gcloud"
+    args:
+      [
+        "deploy",
+        "releases",
+        "create",
+        "release-${_RELEASE_SUFFIX}",
+        "--project=${PROJECT_ID}",
+        "--region=${_LOCATION}",
+        "--images=my-app-image=${_LOCATION}-docker.pkg.dev/$PROJECT_ID/main/myapp:${_VERSION}",
+        "--delivery-pipeline=multi-cluster-pipeline",
+        #"--to-target=multi-target",
+        "--skaffold-file=skaffold.yaml"
+      ]
+    id: "deploy"
+    waitFor: ["push-image"]
+
 images:
-- '${_LOCATION}-docker.pkg.dev/$PROJECT_ID/main/myapp'
+  - "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/main/myapp:${_VERSION}"
