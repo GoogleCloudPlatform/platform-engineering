@@ -18,12 +18,11 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-PATH_TO_THIS_SCRIPT="${0}"
 REPOSITORY_ROOT_DIRECTORY_PATH="$(readlink -f "$(dirname "$0")/../")"
 echo "Repository root directory path: ${REPOSITORY_ROOT_DIRECTORY_PATH}"
 
 # shellcheck disable=SC1091 # do not follow
-source "$(dirname "$0")/common.sh" || exit 1
+source "${REPOSITORY_ROOT_DIRECTORY_PATH}/scripts/common.sh" || exit 1
 
 echo "Running mkdocs: ${MKDOCS_CONTAINER_IMAGE}"
 
@@ -67,11 +66,13 @@ if [[ "${SUBCOMMAND}" == "serve" ]]; then
   RUN_CONTAINER_COMMAND+=(
     "serve"
     "--dev-addr=0.0.0.0:8000"
+    "--strict"
     "${DEFAULT_MKDOCS_ARGS[@]}"
   )
 elif [[ "${SUBCOMMAND}" == "build" ]]; then
   RUN_CONTAINER_COMMAND+=(
     "build"
+    "--strict"
     "${DEFAULT_MKDOCS_ARGS[@]}"
   )
 elif [[ "${SUBCOMMAND}" == "create" ]]; then
@@ -116,7 +117,7 @@ for CURRENT_PROJECT_DIR in "${PROJECTS_DIR}"/*/; do
       -print0 |
       while IFS= read -r -d $'\0' file; do
         # Strip the repository path from the file path
-        FILE_RELATIVE_PATH="${file#${PROJECTS_DIR}/}"
+        FILE_RELATIVE_PATH="${file#"${PROJECTS_DIR}/"}"
         FILE_DESTINATION_PATH="${PROJECTS_DESTINATION_DIR}/${FILE_RELATIVE_PATH}"
         FILE_DESTINATION_DIRECTORY="$(dirname "${FILE_DESTINATION_PATH}")"
         mkdir --parents "${FILE_DESTINATION_DIRECTORY}"

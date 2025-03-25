@@ -14,13 +14,52 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -o errexit
+# Don't set errexit so we can source this from interactive shells without
+# causing the shell to exit on errors
 set -o nounset
 set -o pipefail
 
 # renovate: datasource=docker packageName=squidfunk/mkdocs-material versioning=docker
 MKDOCS_CONTAINER_IMAGE_VERSION="9.5.50"
+# shellcheck disable=SC2034 # variable is used in other scripts
 MKDOCS_CONTAINER_IMAGE="squidfunk/mkdocs-material:${MKDOCS_CONTAINER_IMAGE_VERSION}"
+
+# shellcheck disable=SC2034
+MKDOCS_IGNORE_IF_ONLY_CHANGED_FILES=(
+  "docs/sitemap.xml"
+  "docs/sitemap.xml.gz"
+)
+
+check_if_uncommitted_files_only_include_files() {
+  local -a FILES_TO_CHECK=("$@")
+  local -a CHANGED_FILES
+
+  git status
+
+  readarray -d '' -t CHANGED_FILES < <(git diff-files -z --name-only)
+  readarray -d '' -t SORTED_CHANGED_FILES < <(printf '%s\0' "${CHANGED_FILES[@]}" | sort -z)
+
+  echo "Changed files (${#SORTED_CHANGED_FILES[@]}) in working directory:"
+  echo "${SORTED_CHANGED_FILES[*]}"
+
+  readarray -d '' -t SORTED_FILES_TO_CHECK < <(printf '%s\0' "${FILES_TO_CHECK[@]}" | sort -z)
+
+  if [[ "${SORTED_CHANGED_FILES[*]}" == "${SORTED_FILES_TO_CHECK[*]}" ]]; then
+    echo "Working directory contains only the files to check"
+    return 0
+  else
+    echo "Working directory doesn't contain only the files to check"
+    return 1
+  fi
+}
+
+check_if_uncommitted_files_only_include_files_to_ignore() {
+  if check_if_uncommitted_files_only_include_files "${MKDOCS_IGNORE_IF_ONLY_CHANGED_FILES[@]}"; then
+    return 0
+  else
+    return 1
+  fi
+}
 
 # Set up a tempdir and files, deleted on exit if required
 TEMP_DIR="$(mktemp --directory)"
