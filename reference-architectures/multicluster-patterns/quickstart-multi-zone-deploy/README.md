@@ -7,7 +7,6 @@ deployments across these clusters.
 ## Prerequisites
 
 *   A Google Cloud project.
-*   A pre-existing VPC network within your Google Cloud project.
 *   Terraform installed and configured with appropriate GCP credentials.
 *   Variables defined in `terraform.tfvars` or through other means.
 
@@ -18,8 +17,6 @@ Set project details and authenticate
 ```sh
 export PROJECT_ID=`YOUR PROJECT_ID`
 export LOCATION=us-central1
-export ZONE_1=us-central1-a
-export ZONE_2=us-central1-b
 
 gcloud config set project $PROJECT_ID
 gcloud auth application-default login
@@ -31,7 +28,7 @@ Replace `YOUR PROJECT_ID` with your Google Cloud project ID.
 
 ```sh
 gcloud services enable \
-  aartifactregistry.googleapis.com \
+  artifactregistry.googleapis.com \
   compute.googleapis.com \
   container.googleapis.com \
   clouddeploy.googleapis.com \
@@ -43,12 +40,6 @@ gcloud services enable \
   --project=$PROJECT_ID
 ```
 
-Verify VPC network exists
-
-```sh
-gcloud compute networks list
-```
-
 Navigate to the terraform directory and update the terraform.tfvars
 
 ```sh
@@ -58,8 +49,9 @@ cd multicluster-patterns/quickstart-multi-zone-deploy
 Create resources
 
 ```sh
-terraform init -chdir=terraform
-terraform apply -var-file=terraform.tfvars
+cd terraform
+terraform init
+terraform apply -var-file=terraform.tfvars -var project_id=$PROJECT_ID
 ```
 
 Confirm GKE Gateway controller is enabled
@@ -96,6 +88,13 @@ state:
     description: Ready to use
     updateTime: '2025-03-19T18:19:04.605677961Z'
 updateTime: '2025-03-19T18:21:23.771948904Z'
+```
+
+Confirm the Gateway exists in the config cluster
+
+```sh
+gcloud container clusters get-credentials config-cluster --region us-central1-a
+kubectl get gatewayclasses 
 ```
 
 ## Deploy sample application

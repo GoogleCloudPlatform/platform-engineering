@@ -44,7 +44,6 @@ steps:
         "--region=${_LOCATION}",
         "--images=my-app-image=${_LOCATION}-docker.pkg.dev/$PROJECT_ID/main/myapp:${_VERSION}",
         "--delivery-pipeline=multi-cluster-pipeline",
-        #"--to-target=multi-target",
         "--skaffold-file=skaffold.yaml"
       ]
     id: "deploy"
