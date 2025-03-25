@@ -94,7 +94,7 @@ Confirm the Gateway exists in the config cluster
 
 ```sh
 gcloud container clusters get-credentials config-cluster --region us-central1-a
-kubectl get gatewayclasses 
+kubectl get gatewayclasses
 ```
 
 ## Deploy sample application
