@@ -9,4 +9,4 @@ metadata:
 spec:
   type: service
   lifecycle: production
-  owner: your-team
+  owner: development/guest
