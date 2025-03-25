@@ -1,4 +1,3 @@
-
 # Cloud Deploy Interactions with Pub/Sub
 
 This project demonstrates a Google Cloud Run Function to manage deployments by
@@ -12,26 +11,26 @@ based on the command type.
 This code is designed to integrate with the Terraform configuration for the
 [cloud_deploy_flow](../../README.md) demo. While you can deploy this component
 individually, it's primarily intended to be used as part of the full
-Terraform-managed workflow. Please note that this section of the README may be
+Terraform-managed workflow. Please note that this section of the readme may be
 less actively maintained, as the preferred deployment method relies on the
 Terraform setup.
 
 ## Features
 
-*   Listens for Pub/Sub messages with deployment commands (CreateRelease,
-    CreateRollout, ApproveRollout) Messages should include protobuf request.
+- Listens for Pub/Sub messages with deployment commands (CreateRelease,
+  CreateRollout, ApproveRollout) Messages should include protobuf request.
 
-*   Initiates Google Cloud Deploy actions based on the received command.
+- Initiates Google Cloud Deploy actions based on the received command.
 
-*   Logs each step of the deployment process for better traceability.
+- Logs each step of the deployment process for better traceability.
 
 ## Setup
 
 ### Requirements
 
-*   Go 1.16 or later
-*   Google Cloud SDK
-*   Access to Google Cloud Deploy and Pub/Sub
+- Go 1.16 or later
+- Google Cloud SDK
+- Access to Google Cloud Deploy and Pub/Sub
 
 ### Installation
 
@@ -42,11 +41,10 @@ Terraform setup.
     cd <repository-folder>
     ```
 
-2.  **Set up Google Cloud**:
-    Ensure you have enabled the Google Cloud Deploy and Pub/Sub APIs in your project.
+2.  **Set up Google Cloud**: Ensure you have enabled the Google Cloud Deploy and
+    Pub/Sub APIs in your project.
 
-3.  **Deploy the Function**:
-    Deploy the function using Google Cloud SDK:
+3.  **Deploy the Function**: Deploy the function using Google Cloud SDK:
 
     ```bash
     gcloud functions deploy cloudDeployInteractions --runtime go116 \
@@ -60,9 +58,9 @@ The Pub/Sub message should include a JSON payload with a `command` field
 specifying the type of deployment action to execute. Examples of the command
 types include:
 
-*   `CreateRelease`: Creates a new release for deployment.
-*   `CreateRollout`: Initiates a rollout of the release.
-*   `ApproveRollout`: Approves a pending rollout.
+- `CreateRelease`: Creates a new release for deployment.
+- `CreateRollout`: Initiates a rollout of the release.
+- `ApproveRollout`: Approves a pending rollout.
 
 ### Sample Pub/Sub Message
 
@@ -95,17 +93,17 @@ The JSON inside `data` should follow the format for `DeployCommand`:
 
 ## Code Structure
 
-*   **DeployCommand struct**: Defines the command to be executed and the
-    parameters for each deploy action (create release, create rollout, or
-    approve rollout).
+- **DeployCommand struct**: Defines the command to be executed and the
+  parameters for each deploy action (create release, create rollout, or approve
+  rollout).
 
-*   **cloudDeployInteractions function**: Main function triggered by Pub/Sub
-    messages. It parses the message and calls the respective deployment function
-    based on the command.
+- **cloudDeployInteractions function**: Main function triggered by Pub/Sub
+  messages. It parses the message and calls the respective deployment function
+  based on the command.
 
-*   **cdCreateRelease**: Creates a release in Google Cloud Deploy.
-*   **cdCreateRollout**: Initiates a rollout for a specified release.
-*   **cdApproveRollout**: Approves an existing rollout.
+- **cdCreateRelease**: Creates a release in Google Cloud Deploy.
+- **cdCreateRollout**: Initiates a rollout for a specified release.
+- **cdApproveRollout**: Approves an existing rollout.
 
 ## Logging
 

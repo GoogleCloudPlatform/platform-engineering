@@ -21,8 +21,10 @@ set -o pipefail
 
 # renovate: datasource=docker packageName=squidfunk/mkdocs-material versioning=docker
 MKDOCS_CONTAINER_IMAGE_VERSION="9.5.50"
-# shellcheck disable=SC2034 # variable is used in other scripts
+# shellcheck disable=SC2034
 MKDOCS_CONTAINER_IMAGE="squidfunk/mkdocs-material:${MKDOCS_CONTAINER_IMAGE_VERSION}"
+# shellcheck disable=SC2034
+SUPER_LINTER_ENVIRONMENT_CONFIGURATION_FILE_PATH="config/lint/super-linter.env"
 
 # shellcheck disable=SC2034
 MKDOCS_IGNORE_IF_ONLY_CHANGED_FILES=(
@@ -73,3 +75,16 @@ on_exit() {
   fi
 }
 trap on_exit EXIT
+
+is_linter_config_changed() {
+  # Check if any config files have changed:
+  # if so, VALIDATE_ALL_CODEBASE
+  local CONFIG_FILES_REGEX="^config/lint|^scripts/lint.sh"
+  if git diff --name-only HEAD origin/main | grep -E "${CONFIG_FILES_REGEX}" ||
+    git diff --name-only | grep -E "${CONFIG_FILES_REGEX}"; then
+    echo "Linter configuration file changed."
+    return 0
+  fi
+
+  return 1
+}

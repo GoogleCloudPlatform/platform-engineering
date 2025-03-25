@@ -26,11 +26,11 @@ terraform {
 }
 
 locals {
-  backend_file              = "../backend.tf"
-  project_id_prefix         = "${var.project.name}-${var.environment_name}"
-  project_id_suffix_length  = 29 - length(local.project_id_prefix)
-  tfvars_file               = "../backstage-qs.auto.tfvars"
-  tfvars_contents           = <<-EOT
+  backend_file             = "../backend.tf"
+  project_id_prefix        = "${var.project.name}-${var.environment_name}"
+  project_id_suffix_length = 29 - length(local.project_id_prefix)
+  tfvars_file              = "../backstage-qs.auto.tfvars"
+  tfvars_contents          = <<-EOT
     environment_name        = "${var.environment_name}"
     iap_user_domain         = "${var.iap_user_domain}"
     environment_project_id  = "${google_project.environment.project_id}"

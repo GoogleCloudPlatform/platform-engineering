@@ -1414,16 +1414,17 @@ traditional "Hello World" application, this project generates and serves a
 random date, showcasing how to set up a cloud-based service.</p>
 <h2 id="usage-note">Usage Note<a class="headerlink" href="#usage-note" title="Permanent link">&para;</a></h2>
 <p>This code is designed to integrate with the Terraform configuration for the
-<a href="../">cloud_deploy_flow</a>
-demo. While you can deploy this component individually, it's primarily intended
-to be used as part of the full Terraform-managed workflow. Please note that this
-section of the README may be less actively maintained, as the preferred deployment
-method relies on the Terraform setup.</p>
+<a href="../">cloud_deploy_flow</a> demo. While you can deploy this component
+individually, it's primarily intended to be used as part of the full
+Terraform-managed workflow. Please note that this section of the readme may be
+less actively maintained, as the preferred deployment method relies on the
+Terraform setup.</p>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>The <code>Random Date Service</code> is built to illustrate the process of deploying an
 application using Cloud Run and Cloud Deploy. The application serves a random
 date formatted as a string. This simple service allows you to explore key
-concepts in cloud deployment without the complexity of a full-fledged application.</p>
+concepts in cloud deployment without the complexity of a full-fledged
+application.</p>
 <h2 id="components">Components<a class="headerlink" href="#components" title="Permanent link">&para;</a></h2>
 <h3 id="1-maingo">1. <strong>main.go</strong><a class="headerlink" href="#1-maingo" title="Permanent link">&para;</a></h3>
 <p>This is the core of the application, where the HTTP server is defined. It
@@ -1438,18 +1439,20 @@ process by managing builds and configurations in a single file.</p>
 <p>The <code>run.yaml</code> file defines the configuration for Cloud Run and Cloud Deploy.
 Key aspects to note include:</p>
 <ul>
-<li><strong>Service Name</strong>: This defines the name of the service as <code>random-date-service</code>.</li>
+<li><strong>Service Name</strong>: This defines the name of the service as
+  <code>random-date-service</code>.</li>
 <li><strong>Image Specification</strong>: The <code>image</code> field under <code>spec</code> is set to <code>pizza</code>.
-    This is crucial, as it indicates to Cloud Deploy where to substitute the image.
-    This substitution occurs based on the <code>createRelease</code> function in <code>main.go</code>,
-    specifically noted on line 122.</li>
+  This is crucial, as it indicates to Cloud Deploy where to substitute the
+  image. This substitution occurs based on the <code>createRelease</code> function in
+  <code>main.go</code>, specifically noted on line 122.</li>
 </ul>
 <h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
 <p>To deploy and test this application:</p>
 <ol>
 <li><strong>Build the Docker Image</strong>: Use the provided Dockerfile to create a
     container image.</li>
-<li><strong>Deploy to Cloud Run</strong>: Utilize the <code>run.yaml</code> configuration to deploy the service.</li>
+<li><strong>Deploy to Cloud Run</strong>: Utilize the <code>run.yaml</code> configuration to deploy the
+    service.</li>
 <li><strong>Monitor Deployments</strong>: Use Cloud Deploy to observe the deployment pipeline
     and ensure the service is running as expected.</li>
 <li><strong>Access the Service</strong>: After deployment, access the service through its

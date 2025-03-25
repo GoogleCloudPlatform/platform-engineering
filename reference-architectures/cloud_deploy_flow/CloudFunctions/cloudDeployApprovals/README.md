@@ -1,35 +1,34 @@
-
 # Cloud Deployment Approvals with Pub/Sub
 
-This project provides a Google Cloud Run Function to automate deployment approvals
-based on messages received via Google Cloud Pub/Sub.
-The function processes deployment requests, checks conditions for rollout
-approval, and publishes an approval command if the requirements are met.
+This project provides a Google Cloud Run Function to automate deployment
+approvals based on messages received via Google Cloud Pub/Sub. The function
+processes deployment requests, checks conditions for rollout approval, and
+publishes an approval command if the requirements are met.
 
 ## Usage Note
 
 This code is designed to integrate with the Terraform configuration for the
 [cloud_deploy_flow](../../README.md) demo. While you can deploy this component
 individually, it's primarily intended to be used as part of the full
-Terraform-managed workflow. Please note that this section of the README may be
+Terraform-managed workflow. Please note that this section of the readme may be
 less actively maintained, as the preferred deployment method relies on the
 Terraform setup.
 
 ## Features
 
-*   Listens to Pub/Sub messages for deployment approvals
-*   Validates deployment conditions (manual approval, rollout ID, etc.)
-*   Publishes approval commands to another Pub/Sub topic if conditions are met
+- Listens to Pub/Sub messages for deployment approvals
+- Validates deployment conditions (manual approval, rollout ID, etc.)
+- Publishes approval commands to another Pub/Sub topic if conditions are met
 
 ## Setup
 
 ### Requirements
 
-*   POSIX compliant Bash Shell
-*   Go 1.16 or later
-*   Google Cloud SDK
-*   Access to Google Cloud Pub/Sub
-*   Environment variables to configure project details
+- POSIX compliant Bash Shell
+- Go 1.16 or later
+- Google Cloud SDK
+- Access to Google Cloud Pub/Sub
+- Environment variables to configure project details
 
 ### Installation
 
@@ -40,15 +39,14 @@ Terraform setup.
     cd <repository-folder>
     ```
 
-2.  **Enable APIs**:
-    Enable the Google Cloud Pub/Sub and Deploy APIs for your project:
+2.  **Enable APIs**: Enable the Google Cloud Pub/Sub and Deploy APIs for your
+    project:
 
     ```bash
     gcloud services enable pubsub.googleapis.com deploy.googleapis.com
     ```
 
-3.  **Deploy the Function**:
-    Use Google Cloud SDK to deploy the function:
+3.  **Deploy the Function**: Use Google Cloud SDK to deploy the function:
 
     ```bash
     gcloud functions deploy cloudDeployApprovals --runtime go116 \
@@ -61,25 +59,25 @@ Terraform setup.
 The function relies on environment variables to specify project configuration.
 Ensure these are set before deploying the function:
 
-| Variable Name  | Description                             | Required |
-|----------------|-----------------------------------------|----------|
-| `PROJECTID`    | Google Cloud project ID                 | Yes      |
-| `LOCATION`     | The deployment location (region)        | Yes      |
-| `SENDTOPICID`  | Pub/Sub topic ID for sending commands   | Yes      |
+| Variable Name | Description                           | Required |
+| ------------- | ------------------------------------- | -------- |
+| `PROJECTID`   | Google Cloud project ID               | Yes      |
+| `LOCATION`    | The deployment location (region)      | Yes      |
+| `SENDTOPICID` | Pub/Sub topic ID for sending commands | Yes      |
 
 ## Code Structure
 
-*   **config struct**: Holds configuration for the environment variables.
+- **config struct**: Holds configuration for the environment variables.
 
-*   **PubsubMessage and ApprovalsData structs**: Define the structure of
-      messages received from Pub/Sub and attributes within them.
+- **PubsubMessage and ApprovalsData structs**: Define the structure of messages
+  received from Pub/Sub and attributes within them.
 
-*   **cloudDeployApprovals function**: Entry point for handling messages.
-    Validates the conditions and, if met, triggers the `sendCommandPubSub`
-    function to send an approval command.
+- **cloudDeployApprovals function**: Entry point for handling messages.
+  Validates the conditions and, if met, triggers the `sendCommandPubSub`
+  function to send an approval command.
 
-*   **sendCommandPubSub function**: Publishes a command message to the Pub/Sub
-    topic to approve a deployment rollout.
+- **sendCommandPubSub function**: Publishes a command message to the Pub/Sub
+  topic to approve a deployment rollout.
 
 ## Usage
 
@@ -119,8 +117,8 @@ placeholder for an external approval system.
 To integrate the approval system, you can replace or adapt this field to suit
 your existing change process workflow. For instance, you could link this field
 to an external ticketing or project management system to track and verify
-approvals. Implementing an approval system allows greater control over deployment
-rollouts, ensuring they align with your organization’s policies.
+approvals. Implementing an approval system allows greater control over
+deployment rollouts, ensuring they align with your organization’s policies.
 
 ## Logging
 

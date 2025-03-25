@@ -1557,17 +1557,17 @@ to leverage these runners.</p>
 <p><img alt="GitHub ARC on GKE architecture diagram" src="gh-runners-gke.png" /></p>
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Terraform:</strong> Install Terraform on your local machine or use Cloud Shell  </li>
+<li><strong>Terraform:</strong> Install Terraform on your local machine or use Cloud Shell</li>
 <li><strong>Google Cloud Project:</strong> Have a Google Cloud project with a Billing Account
-    linked and the following APIs enabled:  <ul>
-<li>Cloud Resource Manager API <code>cloudresourcemanager.googleapis.com</code>  </li>
-<li>Identity and Access Management API <code>iam.googleapis.com</code>  </li>
-<li>Kubernetes Engine API <code>container.googleapis.com</code>  </li>
-<li>Service Usage API <code>serviceusage.googleapis.com</code>  </li>
+  linked and the following APIs enabled:<ul>
+<li>Cloud Resource Manager API <code>cloudresourcemanager.googleapis.com</code></li>
+<li>Identity and Access Management API <code>iam.googleapis.com</code></li>
+<li>Kubernetes Engine API <code>container.googleapis.com</code></li>
+<li>Service Usage API <code>serviceusage.googleapis.com</code></li>
 </ul>
 </li>
-<li><strong>GitHub Account:</strong> Have a GitHub organization, either personal or
-    enterprise, where you have administrator access.</li>
+<li><strong>GitHub Account:</strong> Have a GitHub organization, either personal or enterprise,
+  where you have administrator access.</li>
 </ul>
 <p>Run the following command to enable the prerequisite APIs:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>gcloud<span class="w"> </span>services<span class="w"> </span><span class="nb">enable</span><span class="w"> </span><span class="se">\</span>
@@ -1580,28 +1580,31 @@ to leverage these runners.</p>
 <h2 id="register-a-github-app-for-authenticating-arc">Register a GitHub App for Authenticating ARC<a class="headerlink" href="#register-a-github-app-for-authenticating-arc" title="Permanent link">&para;</a></h2>
 <p>Using a GitHub App for authentication allows you to make your self-hosted
 runners available to a GitHub organization that you own or have administrative
-access to. For more details on registering GitHub Apps, see <a href="https://docs.github.com/en/apps/creating-github-apps/registering-a-github-app/registering-a-github-app">GitHub’s documentation</a>.</p>
-<p>You will need 3 values from this section to use as inputs in the Terraform module:</p>
+access to. For more details on registering GitHub Apps, see
+<a href="https://docs.github.com/en/apps/creating-github-apps/registering-a-github-app/registering-a-github-app">GitHub’s documentation</a>.</p>
+<p>You will need 3 values from this section to use as inputs in the Terraform
+module:</p>
 <ul>
-<li>GitHub App ID  </li>
-<li>GitHub App Private Key  </li>
+<li>GitHub App ID</li>
+<li>GitHub App Private Key</li>
 <li>GitHub App Installation ID</li>
 </ul>
 <h3 id="navigate-to-your-organization-github-app-settings">Navigate to your Organization GitHub App settings<a class="headerlink" href="#navigate-to-your-organization-github-app-settings" title="Permanent link">&para;</a></h3>
 <ol>
-<li>Click your profile picture in the top-right  </li>
-<li>Click <strong>Your organizations</strong>  </li>
-<li>Select the organization you want to use for this walkthrough  </li>
-<li>Click <strong>Settings</strong>  </li>
-<li>Click \&lt;&gt; <strong>Developer settings</strong>  </li>
+<li>Click your profile picture in the top-right</li>
+<li>Click <strong>Your organizations</strong></li>
+<li>Select the organization you want to use for this walkthrough</li>
+<li>Click <strong>Settings</strong></li>
+<li>Click \&lt;&gt; <strong>Developer settings</strong></li>
 <li>Click <strong>GitHub Apps</strong></li>
 </ol>
 <h3 id="create-a-new-github-app">Create a new GitHub App<a class="headerlink" href="#create-a-new-github-app" title="Permanent link">&para;</a></h3>
 <ol>
 <li>Click <strong>New GitHub App</strong></li>
 <li>Under “GitHub App name”, choose a unique name such as “my-gke-arc-app”</li>
-<li>Under “Homepage URL” enter <code>https://github.com/actions/actions-runner-controller</code></li>
-<li>Under “Webhook,” uncheck <strong>Active</strong>.  </li>
+<li>Under “Homepage URL” enter
+    <code>https://github.com/actions/actions-runner-controller</code></li>
+<li>Under “Webhook,” uncheck <strong>Active</strong>.</li>
 <li>Under “Permissions,” click <strong>Repository permissions</strong> and use the dropdown
     menu to select the following permissions:<ol>
 <li><strong>Metadata</strong>: Read-only</li>
@@ -1627,15 +1630,17 @@ access to. For more details on registering GitHub Apps, see <a href="https://doc
 </ol>
 </li>
 <li>In the menu at the top-left corner of the page, click <strong>Install App</strong>, and
-    next to your organization, click <strong>Install</strong> to install the app on your organization.<ol>
-<li>Choose <strong>All repositories</strong> to allow any repo in your org to have access
-    to your runners</li>
+    next to your organization, click <strong>Install</strong> to install the app on your
+    organization.<ol>
+<li>Choose <strong>All repositories</strong> to allow any repository in your org to have
+    access to your runners</li>
 <li>Choose <strong>Only select repositories</strong> to allow specific repos to have
     access to your runners</li>
 </ol>
 </li>
 <li>Note the app installation ID, which you can find on the app installation
-    page, which has the following URL format: <code>https://github.com/organizations/ORGANIZATION/settings/installations/INSTALLATION_ID</code><ol>
+    page, which has the following URL format:
+    <code>https://github.com/organizations/ORGANIZATION/settings/installations/INSTALLATION_ID</code><ol>
 <li>You will use this as the value for <code>gh_app_installation_id</code> in the
     Terraform module.</li>
 </ol>
@@ -1643,9 +1648,10 @@ access to. For more details on registering GitHub Apps, see <a href="https://doc
 </ol>
 <h2 id="configure-terraform-example">Configure Terraform example<a class="headerlink" href="#configure-terraform-example" title="Permanent link">&para;</a></h2>
 <h3 id="open-the-terraform-example">Open the Terraform example<a class="headerlink" href="#open-the-terraform-example" title="Permanent link">&para;</a></h3>
-<p>Open the Terraform module repo in Cloud Shell automatically by clicking the button:</p>
+<p>Open the Terraform module repository in Cloud Shell automatically by clicking
+the button:</p>
 <p><a href="https://shell.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fterraform-google-github-actions-runners&amp;cloudshell_git_branch=master&amp;cloudshell_open_in_editor=examples%2Fgh-runner-gke-simple%2Fmain.tf&amp;cloudshell_workspace=examples%2Fgh-runner-gke-simple"><img alt="Open in Cloud Shell" src="https://gstatic.com/cloudssh/images/open-btn.svg" /></a></p>
-<p>Clicking this button will clone the repo into Cloud Shell, change into the
+<p>Clicking this button will clone the repository into Cloud Shell, change into the
 example directory, and open the <code>main.tf</code> file in the Cloud Shell Editor.</p>
 <h3 id="modify-terraform-example-variables">Modify Terraform example variables<a class="headerlink" href="#modify-terraform-example-variables" title="Permanent link">&para;</a></h3>
 <ol>
@@ -1656,15 +1662,17 @@ example directory, and open the <code>main.tf</code> file in the Cloud Shell Edi
 <li><code>gh_app_installation_id</code>: insert the value from the URL of the app
     installation page</li>
 <li><code>gh_app_private_key</code>:<ol>
-<li>Copy the <code>.pem</code> file to example directory, alongside the <code>main.tf</code> file</li>
-<li>Insert the <code>.pem</code> file name you downloaded after generating the
+<li>Copy the <code>.pem</code> file to example directory, alongside the <code>main.tf</code>
+    file</li>
+<li>Insert the <code>.pem</code> filename you downloaded after generating the
     private key for the app, like so:<ol>
 <li><code>gh_app_private_key = file("example.private-key.pem")</code></li>
 </ol>
 </li>
 <li>Warning: Terraform will store the private key in state as plaintext.
     It’s recommended to secure your state file by using a backend such
-    as a GCS bucket with encryption. You can do so by following <a href="https://cloud.google.com/docs/terraform/best-practices/security">these instructions</a>.</li>
+    as a GCS bucket with encryption. You can do so by following
+    <a href="https://cloud.google.com/docs/terraform/best-practices/security">these instructions</a>.</li>
 </ol>
 </li>
 </ol>
@@ -1672,11 +1680,13 @@ example directory, and open the <code>main.tf</code> file in the Cloud Shell Edi
 <li>Modify the value of <code>gh_config_url</code> with the URL of your GitHub
     organization. It will be in the format of <code>https://github.com/ORGANIZATION</code></li>
 <li>(Optional) Specify any other parameters that you wish. For a full list of
-    variables you can modify, refer to the <a href="https://github.com/terraform-google-modules/terraform-google-github-actions-runners/tree/master/modules/gh-runner-gke#inputs">module documentation</a>.</li>
+    variables you can modify, refer to the
+    <a href="https://github.com/terraform-google-modules/terraform-google-github-actions-runners/tree/master/modules/gh-runner-gke#inputs">module documentation</a>.</li>
 </ol>
 <h3 id="deploy-the-example">Deploy the example<a class="headerlink" href="#deploy-the-example" title="Permanent link">&para;</a></h3>
 <ol>
-<li><strong>Initialize Terraform:</strong> Run <code>terraform init</code> to download the required providers.</li>
+<li><strong>Initialize Terraform:</strong> Run <code>terraform init</code> to download the required
+    providers.</li>
 <li><strong>Plan:</strong> Run <code>terraform plan</code> to preview the changes that will be made.</li>
 <li><strong>Apply:</strong> Run <code>terraform apply</code> and confirm to create the resources.</li>
 </ol>
@@ -1689,9 +1699,9 @@ example directory, and open the <code>main.tf</code> file in the Cloud Shell Edi
 <p>You should see the runners appear as “arc-runners”</p>
 <h2 id="creating-a-github-actions-workflow">Creating a GitHub Actions Workflow<a class="headerlink" href="#creating-a-github-actions-workflow" title="Permanent link">&para;</a></h2>
 <ol>
-<li>Create a new GitHub repository within your organization.  </li>
-<li>In your GitHub repository, click the <strong>Actions</strong> tab.  </li>
-<li>Click <strong>New workflow</strong>  </li>
+<li>Create a new GitHub repository within your organization.</li>
+<li>In your GitHub repository, click the <strong>Actions</strong> tab.</li>
+<li>Click <strong>New workflow</strong></li>
 <li>Under “Choose workflow” click <strong>set up a workflow yourself</strong></li>
 <li>
 <p>Paste the following configuration into the text editor:</p>
@@ -1706,16 +1716,16 @@ example directory, and open the <code>main.tf</code> file in the Cloud Shell Edi
 </span></code></pre></div>
 </li>
 <li>
-<p>Click <strong>Commit changes</strong> to save the workflow to your repo.</p>
+<p>Click <strong>Commit changes</strong> to save the workflow to your repository.</p>
 </li>
 </ol>
 <h3 id="test-the-github-actions-workflow">Test the GitHub Actions Workflow<a class="headerlink" href="#test-the-github-actions-workflow" title="Permanent link">&para;</a></h3>
 <ol>
-<li>Go back to the <strong>Actions</strong> tab in your repo.  </li>
+<li>Go back to the <strong>Actions</strong> tab in your repository.</li>
 <li>In the left menu, select the name of your workflow. This should be “Actions
     Runner Controller Demo” if you left the above configuration unchanged</li>
-<li>Click <strong>Run workflow</strong> to open the drop-down menu, and click
-    <strong>Run workflow</strong>  </li>
+<li>Click <strong>Run workflow</strong> to open the drop-down menu, and click <strong>Run
+    workflow</strong></li>
 <li>The sample workflow executes on your GKE-hosted ARC runner set. You can view
     the output within the GitHub Actions run history.</li>
 </ol>
@@ -1723,7 +1733,8 @@ example directory, and open the <code>main.tf</code> file in the Cloud Shell Edi
 <h3 id="teardown-terraform-managed-infrastructure">Teardown Terraform-managed infrastructure<a class="headerlink" href="#teardown-terraform-managed-infrastructure" title="Permanent link">&para;</a></h3>
 <ol>
 <li>
-<p>Navigate back into the example directory you previously ran <code>terraform apply</code></p>
+<p>Navigate back into the example directory you previously ran
+    <code>terraform apply</code></p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">cd</span><span class="w"> </span>terraform-google-github-actions-runners/examples/gh-runner-gke-simple/
 </span></code></pre></div>
 </li>
@@ -1740,18 +1751,18 @@ the Helm-managed workloads previously deployed by this example.</p>
 can delete it via the following instructions. Note that any services
 authenticating via this GitHub App will lose access.</p>
 <ol>
-<li>Navigate to your Organization GitHub App settings  <ol>
-<li>Click your profile picture in the top-right  </li>
-<li>Click <strong>Your organizations</strong>  </li>
-<li>Select the organization you used for this walkthrough  </li>
-<li>Click <strong>Settings</strong>  </li>
-<li>Click the \&lt;&gt; <strong>Developer settings</strong> drop-down  </li>
-<li>Click <strong>GitHub Apps</strong>  </li>
+<li>Navigate to your Organization GitHub App settings<ol>
+<li>Click your profile picture in the top-right</li>
+<li>Click <strong>Your organizations</strong></li>
+<li>Select the organization you used for this walkthrough</li>
+<li>Click <strong>Settings</strong></li>
+<li>Click the \&lt;&gt; <strong>Developer settings</strong> drop-down</li>
+<li>Click <strong>GitHub Apps</strong></li>
 </ol>
 </li>
-<li>In the row where your GitHub App is listed, click <strong>Edit</strong>  </li>
-<li>In the left-side menu, click <strong>Advanced</strong>  </li>
-<li>Click <strong>Delete GitHub App</strong>  </li>
+<li>In the row where your GitHub App is listed, click <strong>Edit</strong></li>
+<li>In the left-side menu, click <strong>Advanced</strong></li>
+<li>Click <strong>Delete GitHub App</strong></li>
 <li>Type the name of the GitHub App to confirm and delete.</li>
 </ol>
 

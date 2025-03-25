@@ -91,4 +91,3 @@ resource "google_project_iam_member" "cloudStorageBinding" {
   role    = "roles/storage.objectUser"
   member  = "serviceAccount:${google_service_account.workloadSa.email}"
 }
-

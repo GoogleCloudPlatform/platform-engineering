@@ -2,11 +2,11 @@
 terraform {
   required_providers {
     google = {
-      source = "hashicorp/google"
+      source  = "hashicorp/google"
       version = ">= 6.0"
     }
   }
-  
+
   provider_meta "google" {
     module_name = "cloud-solutions/platform-engineering-cloud-deploy-pipeline-deploy-v1"
   }
@@ -22,8 +22,8 @@ data "google_project" "project" {
 # Enable Services
 resource "google_project_service" "project" {
   for_each = toset(local.gcp_service_list)
-  project = data.google_project.project.project_id
-  service = each.key
+  project  = data.google_project.project.project_id
+  service  = each.key
 
   timeouts {
     create = "30m"
@@ -31,7 +31,7 @@ resource "google_project_service" "project" {
   }
 
   disable_on_destroy = false
-  depends_on = [data.google_project.project]
+  depends_on         = [data.google_project.project]
 }
 
 # Create Pub/Sub topics using a for_each loop
@@ -62,11 +62,11 @@ resource "google_artifact_registry_repository" "random-date-app" {
 
 # Create a Cloud Run service (Random Date Service)
 resource "google_cloud_run_v2_service" "main" {
-  name     = "random-date-service"
-  project = data.google_project.project.project_id
-  location = var.region
-  ingress = "INGRESS_TRAFFIC_ALL"
-  deletion_protection=false
+  name                = "random-date-service"
+  project             = data.google_project.project.project_id
+  location            = var.region
+  ingress             = "INGRESS_TRAFFIC_ALL"
+  deletion_protection = false
 
   template {
     containers {
@@ -85,9 +85,9 @@ resource "google_service_account" "cloudbuild_service_account" {
 
 resource "google_project_iam_member" "act_as" {
   for_each = toset(local.sa_roles_list)
-  project = data.google_project.project.project_id
-  role    = each.key
-  member  = "serviceAccount:${google_service_account.cloudbuild_service_account.email}"
+  project  = data.google_project.project.project_id
+  role     = each.key
+  member   = "serviceAccount:${google_service_account.cloudbuild_service_account.email}"
 }
 
 # Data source to get the default compute engine service account
@@ -100,12 +100,12 @@ data "google_compute_default_service_account" "default" {
 #Not sure how to do this in terraform yet TODO: @Ghaun
 # Create a Cloud Build trigger
 resource "google_cloudbuild_trigger" "build-cloudrun-deploy" {
-  name        = "random-date-build-trigger"
-  location = "global"
+  name            = "random-date-build-trigger"
+  location        = "global"
   service_account = google_service_account.cloudbuild_service_account.id
   github {
     owner = var.github_owner
-    name = var.github_repo
+    name  = var.github_repo
     push {
       branch = "main"
     }
@@ -116,14 +116,14 @@ resource "google_cloudbuild_trigger" "build-cloudrun-deploy" {
     "_DEPLOY_GCS" = google_storage_bucket.deploy_resources_bucket.url
   }
 
-  depends_on = [ google_project_iam_member.act_as ]
+  depends_on = [google_project_iam_member.act_as]
 }
 
 resource "google_storage_bucket" "deploy_resources_bucket" {
-  name = "${data.google_project.project.project_id}-deploy-resources-bucket"
-  location = "US"
-  uniform_bucket_level_access = true 
-  force_destroy = true
+  name                        = "${data.google_project.project.project_id}-deploy-resources-bucket"
+  location                    = "US"
+  uniform_bucket_level_access = true
+  force_destroy               = true
 }
 
 

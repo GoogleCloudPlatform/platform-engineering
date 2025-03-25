@@ -1,4 +1,4 @@
-const { PubSub } = require('@google-cloud/pubsub');
+const {PubSub} = require('@google-cloud/pubsub');
 const express = require('express');
 const path = require('path');
 
@@ -12,25 +12,25 @@ const subscriptionNames = [
   'build_notifications_subscription',
   'deploy-commands-subscription',
   'clouddeploy-operations-subscription',
-  'clouddeploy-approvals-subscription'
+  'clouddeploy-approvals-subscription',
 ];
 const timeout = 60;
 
-const pubsubClient = new PubSub({ projectId });
+const pubsubClient = new PubSub({projectId});
 
 // Store messages per subscription
 let messages = {
   'build_notifications_subscription': [],
   'deploy-commands-subscription': [],
   'clouddeploy-operations-subscription': [],
-  'clouddeploy-approvals-subscription': []
+  'clouddeploy-approvals-subscription': [],
 };
 
 // Function to pull messages from each subscription
 async function pullMessages(pubSubClient, subscriptionName) {
   const subscription = pubSubClient.subscription(subscriptionName);
 
-  const messageHandler = message => {
+  const messageHandler = (message) => {
     console.log(`Received message ${message.id}:`);
     console.log(`\tData: ${message.data}`);
     console.log(`\tAttributes: ${JSON.stringify(message.attributes)}`);
@@ -38,7 +38,7 @@ async function pullMessages(pubSubClient, subscriptionName) {
     messages[subscriptionName].push({
       id: message.id,
       data: message.data.toString(),
-      attributes: message.attributes
+      attributes: message.attributes,
     });
 
     message.ack();
@@ -61,7 +61,7 @@ async function main() {
 
   app.use(express.static(path.join(__dirname, 'public')));
   app.use(express.json());
-  app.use(express.urlencoded({ extended: true })); // For parsing application/x-www-form-urlencoded
+  app.use(express.urlencoded({extended: true})); // For parsing application/x-www-form-urlencoded
 
   // API endpoint to send messages to the frontend
   app.get('/messages', (req, res) => {
@@ -75,44 +75,41 @@ async function main() {
       'build_notifications_subscription': [],
       'deploy-commands-subscription': [],
       'clouddeploy-operations-subscription': [],
-      'clouddeploy-approvals-subscription': []
+      'clouddeploy-approvals-subscription': [],
     };
-    console.log("All messages cleared.");
+    console.log('All messages cleared.');
     res.sendStatus(200); // Respond with success
   });
 
   app.post('/send-message', async (req, res) => {
     console.log(`Req Body: ${JSON.stringify(req.body, null, 2)}`);
     try {
-      const {data, attributes } = req.body
-      console.log(`Data: ${data}, Attributes: ${JSON.stringify(attributes)}`)
-      
+      const {data, attributes} = req.body;
+      console.log(`Data: ${data}, Attributes: ${JSON.stringify(attributes)}`);
+
       const topic = pubsubClient.topic(topicName);
-      
+
       // Create the message object with optional attributes
-      const dataBuf = Buffer.from("{}"); // Convert data to Buffer
-  
+      const dataBuf = Buffer.from('{}'); // Convert data to Buffer
+
       // Publish the message to the Pub/Sub topic
-      const messageId = await topic.publish(dataBuf,
-        attributes);
-      
+      const messageId = await topic.publish(dataBuf, attributes);
+
       console.log(`Message sent with ID: ${messageId}`);
-      
+
       // Send a success response
       res.status(200).send('Message published.');
     } catch (error) {
       console.error('Error publishing message:', error);
-      
+
       // Send an error response
-      res.status(500).send('Failed to publish message.'); 
+      res.status(500).send('Failed to publish message.');
     }
   });
 
   app.listen(port, () => {
     console.log(`Server is listening on port ${port}`);
   });
-
-  
 }
 
 main().catch(console.error);
