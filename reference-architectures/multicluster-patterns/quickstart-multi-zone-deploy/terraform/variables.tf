@@ -65,25 +65,3 @@ variable "cluster_2_name" {
   type        = string
   default     = "secondary-cluster"
 }
-variable "namespace" {
-  description = "Service namespace"
-  type        = string
-}
-variable "app_service_name" {
-  description = "The Service and Service Export name"
-  type = string
-}
-variable "gatewayclass" {
-  description = <<-EOT
-    The type of multi-cluster Gateway to create. Choose from:
-    - gke-l7-global-external-managed-mc: for global external multi-cluster Gateways
-    - gke-l7-regional-external-managed-mc: for regional external multi-cluster Gateways
-    - gke-l7-rilb-mc for regional internal multi-cluster Gateways
-    - gke-l7-gxlb-mc for global external Classic multi-cluster Gateways
-  EOT
-  type        = string
-}
-variable "hostnames" {
-  description = "HTTP Route hostnames"
-  type = list(string)
-}
