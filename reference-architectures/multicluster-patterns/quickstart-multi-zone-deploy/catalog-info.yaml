@@ -1,0 +1,12 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: multicluster-quickstart
+  description: Mutlicluster zquickstart in same region.
+  tags:
+    - go
+    - website
+spec:
+  type: service
+  lifecycle: production
+  owner: google-cloud-sa
