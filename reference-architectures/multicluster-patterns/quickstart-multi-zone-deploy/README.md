@@ -1,10 +1,9 @@
 # Deploy services to multiple zonal clusters in the same region
 
-This Terraform configuration deploys a multiple zonal clusters GKE setup 
-and configures a Cloud Deploy delivery pipeline for canary
-deployments.
+This Terraform configuration deploys a multiplezonal clusters GKE setup
+and configures a Cloud Deploy delivery pipeline for canary deployments.
 
-![archtiect](images/diagram.svg)
+![diagram](images/diagram.svg)
 
 ## Prerequisites
 
