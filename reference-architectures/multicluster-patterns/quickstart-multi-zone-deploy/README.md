@@ -1,8 +1,8 @@
-# Google Kubernetes Engine (GKE) Multi-Cluster Deployment with Cloud Deploy
+# Deploy services to multiple zonal clusters in the same region
 
 This Terraform configuration deploys a multi-cluster GKE setup on Google Cloud
 Platform (GCP) and configures a Cloud Deploy delivery pipeline for canary
-deployments across these clusters.
+deployments.
 
 ## Prerequisites
 
