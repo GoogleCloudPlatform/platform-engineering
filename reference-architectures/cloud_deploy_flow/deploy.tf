@@ -27,7 +27,7 @@ resource "google_service_account_iam_binding" "allow_compute_sa_to_act_as" {
 # Create a Cloud Deploy pipeline
 resource "google_clouddeploy_delivery_pipeline" "primary" {
   name        = "random-date-service"
-  project = data.google_project.project.project_id
+  project     = data.google_project.project.project_id
   location    = var.region
   description = "Pipeline triggered by JIRA notifications"
 
@@ -40,21 +40,21 @@ resource "google_clouddeploy_delivery_pipeline" "primary" {
 
 # Create a Cloud Deploy target
 resource "google_clouddeploy_target" "primary" {
-  name     = "random-date-service"
-  project = data.google_project.project.project_id
-  location = var.region
+  name             = "random-date-service"
+  project          = data.google_project.project.project_id
+  location         = var.region
   require_approval = true # Set to true if you want manual approval for deployments
 
-  # Configure Service Account 
+  # Configure Service Account
   execution_configs {
-    usages = ["RENDER", "DEPLOY"]
-    service_account = "${google_service_account.cloudbuild_service_account.email}"
+    usages          = ["RENDER", "DEPLOY"]
+    service_account = google_service_account.cloudbuild_service_account.email
   }
   # Configure your deployment target (Cloud Run)
   run {
     location = "projects/${data.google_project.project.project_id}/locations/${var.region}"
   }
-  depends_on = [ 
+  depends_on = [
     google_cloud_run_v2_service.main,
-    google_project_iam_member.act_as ]
+  google_project_iam_member.act_as]
 }

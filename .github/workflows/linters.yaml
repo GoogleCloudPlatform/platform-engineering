@@ -12,19 +12,50 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: markdownlint
+name: Lint
 
-on: [push, pull_request]
+on: # yamllint disable-line rule:truthy
+  push: null
+  pull_request: null
+  workflow_call: null
+
+permissions:
+  contents: read
 
 jobs:
-  delivery:
-
+  lint:
+    concurrency:
+      # Ref: https://docs.github.com/en/actions/learn-github-actions/contexts#github-context
+      # github.head_ref: head_ref or source branch of the pull request
+      # github.ref: ref of the branch that triggered the workflow
+      group: ${{ github.workflow }}-lint-${{ github.head_ref || github.ref }}-${{ github.event_name }}
+      cancel-in-progress: true
+    permissions:
+      contents: read
+      packages: read
+      statuses: write
     runs-on: ubuntu-latest
-
     steps:
-    - name: Check out code
-      uses: actions/checkout@v4
-    - name: Run mdl
-      uses: actionshub/markdownlint@main
-      with:
-        filesToIgnoreRegex: code\-of\-conduct\.md
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Load super-linter configuration
+        run: |
+          . scripts/common.sh
+
+          TEMP_SUPER_LINTER_ENVIROMENT_CONFIG_FILE="/tmp/super-linter-environment-config.env"
+          grep -v '^#' "${SUPER_LINTER_ENVIRONMENT_CONFIGURATION_FILE_PATH}" >"${TEMP_SUPER_LINTER_ENVIROMENT_CONFIG_FILE}"
+          SUPER_LINTER_ENVIRONMENT_CONFIG_FILE="${TEMP_SUPER_LINTER_ENVIROMENT_CONFIG_FILE}"
+
+          if is_linter_config_changed; then
+            echo "Configure Super-linter to validate the entire codebase"
+            TEMP_SUPER_LINTER_ENVIROMENT_CONFIG_FILE_WITHOUT_VALIDATE_ALL_CODEBASE="/tmp/super-linter-environment-config-without-validate-all-codebase.env"
+            grep -v 'VALIDATE_ALL_CODEBASE' "${TEMP_SUPER_LINTER_ENVIROMENT_CONFIG_FILE}" >"${TEMP_SUPER_LINTER_ENVIROMENT_CONFIG_FILE_WITHOUT_VALIDATE_ALL_CODEBASE}"
+            SUPER_LINTER_ENVIRONMENT_CONFIG_FILE="${TEMP_SUPER_LINTER_ENVIROMENT_CONFIG_FILE_WITHOUT_VALIDATE_ALL_CODEBASE}"
+          fi
+
+          cat "${SUPER_LINTER_ENVIRONMENT_CONFIG_FILE}" >>"$GITHUB_ENV"
+      - name: Super-Linter
+        uses: super-linter/super-linter@v7.3.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
