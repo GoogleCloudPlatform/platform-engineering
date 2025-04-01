@@ -283,7 +283,7 @@ resource "google_cloudfunctions2_function" "pubsub_handler" {
   description = "Handles Pub/Sub messages to rotate cloudsql password"
   build_config {
     runtime     = "python310"
-    entry_point = "password_rotation_function" # Set the entry point 
+    entry_point = "password_rotation_function" # Set the entry point
     source {
       storage_source {
         bucket = google_storage_bucket.function_bucket.name

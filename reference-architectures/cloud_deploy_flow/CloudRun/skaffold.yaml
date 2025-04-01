@@ -5,4 +5,4 @@ deploy:
   # Or 'gke' for direct deployments to GKE
 manifests:
   rawYaml:
-  - run.yaml
+    - run.yaml

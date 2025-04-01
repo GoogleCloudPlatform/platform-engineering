@@ -35,8 +35,9 @@ deployment of a new application.
 This demo illustrates the end-to-end deployment process, starting from the
 container build phase. Here's a high-level overview of the workflow:
 
-1.  **Container Build Process**: The demo begins when a container is built in
-    Cloud Build. Upon completion, a notification is sent to a Pub/Sub message queue.
+1.  **Container Build Process**: The demo begins when a container is built-in
+    Cloud Build. Upon completion, a notification is sent to a Pub/Sub message
+    queue.
 
 2.  **Release Logic**: A Cloud Run Function subscribes to this message queue,
     assessing whether a release should be created. If a release is warranted, a
@@ -51,9 +52,9 @@ container build phase. Here's a high-level overview of the workflow:
     "Command Queue."
 
 5.  **Approval Process**: Since rollouts typically require approval, a
-    notification is sent to the `cloud-deploy-approvals` Pub/Sub queue. An approval
-    function then picks up this message, allowing you to implement your custom logic
-    or utilize the provided Website Demo to return JSON, such as
+    notification is sent to the `cloud-deploy-approvals` Pub/Sub queue. An
+    approval function then picks up this message, allowing you to implement your
+    custom logic or utilize the provided site Demo to return JSON, such as
     `{ "manualApproval": "true" }`.
 
 6.  **Deployment**: Once approved, the rollout proceeds, and the new application
@@ -61,70 +62,71 @@ container build phase. Here's a high-level overview of the workflow:
 
 ![Workflow Diagram](architecture.svg)
 
-## Prerequisites  
+## Prerequisites
 
-*   A GCP project with billing enabled  
-*   The following APIs must be enabled in your GCP project:  
-    *   `compute.googleapis.com`  
-    *   `iam.googleapis.com`  
-    *   `cloudresourcemanager.googleapis.com`  
-*   Ensure you have the necessary IAM roles to manage these resources.
+- A GCP project with billing enabled
+- The following APIs must be enabled in your GCP project:
+    - `compute.googleapis.com`
+    - `iam.googleapis.com`
+    - `cloudresourcemanager.googleapis.com`
+- Ensure you have the necessary IAM roles to manage these resources.
 
 ## IAM Roles used by Terraform
 
 To run this demo, the following IAM roles will be granted to the service account
 created by the Terraform configuration:
 
-*   `roles/iam.serviceAccountUser`: Allows management of service accounts.
-*   `roles/logging.logWriter`: Grants permission to write logs.
-*   `roles/artifactregistry.writer`: Enables writing to Artifact Registry.
-*   `roles/storage.objectUser`: Provides access to Cloud Storage objects.
-*   `roles/clouddeploy.jobRunner`: Allows execution of Cloud Deploy jobs.
-*   `roles/clouddeploy.releaser`: Grants permissions to release configurations
-    in Cloud Deploy.
-*   `roles/run.developer`: Enables deploying and managing Cloud Run services.
-*   `roles/cloudbuild.builds.builder`: Allows triggering and managing Cloud
-    Build processes.
+- `roles/iam.serviceAccountUser`: Allows management of service accounts.
+- `roles/logging.logWriter`: Grants permission to write logs.
+- `roles/artifactregistry.writer`: Enables writing to Artifact Registry.
+- `roles/storage.objectUser`: Provides access to Cloud Storage objects.
+- `roles/clouddeploy.jobRunner`: Allows execution of Cloud Deploy jobs.
+- `roles/clouddeploy.releaser`: Grants permissions to release configurations in
+  Cloud Deploy.
+- `roles/run.developer`: Enables deploying and managing Cloud Run services.
+- `roles/cloudbuild.builds.builder`: Allows triggering and managing Cloud Build
+  processes.
 
 ## GCP Services enabled by Terraform
 
-The following Google Cloud services must be enabled in your project to run this demo:
+The following Google Cloud services must be enabled in your project to run this
+demo:
 
-*   `pubsub.googleapis.com`: Enables Pub/Sub for messaging between services.  
-*   `clouddeploy.googleapis.com`: Allows use of Cloud Deploy for managing
-    deployments.  
-*   `cloudbuild.googleapis.com`: Enables Cloud Build for building and deploying
-    applications.  
-*   `compute.googleapis.com`: Provides access to Compute Engine resources.  
-*   `cloudresourcemanager.googleapis.com`: Allows management of project-level
-    permissions and resources.  
-*   `run.googleapis.com`: Enables Cloud Run for deploying and running
-    containerized applications.  
-*   `cloudfunctions.googleapis.com`: Allows use of Cloud Functions for
-    event-driven functions.  
-*   `eventarc.googleapis.com`: Enables Eventarc for routing events from sources
-    to targets.
+- `pubsub.googleapis.com`: Enables Pub/Sub for messaging between services.
+- `clouddeploy.googleapis.com`: Allows use of Cloud Deploy for managing
+  deployments.
+- `cloudbuild.googleapis.com`: Enables Cloud Build for building and deploying
+  applications.
+- `compute.googleapis.com`: Provides access to Compute Engine resources.
+- `cloudresourcemanager.googleapis.com`: Allows management of project-level
+  permissions and resources.
+- `run.googleapis.com`: Enables Cloud Run for deploying and running
+  containerized applications.
+- `cloudfunctions.googleapis.com`: Allows use of Cloud Functions for
+  event-driven functions.
+- `eventarc.googleapis.com`: Enables Eventarc for routing events from sources to
+  targets.
 
 ## Getting Started
 
 To run this demo, follow these steps:
 
-1.  **Fork and Clone the Repository**:
-    Start by forking this repository to your GitHub account (So you can connect
-    GCP to this repo), then clone it to your local environment. After cloning,
-    change your directory to the deployment demo:
+1.  **Fork and Clone the Repository**: Start by forking this repository to your
+    GitHub account (So you can connect GCP to this repository), then clone it to
+    your local environment. After cloning, change your directory to the
+    deployment demo:
 
     ```bash
     cd platform-engineering/reference-architectures/cloud_deploy_flow
     ```
 
-2.  **Set Up Environment Variables or Variables File**:  
-   You can set the necessary variables either by exporting them as environment
-   variables or by creating a `terraform.tfvars` file. Refer to
-   `variables.tf` for more details on each variable. Ensure the
-   values match your Google Cloud project and GitHub configuration.
+2.  **Set Up Environment Variables or Variables File**: You can set the
+    necessary variables either by exporting them as environment variables or by
+    creating a `terraform.tfvars` file. Refer to `variables.tf` for more details
+    on each variable. Ensure the values match your Google Cloud project and
+    GitHub configuration.
 
-    *   **Option 1**: Set environment variables manually in your shell:  
+    - **Option 1**: Set environment variables manually in your shell:
 
         ```bash
         export TF_VAR_project_id="your-google-cloud-project-id"
@@ -133,8 +135,8 @@ To run this demo, follow these steps:
         export TF_VAR_github_repo="your-github-repo-name"
         ```
 
-    *   **Option 2**: Create a `terraform.tfvars` file in the same directory as your
-    Terraform configuration and populate it with the following:  
+    - **Option 2**: Create a `terraform.tfvars` file in the same directory as
+      your Terraform configuration and populate it with the following:
 
         ```hcl
         project_id  = "your-google-cloud-project-id"
@@ -143,23 +145,23 @@ To run this demo, follow these steps:
         github_repo = "your-github-repo-name"
         ```
 
-3.  **Initialize and Apply Terraform**:
-    With the environment variables set, initialize and apply the Terraform configuration:
+3.  **Initialize and Apply Terraform**: With the environment variables set,
+    initialize and apply the Terraform configuration:
 
     ```bash
     terraform init
     terraform apply
     ```
 
-    *Note*: Applying Terraform may take a few minutes as it creates the
+    _Note_: Applying Terraform may take a few minutes as it creates the
     necessary resources.
 
-4.  **Connect GitHub Repository to Cloud Build**:
-    Due to occasional issues with automatic connections, you may need to manually
-    attach your GitHub repository to Cloud Build in the Google Cloud Console.
+4.  **Connect GitHub Repository to Cloud Build**: Due to occasional issues with
+    automatic connections, you may need to manually attach your GitHub
+    repository to Cloud Build in the Google Cloud Console.
 
-    If you get the following error you will need to manually connect your repo
-    to the project:
+    If you get the following error you will need to manually connect your
+    repository to the project:
 
     ```bash
     Error: Error creating Trigger: googleapi: Error 400: Repository mapping does
@@ -168,52 +170,52 @@ To run this demo, follow these steps:
 
     Re-run step 3 to ensure all resources are deployed
 
-5.  **Navigate to the Demo Website**:
-    Once the Terraform setup is complete, switch to the Demo Website directory:
+5.  **Navigate to the Demo site**: Once the Terraform setup is complete, switch
+    to the Demo site directory:
 
     ```bash
     cd platform-engineering/reference-architectures/cloud-deploy-flow/WebsiteDemo
     ```
 
-6.  **Authenticate and Run the Demo Website**:
+6.  **Authenticate and Run the Demo site**:
 
-    *   Ensure you are running these commands on a **local machine** or a
-    machine with **GUI/web browser access**, as Cloud Shell may not fully
-    support running the demo website.
+    - Ensure you are running these commands on a **local machine** or a machine
+      with **GUI/web browser access**, as Cloud Shell may not fully support
+      running the demo site.
 
-    *   Set your Google Cloud project by running:
+    - Set your Google Cloud project by running:
 
         ```bash
         gcloud config set project <your_project_id>
         ```
 
-    *   Authenticate your Google Cloud CLI session:
+    - Authenticate your Google Cloud CLI session:
 
         ```bash
         gcloud auth application-default login
         ```
 
-    *   Install required npm packages and start the demo website:
+    - Install required npm packages and start the demo site:
 
         ```bash
         npm install
         node index.js
         ```
 
-    *   Open `http://localhost:8080` in your browser to observe the demo
-    website in action.
+    - Open `http://localhost:8080` in your browser to observe the demo site in
+      action.
 
 7.  **Trigger a Build in Cloud Build**:
 
-    *   Initiate a build in Cloud Build. As the build progresses, messages will
-    display on the demo website, allowing you to follow each step in the
-    deployment process.
-    *   You can also monitor the deployment rollout on [Google Cloud Console](https://console.cloud.google.com).
+    - Initiate a build in Cloud Build. As the build progresses, messages will
+      display on the demo site, allowing you to follow each step in the
+      deployment process.
+    - You can also monitor the deployment rollout on
+      [Google Cloud Console](https://console.cloud.google.com).
 
-8.  **Approve the Rollout**:
-    When an approval message is received, you’ll need to send a response to
-    complete the deployment. Use the message data provided and add a
-    `ManualApproval` field:
+8.  **Approve the Rollout**: When an approval message is received, you’ll need
+    to send a response to complete the deployment. Use the message data provided
+    and add a `ManualApproval` field:
 
     ```text
     {
@@ -229,10 +231,9 @@ To run this demo, follow these steps:
     }
     ```
 
-9.  **Verify the Deployment**:
-   Once the approval is processed, the deployment should finish rolling out.
-   Check the Cloud Deploy dashboard in the Google Cloud Console to confirm the
-   deployment status.
+9.  **Verify the Deployment**: Once the approval is processed, the deployment
+    should finish rolling out. Check the Cloud Deploy dashboard in the Google
+    Cloud Console to confirm the deployment status.
 
 ## Conclusion
 

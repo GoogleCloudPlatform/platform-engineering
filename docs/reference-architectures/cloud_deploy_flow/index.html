@@ -1387,8 +1387,9 @@ deployment of a new application.</p>
 container build phase. Here's a high-level overview of the workflow:</p>
 <ol>
 <li>
-<p><strong>Container Build Process</strong>: The demo begins when a container is built in
-    Cloud Build. Upon completion, a notification is sent to a Pub/Sub message queue.</p>
+<p><strong>Container Build Process</strong>: The demo begins when a container is built-in
+    Cloud Build. Upon completion, a notification is sent to a Pub/Sub message
+    queue.</p>
 </li>
 <li>
 <p><strong>Release Logic</strong>: A Cloud Run Function subscribes to this message queue,
@@ -1407,9 +1408,9 @@ container build phase. Here's a high-level overview of the workflow:</p>
 </li>
 <li>
 <p><strong>Approval Process</strong>: Since rollouts typically require approval, a
-    notification is sent to the <code>cloud-deploy-approvals</code> Pub/Sub queue. An approval
-    function then picks up this message, allowing you to implement your custom logic
-    or utilize the provided Website Demo to return JSON, such as
+    notification is sent to the <code>cloud-deploy-approvals</code> Pub/Sub queue. An
+    approval function then picks up this message, allowing you to implement your
+    custom logic or utilize the provided site Demo to return JSON, such as
     <code>{ "manualApproval": "true" }</code>.</p>
 </li>
 <li>
@@ -1420,11 +1421,11 @@ container build phase. Here's a high-level overview of the workflow:</p>
 <p><img alt="Workflow Diagram" src="architecture.svg" /></p>
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <ul>
-<li>A GCP project with billing enabled  </li>
-<li>The following APIs must be enabled in your GCP project:  <ul>
-<li><code>compute.googleapis.com</code>  </li>
-<li><code>iam.googleapis.com</code>  </li>
-<li><code>cloudresourcemanager.googleapis.com</code>  </li>
+<li>A GCP project with billing enabled</li>
+<li>The following APIs must be enabled in your GCP project:<ul>
+<li><code>compute.googleapis.com</code></li>
+<li><code>iam.googleapis.com</code></li>
+<li><code>cloudresourcemanager.googleapis.com</code></li>
 </ul>
 </li>
 <li>Ensure you have the necessary IAM roles to manage these resources.</li>
@@ -1438,50 +1439,51 @@ created by the Terraform configuration:</p>
 <li><code>roles/artifactregistry.writer</code>: Enables writing to Artifact Registry.</li>
 <li><code>roles/storage.objectUser</code>: Provides access to Cloud Storage objects.</li>
 <li><code>roles/clouddeploy.jobRunner</code>: Allows execution of Cloud Deploy jobs.</li>
-<li><code>roles/clouddeploy.releaser</code>: Grants permissions to release configurations
-    in Cloud Deploy.</li>
+<li><code>roles/clouddeploy.releaser</code>: Grants permissions to release configurations in
+  Cloud Deploy.</li>
 <li><code>roles/run.developer</code>: Enables deploying and managing Cloud Run services.</li>
-<li><code>roles/cloudbuild.builds.builder</code>: Allows triggering and managing Cloud
-    Build processes.</li>
+<li><code>roles/cloudbuild.builds.builder</code>: Allows triggering and managing Cloud Build
+  processes.</li>
 </ul>
 <h2 id="gcp-services-enabled-by-terraform">GCP Services enabled by Terraform<a class="headerlink" href="#gcp-services-enabled-by-terraform" title="Permanent link">&para;</a></h2>
-<p>The following Google Cloud services must be enabled in your project to run this demo:</p>
+<p>The following Google Cloud services must be enabled in your project to run this
+demo:</p>
 <ul>
-<li><code>pubsub.googleapis.com</code>: Enables Pub/Sub for messaging between services.  </li>
+<li><code>pubsub.googleapis.com</code>: Enables Pub/Sub for messaging between services.</li>
 <li><code>clouddeploy.googleapis.com</code>: Allows use of Cloud Deploy for managing
-    deployments.  </li>
+  deployments.</li>
 <li><code>cloudbuild.googleapis.com</code>: Enables Cloud Build for building and deploying
-    applications.  </li>
-<li><code>compute.googleapis.com</code>: Provides access to Compute Engine resources.  </li>
+  applications.</li>
+<li><code>compute.googleapis.com</code>: Provides access to Compute Engine resources.</li>
 <li><code>cloudresourcemanager.googleapis.com</code>: Allows management of project-level
-    permissions and resources.  </li>
+  permissions and resources.</li>
 <li><code>run.googleapis.com</code>: Enables Cloud Run for deploying and running
-    containerized applications.  </li>
+  containerized applications.</li>
 <li><code>cloudfunctions.googleapis.com</code>: Allows use of Cloud Functions for
-    event-driven functions.  </li>
-<li><code>eventarc.googleapis.com</code>: Enables Eventarc for routing events from sources
-    to targets.</li>
+  event-driven functions.</li>
+<li><code>eventarc.googleapis.com</code>: Enables Eventarc for routing events from sources to
+  targets.</li>
 </ul>
 <h2 id="getting-started">Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
 <p>To run this demo, follow these steps:</p>
 <ol>
 <li>
-<p><strong>Fork and Clone the Repository</strong>:
-    Start by forking this repository to your GitHub account (So you can connect
-    GCP to this repo), then clone it to your local environment. After cloning,
-    change your directory to the deployment demo:</p>
+<p><strong>Fork and Clone the Repository</strong>: Start by forking this repository to your
+    GitHub account (So you can connect GCP to this repository), then clone it to
+    your local environment. After cloning, change your directory to the
+    deployment demo:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">cd</span><span class="w"> </span>platform-engineering/reference-architectures/cloud_deploy_flow
 </span></code></pre></div>
 </li>
 <li>
-<p><strong>Set Up Environment Variables or Variables File</strong>:<br />
-   You can set the necessary variables either by exporting them as environment
-   variables or by creating a <code>terraform.tfvars</code> file. Refer to
-   <code>variables.tf</code> for more details on each variable. Ensure the
-   values match your Google Cloud project and GitHub configuration.</p>
+<p><strong>Set Up Environment Variables or Variables File</strong>: You can set the
+    necessary variables either by exporting them as environment variables or by
+    creating a <code>terraform.tfvars</code> file. Refer to <code>variables.tf</code> for more details
+    on each variable. Ensure the values match your Google Cloud project and
+    GitHub configuration.</p>
 <ul>
 <li>
-<p><strong>Option 1</strong>: Set environment variables manually in your shell:  </p>
+<p><strong>Option 1</strong>: Set environment variables manually in your shell:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">TF_VAR_project_id</span><span class="o">=</span><span class="s2">&quot;your-google-cloud-project-id&quot;</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">TF_VAR_region</span><span class="o">=</span><span class="s2">&quot;your-preferred-region&quot;</span>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">TF_VAR_github_owner</span><span class="o">=</span><span class="s2">&quot;your-github-repo-owner&quot;</span>
@@ -1489,8 +1491,8 @@ created by the Terraform configuration:</p>
 </span></code></pre></div>
 </li>
 <li>
-<p><strong>Option 2</strong>: Create a <code>terraform.tfvars</code> file in the same directory as your
-Terraform configuration and populate it with the following:  </p>
+<p><strong>Option 2</strong>: Create a <code>terraform.tfvars</code> file in the same directory as
+  your Terraform configuration and populate it with the following:</p>
 <div class="language-hcl highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="na">project_id</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;your-google-cloud-project-id&quot;</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="na">region</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;your-preferred-region&quot;</span>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="na">github_owner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;your-github-repo-owner&quot;</span>
@@ -1500,8 +1502,8 @@ Terraform configuration and populate it with the following:  </p>
 </ul>
 </li>
 <li>
-<p><strong>Initialize and Apply Terraform</strong>:
-    With the environment variables set, initialize and apply the Terraform configuration:</p>
+<p><strong>Initialize and Apply Terraform</strong>: With the environment variables set,
+    initialize and apply the Terraform configuration:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>terraform<span class="w"> </span>init
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>terraform<span class="w"> </span>apply
 </span></code></pre></div>
@@ -1509,29 +1511,29 @@ Terraform configuration and populate it with the following:  </p>
 necessary resources.</p>
 </li>
 <li>
-<p><strong>Connect GitHub Repository to Cloud Build</strong>:
-    Due to occasional issues with automatic connections, you may need to manually
-    attach your GitHub repository to Cloud Build in the Google Cloud Console.</p>
-<p>If you get the following error you will need to manually connect your repo
-to the project:</p>
+<p><strong>Connect GitHub Repository to Cloud Build</strong>: Due to occasional issues with
+    automatic connections, you may need to manually attach your GitHub
+    repository to Cloud Build in the Google Cloud Console.</p>
+<p>If you get the following error you will need to manually connect your
+repository to the project:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Error:<span class="w"> </span>Error<span class="w"> </span>creating<span class="w"> </span>Trigger:<span class="w"> </span>googleapi:<span class="w"> </span>Error<span class="w"> </span><span class="m">400</span>:<span class="w"> </span>Repository<span class="w"> </span>mapping<span class="w"> </span>does
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>not<span class="w"> </span>exist.
 </span></code></pre></div>
 <p>Re-run step 3 to ensure all resources are deployed</p>
 </li>
 <li>
-<p><strong>Navigate to the Demo Website</strong>:
-    Once the Terraform setup is complete, switch to the Demo Website directory:</p>
+<p><strong>Navigate to the Demo site</strong>: Once the Terraform setup is complete, switch
+    to the Demo site directory:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">cd</span><span class="w"> </span>platform-engineering/reference-architectures/cloud-deploy-flow/WebsiteDemo
 </span></code></pre></div>
 </li>
 <li>
-<p><strong>Authenticate and Run the Demo Website</strong>:</p>
+<p><strong>Authenticate and Run the Demo site</strong>:</p>
 <ul>
 <li>
-<p>Ensure you are running these commands on a <strong>local machine</strong> or a
-machine with <strong>GUI/web browser access</strong>, as Cloud Shell may not fully
-support running the demo website.</p>
+<p>Ensure you are running these commands on a <strong>local machine</strong> or a machine
+  with <strong>GUI/web browser access</strong>, as Cloud Shell may not fully support
+  running the demo site.</p>
 </li>
 <li>
 <p>Set your Google Cloud project by running:</p>
@@ -1544,14 +1546,14 @@ support running the demo website.</p>
 </span></code></pre></div>
 </li>
 <li>
-<p>Install required npm packages and start the demo website:</p>
+<p>Install required npm packages and start the demo site:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>npm<span class="w"> </span>install
 </span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>node<span class="w"> </span>index.js
 </span></code></pre></div>
 </li>
 <li>
-<p>Open <code>http://localhost:8080</code> in your browser to observe the demo
-website in action.</p>
+<p>Open <code>http://localhost:8080</code> in your browser to observe the demo site in
+  action.</p>
 </li>
 </ul>
 </li>
@@ -1559,16 +1561,16 @@ website in action.</p>
 <p><strong>Trigger a Build in Cloud Build</strong>:</p>
 <ul>
 <li>Initiate a build in Cloud Build. As the build progresses, messages will
-display on the demo website, allowing you to follow each step in the
-deployment process.</li>
-<li>You can also monitor the deployment rollout on <a href="https://console.cloud.google.com">Google Cloud Console</a>.</li>
+  display on the demo site, allowing you to follow each step in the
+  deployment process.</li>
+<li>You can also monitor the deployment rollout on
+  <a href="https://console.cloud.google.com">Google Cloud Console</a>.</li>
 </ul>
 </li>
 <li>
-<p><strong>Approve the Rollout</strong>:
-    When an approval message is received, you’ll need to send a response to
-    complete the deployment. Use the message data provided and add a
-    <code>ManualApproval</code> field:</p>
+<p><strong>Approve the Rollout</strong>: When an approval message is received, you’ll need
+    to send a response to complete the deployment. Use the message data provided
+    and add a <code>ManualApproval</code> field:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>{
 </span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>    &quot;message&quot;: {
 </span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>    &quot;data&quot;: &quot;&lt;base64-encoded data&gt;&quot;,
@@ -1583,10 +1585,9 @@ deployment process.</li>
 </span></code></pre></div>
 </li>
 <li>
-<p><strong>Verify the Deployment</strong>:
-   Once the approval is processed, the deployment should finish rolling out.
-   Check the Cloud Deploy dashboard in the Google Cloud Console to confirm the
-   deployment status.</p>
+<p><strong>Verify the Deployment</strong>: Once the approval is processed, the deployment
+    should finish rolling out. Check the Cloud Deploy dashboard in the Google
+    Cloud Console to confirm the deployment status.</p>
 </li>
 </ol>
 <h2 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link">&para;</a></h2>
