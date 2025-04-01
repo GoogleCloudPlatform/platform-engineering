@@ -5,6 +5,10 @@
   "description": "A report that Gemini produces to analyze migration blockers",
   "type": "object",
   "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "The schema to verify this document against."
+    },
     "reportVersion": {
       "description": "Report version",
       "type": "string",
@@ -80,6 +84,6 @@
       }
     }
   },
-  "required": ["reportVersion", "name", "id", "reportSections"],
+  "required": ["$schema", "reportVersion", "name", "id", "reportSections"],
   "additionalProperties": false
 }
