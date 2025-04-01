@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/GoogleCloudPlatform/platform-engineering/blob/main/reference-architectures/gemini-powered-migration-blocker-analysis/schemas/migration-blocker-analysis-v1.0.0-schema.json",
-  "title": "Gemini-powered migration blocker analysis report ",
+  "title": "Gemini-powered migration blocker analysis report",
   "description": "A report that Gemini produces to analyze migration blockers",
   "type": "object",
   "properties": {
