@@ -172,7 +172,7 @@ resource "google_secret_manager_secret" "cloudsql_pswd" {
 
 resource "google_secret_manager_secret_version" "cloudsql_pswd_secret" {
   secret      = google_secret_manager_secret.cloudsql_pswd.id
-  secret_data = "${random_password.pass-webhook.result}"
+  secret_data = random_password.pass-webhook.result
 }
 
 resource "google_secret_manager_secret_iam_member" "cloudsql_pswd_secret_access" {
@@ -208,8 +208,9 @@ resource "google_project_iam_member" "scheduler_runinvoke" {
 //Have to enable cloudresourcemanager & serviceusage.googleapis.com API before running TF
 
 resource "google_project_service" "services" {
-  for_each = toset(var.services)
-  service  = each.value
+  for_each                   = toset(var.services)
+  service                    = each.value
+  disable_dependent_services = true
 }
 
 //Creating Serverless VPC connector to connect from Cloud Function to CloudSQL over private IP
@@ -246,6 +247,7 @@ resource "google_service_networking_connection" "private_vpc_connection" {
   depends_on = [
     google_project_service.services
   ]
+  provider = google-beta
 }
 
 // Creating CloudSql
@@ -272,7 +274,7 @@ resource "google_sql_database_instance" "cloudsql_instance" {
 resource "google_sql_user" "db_user" {
   name     = var.db_user
   instance = google_sql_database_instance.cloudsql_instance.name
-  password = "${random_password.pass-webhook.result}"
+  password = random_password.pass-webhook.result
 }
 
 // Cloud Function

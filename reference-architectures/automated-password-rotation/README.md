@@ -65,17 +65,6 @@ Typically, rotating a password requires these steps:
 
 application source the latest passwords.
 
-### Review Secret Manager
-
-1.  In the Cloud Console, using the naviagion menu select
-    `Security > Secret Manager`. Confirm that `cloudsql-pswd` is present in the
-    list.
-2.  Click on `cloudsql-pswd`.
-3.  Click three dots icon and select `View secret value` to view the password
-    for Cloud SQL database.
-4.  Copy the secret value, you will use this in the next section to confirm
-   access to the Cloud SQL instance.
-
 The following architecture represents a general design for a systems that can
 rotate password for any underlying software/system.
 
@@ -94,7 +83,7 @@ rotate password for any underlying software/system.
     For example, if the message contained a database instance, database
     name and  user,the function changes the password for that user in the
     given database.
-*   The function updates the password  in secret manager to reflect the =
+*   The function updates the password  in secret manager to reflect the
     new password. It knows what secret id to update since it was provided in
     the pub/sub message.
 *   The function publishes a message to a different pub/sub topic indicating
@@ -204,6 +193,17 @@ rotation process, review and verify the deployment in the Google Cloud Console.
     `Private IP address` is present and no public IP address. This restricts access
     to the instance over public network.
 
+### Review Secret Manager
+
+1.  In the Cloud Console, using the naviagion menu select
+    `Security > Secret Manager`. Confirm that `cloudsql-pswd` is present in the
+    list.
+2.  Click on `cloudsql-pswd`.
+3.  Click three dots icon and select `View secret value` to view the password
+    for Cloud SQL database.
+4.  Copy the secret value, you will use this in the next section to confirm
+   access to the Cloud SQL instance.
+
 ### Review Cloud Scheduler job
 
 1.  In the Cloud Console, using the naviagion menu select
@@ -287,8 +287,8 @@ update it in Cloud SQL and store it in Secret Manager.
 6.  Select the `Logs` tab.
 7.  Review the logs and verify the function has run and completed without
     errors. Successful completion will be noted with log entries containing
-    `DB password changed successfully` , `DB password verified successfully` and
-    `Secret cloudsql-pswd rotated successfully!`.
+    `Secret cloudsql-pswd changed in Secret Manager!`,
+    `DB password changed successfully!` and `DB password verified successfully!`.
 
 ## Test the new password
 
@@ -308,6 +308,16 @@ update it in Cloud SQL and store it in Secret Manager.
 10.  In `Password` textbox paste the password copied from the `cloudsql-pswd`
     secret.
 11.  Click `Authenticate`. Confirm you were able to log in to the database.
+
+### Destroy the architecture
+
+   ```shell
+     cd platform-engineering/reference-architectures/automated-password-rotation/terraform
+
+     terraform init
+     terraform plan -var "project_id=$PROJECT_ID"
+     terraform destroy -var "project_id=$PROJECT_ID" --auto-approve
+   ```
 
 ## Conclusion
 
