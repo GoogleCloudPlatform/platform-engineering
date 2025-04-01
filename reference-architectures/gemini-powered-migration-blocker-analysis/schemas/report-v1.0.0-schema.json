@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/GoogleCloudPlatform/platform-engineering/blob/main/reference-architectures/gemini-powered-migration-blocker-analysis/schemas/migration-blocker-analysis-v1.0.0-schema.json",
+  "$id": "https://github.com/GoogleCloudPlatform/platform-engineering/blob/main/reference-architectures/gemini-powered-migration-blocker-analysis/schemas/report-v1.0.0-schema.json",
   "title": "Gemini-powered migration blocker analysis report",
   "description": "A report that Gemini produces to analyze migration blockers",
   "type": "object",
@@ -9,11 +9,15 @@
       "type": "string",
       "description": "The schema to verify this document against."
     },
-    "reportVersion": {
+    "version": {
       "description": "Report version",
       "type": "string",
       "pattern": "^(?P<major>0|[1-9]\\d*)\\.(?P<minor>0|[1-9]\\d*)\\.(?P<patch>0|[1-9]\\d*)(?:-(?P<prerelease>(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
       "$comment": "Regex source: https://semver.org/spec/v2.0.0.html#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string"
+    },
+    "reportTemplateId": {
+      "description": "Reference to the report template",
+      "type": "string"
     },
     "id": {
       "description": "Unique identifier for the report",
@@ -61,10 +65,6 @@
                   "description": "Unique identifier for the subsection",
                   "type": "string"
                 },
-                "prompt": {
-                  "description": "Prompt to generate the subsection's body",
-                  "type": "string"
-                },
                 "heading": {
                   "description": "Heading text for the subsection",
                   "type": "string"
@@ -74,16 +74,23 @@
                   "type": "string"
                 }
               },
-              "required": ["name", "id", "prompt", "heading"],
+              "required": ["name", "id", "heading", "body"],
               "additionalProperties": false
             }
           }
         },
-        "required": ["name", "id", "heading", "reportSubsections"],
+        "required": ["name", "id", "heading", "body", "reportSubsections"],
         "additionalProperties": false
       }
     }
   },
-  "required": ["$schema", "reportVersion", "name", "id", "reportSections"],
+  "required": [
+    "$schema",
+    "reportVersion",
+    "reportTemplateId",
+    "name",
+    "id",
+    "reportSections"
+  ],
   "additionalProperties": false
 }
