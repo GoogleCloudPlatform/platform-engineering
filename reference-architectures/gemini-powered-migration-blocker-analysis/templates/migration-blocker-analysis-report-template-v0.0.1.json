@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/GoogleCloudPlatform/platform-engineering/refs/heads/migration-blocker-analysis/reference-architectures/gemini-powered-migration-blocker-analysis/schemas/report-template-v1.0.0-schema.json",
   "version": "0.0.1",
-  "id": "template-migration-blocker-analysis-v0.0.1",
+  "id": "migration-blocker-analysis-report-template-v0.0.1",
   "name": "Migration Blocker Analysis Report Template",
   "reportSections": [
     {
