@@ -1346,12 +1346,13 @@
 <h1 id="example-cloud-run-function">Example Cloud Run Function<a class="headerlink" href="#example-cloud-run-function" title="Permanent link">&para;</a></h1>
 <p>This project demonstrates a Google Cloud Run Function that triggers deployments
 based on Pub/Sub messages. The function listens for build notifications from
-Google Cloud Build and initiates a release in Google Cloud Deploy when a build succeeds.</p>
+Google Cloud Build and initiates a release in Google Cloud Deploy when a build
+succeeds.</p>
 <h2 id="usage-note">Usage Note<a class="headerlink" href="#usage-note" title="Permanent link">&para;</a></h2>
 <p>This code is designed to integrate with the Terraform configuration for the
 <a href="../../">cloud_deploy_flow</a> demo. While you can deploy this component
 individually, it's primarily intended to be used as part of the full
-Terraform-managed workflow. Please note that this section of the README may be
+Terraform-managed workflow. Please note that this section of the readme may be
 less actively maintained, as the preferred deployment method relies on the
 Terraform setup.</p>
 <h2 id="table-of-contents">Table of Contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>
@@ -1422,8 +1423,8 @@ its key components:</p>
 <p><strong>Message Handling</strong>:</p>
 <ul>
 <li>Parses incoming Pub/Sub messages.</li>
-<li>Validates build notifications based on specified criteria
-(trigger ID and build status).</li>
+<li>Validates build notifications based on specified criteria (trigger ID and
+  build status).</li>
 </ul>
 </li>
 <li>
@@ -1445,14 +1446,14 @@ its key components:</p>
 <p>To deploy the function, follow these steps:</p>
 <ol>
 <li>Ensure that your Google Cloud SDK is authenticated and configured with the
-      correct project.</li>
+    correct project.</li>
 <li>Use the following command to deploy the function:</li>
 </ol>
-<p>```bash
-   gcloud functions deploy deployTrigger \
-       --runtime go113 \
-       --trigger-topic YOUR_TOPIC_NAME \
-       --env-file .env</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>gcloud<span class="w"> </span>functions<span class="w"> </span>deploy<span class="w"> </span>deployTrigger<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span>--runtime<span class="w"> </span>go113<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span>--trigger-topic<span class="w"> </span>YOUR_TOPIC_NAME<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span>--env-file<span class="w"> </span>.env
+</span></code></pre></div>
 
 
 

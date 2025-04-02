@@ -1,0 +1,71 @@
+{
+  "extends": ["eslint:recommended"],
+  "env": {
+    "browser": true,
+    "es6": true,
+    "node": true
+  },
+  "ignorePatterns": ["!.*", "**/node_modules/.*", "vite-env.d.ts"],
+  "plugins": ["n", "prettier"],
+  "rules": {},
+  "overrides": [
+    {
+      "files": ["**/*.js", "**/*.mjs", "**/*.cjs", "**/*.jsx"],
+      "parserOptions": {
+        "sourceType": "module",
+        "ecmaVersion": "latest",
+        "ecmaFeatures": {
+          "jsx": true,
+          "modules": true,
+          "experimentalObjectRestSpread": true
+        }
+      }
+    },
+    {
+      "files": ["**/*.json"],
+      "extends": ["plugin:jsonc/recommended-with-json"],
+      "parser": "jsonc-eslint-parser",
+      "parserOptions": {
+        "jsonSyntax": "JSON"
+      },
+      "rules": {
+        "max-len": ["off"]
+      }
+    },
+    {
+      "files": ["**/*.jsonc"],
+      "extends": ["plugin:jsonc/recommended-with-jsonc"],
+      "parser": "jsonc-eslint-parser",
+      "parserOptions": {
+        "jsonSyntax": "JSONC"
+      },
+      "rules": {
+        "max-len": ["off"]
+      }
+    },
+    {
+      "files": ["**/*.json5"],
+      "extends": ["plugin:jsonc/recommended-with-json5"],
+      "parser": "jsonc-eslint-parser",
+      "parserOptions": {
+        "jsonSyntax": "JSON5"
+      },
+      "rules": {
+        "max-len": ["off"]
+      }
+    },
+    {
+      "files": ["**/*.ts", "**/*.cts", "**/*.mts", "**/*.tsx"],
+      "parser": "@typescript-eslint/parser",
+      "extends": [
+        "plugin:@typescript-eslint/recommended",
+        "plugin:n/recommended",
+        "prettier"
+      ],
+      "parserOptions": {
+        "ecmaVersion": 2018,
+        "sourceType": "module"
+      }
+    }
+  ]
+}

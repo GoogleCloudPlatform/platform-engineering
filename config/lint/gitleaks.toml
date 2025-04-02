@@ -1,0 +1,4 @@
+[allowlist]
+    description = "ignore GCP safe phrases"
+    regexTarget = "line"
+    regexs = ['''clients_zone''']

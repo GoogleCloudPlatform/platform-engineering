@@ -1582,20 +1582,21 @@
 
 
 <h1 id="backstage-on-google-cloud-quickstart">Backstage on Google Cloud Quickstart<a class="headerlink" href="#backstage-on-google-cloud-quickstart" title="Permanent link">&para;</a></h1>
-<p>This quick-start deployment guide can be used to set up an environment to<br />
-familiarize yourself with the architecture and get an understanding of the<br />
+<p>This quick-start deployment guide can be used to set up an environment to
+familiarize yourself with the architecture and get an understanding of the
 concepts related to hosting Backstage on Google Cloud.</p>
-<p><strong>NOTE: This environment is not intended to be a long lived environment. It is<br />
-intended for temporary demonstration and learning purposes.  You will need to<br />
+<p><strong>NOTE: This environment is not intended to be a long lived environment. It is
+intended for temporary demonstration and learning purposes. You will need to
 modify the configurations provided to align with your orginazations needs.</strong></p>
 <h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
-<p>For more information about the architecture, see the <a href="docs/backstage-quickstart-architecture/">Backstage on Google<br />
-Cloud:Architecture</a> document.</p>
+<p>For more information about the architecture, see the
+<a href="docs/backstage-quickstart-architecture/">Backstage on Google Cloud:Architecture</a>
+document.</p>
 <h2 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">&para;</a></h2>
 <h3 id="project">Project<a class="headerlink" href="#project" title="Permanent link">&para;</a></h3>
-<p>In this guide you can choose to bring your project (BYOP) or have Terraform<br />
-create a new project for you. The requirements are different based on the<br />
-option that you choose.</p>
+<p>In this guide you can choose to bring your project (BYOP) or have Terraform
+create a new project for you. The requirements are different based on the option
+that you choose.</p>
 <h4 id="option-1-bring-your-own-project-byop">Option 1: Bring your own project (BYOP)<a class="headerlink" href="#option-1-bring-your-own-project-byop" title="Permanent link">&para;</a></h4>
 <ul>
 <li>Project ID of a Google Cloud Project</li>
@@ -1607,13 +1608,13 @@ option that you choose.</p>
 <li>Billing account ID</li>
 <li>Organization or folder ID</li>
 <li><code>roles/billing.user</code> IAM permissions on the billing account specified</li>
-<li><code>roles/resourcemanager.projectCreator</code> IAM permissions on the organization<br />
-    or folder specified</li>
+<li><code>roles/resourcemanager.projectCreator</code> IAM permissions on the organization or
+  folder specified</li>
 <li>GitHub Personal Access Token, steps to create the token are provided below</li>
 </ul>
 <h2 id="pull-the-source-code">Pull the source code<a class="headerlink" href="#pull-the-source-code" title="Permanent link">&para;</a></h2>
-<p><strong>NOTE: This tutorial is designed to be run from Cloud Shell in the Google<br />
-Cloud Console.</strong></p>
+<p><strong>NOTE: This tutorial is designed to be run from Cloud Shell in the Google Cloud
+Console.</strong></p>
 <ul>
 <li>Clone the repository and change directory to the guide directory</li>
 </ul>
@@ -1628,7 +1629,7 @@ Cloud Console.</strong></p>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="s1">BACKSTAGE_QS_BASE_DIR=&quot;&#39;</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BACKSTAGE_QS_BASE_DIR</span><span class="si">}</span><span class="s2">&quot;</span><span class="s1">&#39;&quot;&#39;</span><span class="w"> </span><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/.bashrc
 </span></code></pre></div>
 <h2 id="project-configuration">Project Configuration<a class="headerlink" href="#project-configuration" title="Permanent link">&para;</a></h2>
-<p>You only need to complete the section for the option that you have selected<br />
+<p>You only need to complete the section for the option that you have selected
 (either option 1 or 2).</p>
 <h3 id="option-1-bring-your-own-project-config-byop">Option 1: Bring your own project config (BYOP)<a class="headerlink" href="#option-1-bring-your-own-project-config-byop" title="Permanent link">&para;</a></h3>
 <ul>
@@ -1680,13 +1681,14 @@ Cloud Console.</strong></p>
 </span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="o">}</span>
 </span></code></pre></div>
 <ul>
-<li><code>environment_name</code>: the name of the environment (defaults to qs for quickstart)</li>
-<li><code>iapUserDomain</code>: the root domain of the GCP Org that the Backstage users<br />
-    will be in</li>
+<li><code>environment_name</code>: the name of the environment (defaults to qs for
+  quickstart)</li>
+<li><code>iapUserDomain</code>: the root domain of the GCP Org that the Backstage users will
+  be in</li>
 <li><code>iapSupportEmail</code>: support contact for the IAP brand</li>
 <li><code>project.billing_account_id</code>: the billing account ID</li>
-<li><code>project.name</code>: the prefix for the display name of the project, the full<br />
-    name will be <code>&lt;project.name&gt;-&lt;environment_name&gt;</code></li>
+<li><code>project.name</code>: the prefix for the display name of the project, the full name
+  will be <code>&lt;project.name&gt;-&lt;environment_name&gt;</code></li>
 </ul>
 <p>Enter either <code>project.folder_id</code> <strong>OR</strong> <code>project.org_id</code></p>
 <ul>
@@ -1719,8 +1721,8 @@ Cloud Console.</strong></p>
 </span></code></pre></div>
 <p>You can now the <a href="#create-the-resources">Create the resources</a>.</p>
 <h2 id="create-the-resources">Create the resources<a class="headerlink" href="#create-the-resources" title="Permanent link">&para;</a></h2>
-<p>Before running Terraform, make sure that the Service Usage API and Service Management
-API are enabled.</p>
+<p>Before running Terraform, make sure that the Service Usage API and Service
+Management API are enabled.</p>
 <ul>
 <li>Enable Service Usage API</li>
 </ul>
@@ -1732,9 +1734,9 @@ API are enabled.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>gcloud<span class="w"> </span>services<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>servicemanagement.googleapis.com
 </span></code></pre></div>
 <ul>
-<li>In situations where you have run this quickstart before and then<br />
-    cleaned-up the resources but are re-using the project, it might be<br />
-    neccasary to restore the endpoints from a deleted state first.</li>
+<li>In situations where you have run this quickstart before and then cleaned-up
+  the resources but are re-using the project, it might be neccasary to restore
+  the endpoints from a deleted state first.</li>
 </ul>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nv">BACKSTAGE_QS_PREFIX</span><span class="o">=</span><span class="k">$(</span>grep<span class="w"> </span>environment_name<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="si">${</span><span class="nv">BACKSTAGE_QS_BASE_DIR</span><span class="si">}</span>/backstage-qs.auto.tfvars<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span>-F<span class="s2">&quot;=&quot;</span><span class="w"> </span><span class="s1">&#39;{print $2}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="k">)</span>
@@ -1753,8 +1755,8 @@ API are enabled.</p>
 </span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>terraform<span class="w"> </span>apply<span class="w"> </span>-input<span class="o">=</span><span class="nb">false</span><span class="w"> </span>tfplan<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>rm<span class="w"> </span>tfplan
 </span></code></pre></div>
-<p>This will take a while to create all of the required resources, figure<br />
-  somewhere between 15 and 20 minutes.</p>
+<p>This will take a while to create all of the required resources, figure somewhere
+between 15 and 20 minutes.</p>
 <h2 id="cleanup">Cleanup<a class="headerlink" href="#cleanup" title="Permanent link">&para;</a></h2>
 <h3 id="resources">Resources<a class="headerlink" href="#resources" title="Permanent link">&para;</a></h3>
 <ul>
@@ -1778,7 +1780,7 @@ API are enabled.</p>
 <li>Destroy the project</li>
 </ul>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="nb">cd</span><span class="w"> </span><span class="si">${</span><span class="nv">BACKSTAGE_QS_BASE_DIR</span><span class="si">}</span>/initialize<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="nv">TERRAFORM_BUCKET_NAME</span><span class="o">=</span><span class="k">$(</span>grep<span class="w"> </span>bucket<span class="w"> </span>backend.tf<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span>-F<span class="s2">&quot;=&quot;</span><span class="w"> </span><span class="s1">&#39;{print $2}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w">  </span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="nv">TERRAFORM_BUCKET_NAME</span><span class="o">=</span><span class="k">$(</span>grep<span class="w"> </span>bucket<span class="w"> </span>backend.tf<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span>-F<span class="s2">&quot;=&quot;</span><span class="w"> </span><span class="s1">&#39;{print $2}&#39;</span><span class="w"> </span><span class="p">|</span>
 </span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>xargs<span class="k">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>cp<span class="w"> </span>backend.tf.local<span class="w"> </span>backend.tf<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>terraform<span class="w"> </span>init<span class="w"> </span>-force-copy<span class="w"> </span>-lock<span class="o">=</span><span class="nb">false</span><span class="w"> </span>-migrate-state<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
@@ -1803,15 +1805,15 @@ API are enabled.</p>
 <ul>
 <li>Reset the TF variables file</li>
 </ul>
-<p><code>bash
-  cd ${BACKSTAGE_QS_BASE_DIR} &amp;&amp; \
-  cp backstage-qs-auto.tfvars.local backstage-qs.auto.tfvars</code></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="nb">cd</span><span class="w"> </span><span class="si">${</span><span class="nv">BACKSTAGE_QS_BASE_DIR</span><span class="si">}</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>cp<span class="w"> </span>backstage-qs-auto.tfvars.local<span class="w"> </span>backstage-qs.auto.tfvars
+</span></code></pre></div>
 <ul>
 <li>Remove the environment variables</li>
 </ul>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>sed<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>-i<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;/^export BACKSTAGE_QS_BASE_DIR=/d&#39;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/.bashrc
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>sed<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>-i<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;/^export BACKSTAGE_QS_BASE_DIR=/d&#39;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/.bashrc
 </span></code></pre></div>
 
 

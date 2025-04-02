@@ -454,15 +454,6 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#review-secret-manager" class="md-nav__link">
-    <span class="md-ellipsis">
-      Review Secret Manager
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#workflow" class="md-nav__link">
     <span class="md-ellipsis">
       Workflow
@@ -529,6 +520,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#review-secret-manager" class="md-nav__link">
+    <span class="md-ellipsis">
+      Review Secret Manager
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#review-cloud-scheduler-job" class="md-nav__link">
     <span class="md-ellipsis">
       Review Cloud Scheduler job
@@ -584,6 +584,21 @@
       Test the new password
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Test the new password">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#destroy-the-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Destroy the architecture
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1431,15 +1446,6 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#review-secret-manager" class="md-nav__link">
-    <span class="md-ellipsis">
-      Review Secret Manager
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#workflow" class="md-nav__link">
     <span class="md-ellipsis">
       Workflow
@@ -1506,6 +1512,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#review-secret-manager" class="md-nav__link">
+    <span class="md-ellipsis">
+      Review Secret Manager
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#review-cloud-scheduler-job" class="md-nav__link">
     <span class="md-ellipsis">
       Review Cloud Scheduler job
@@ -1562,6 +1577,21 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Test the new password">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#destroy-the-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Destroy the architecture
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1594,7 +1624,7 @@
 <h1 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h1>
 <p>Secrets rotation is a broadly accepted best practice across the information
 technology industry. However, often times it is cumbersome and disruptive
-process.  In this guide you will use Google Cloud tools to automate the process
+process. In this guide you will use Google Cloud tools to automate the process
 of rotating passwords for a Cloud SQL instance. This method could easily be
 extended to other tools and types of secrets.</p>
 <h2 id="storing-passwords-in-google-cloud">Storing passwords in Google Cloud<a class="headerlink" href="#storing-passwords-in-google-cloud" title="Permanent link">&para;</a></h2>
@@ -1602,48 +1632,46 @@ extended to other tools and types of secrets.</p>
 tools including common open source tools such as <a href="https://www.vaultproject.io/">Vault</a>, however in this
 guide, you will use <a href="https://cloud.google.com/security/products/secret-manager">Secret Manager</a>, Google Cloud's fully
 managed product for securely storing secrets. Regardless of the tool you use,
-passwords stored should be further secured. When using
-<a href="https://cloud.google.com/security/products/secret-manager">Secret Manager</a>, following are some of the ways you can
-further secure your secrets:</p>
+passwords stored should be further secured. When using <a href="https://cloud.google.com/security/products/secret-manager">Secret
+Manager</a>, following are some of the ways you can further secure
+your secrets:</p>
 <ol>
 <li>
-<p><strong>Limiting access</strong> : The secrets should be
-                         readable writable only through
-                         the <a href="https://cloud.google.com/iam/docs/service-account-overview">Service Accounts</a> via <a href="https://cloud.google.com/security/products/iam">IAM roles</a>.
-                         The principle of
-                         least privilege must be followed while granting roles
-                         to the service accounts.</p>
+<p><strong>Limiting access</strong> : The secrets should be readable writable only through
+    the <a href="https://cloud.google.com/iam/docs/service-account-overview">Service Accounts</a> via <a href="https://cloud.google.com/security/products/iam">IAM roles</a>. The principle
+    of least privilege must be followed while granting roles to the service
+    accounts.</p>
 </li>
 <li>
-<p><strong>Encryption</strong> : The secrets should be encrypted.
-   <a href="https://cloud.google.com/security/products/secret-manager">Secret Manager</a>
-   encrypts the secret at rest using AES-256 by default. But you can use your
-   own encryption keys, customer-managed encryption keys (CMEK) to encrypt your secret
-   at rest. For details, see
-   <a href="https://cloud.google.com/secret-manager/docs/cmek">Enable customer-managed encryption keys for Secret Manager</a>.</p>
+<p><strong>Encryption</strong> : The secrets should be encrypted. <a href="https://cloud.google.com/security/products/secret-manager">Secret
+    Manager</a> encrypts the secret at rest using AES-256 by
+    default. But you can use your own encryption keys, customer-managed
+    encryption keys (CMEK) to encrypt your secret at rest. For details, see
+    <a href="https://cloud.google.com/secret-manager/docs/cmek">Enable customer-managed encryption keys for Secret
+    Manager</a>.</p>
 </li>
 <li>
 <p><strong>Password rotation</strong> : The passwords stored in the secret manager should be
-   rotated on a regular basis to reduce the risk of a security incident.</p>
+    rotated on a regular basis to reduce the risk of a security incident.</p>
 </li>
 </ol>
 <h2 id="why-password-rotation">Why password rotation<a class="headerlink" href="#why-password-rotation" title="Permanent link">&para;</a></h2>
 <p>Security best practices require us to regularly rotate the passwords in our
-stack. Changing the password mitigates the risk in the event where passwords
-are compromised.</p>
+stack. Changing the password mitigates the risk in the event where passwords are
+compromised.</p>
 <h2 id="how-to-rotate-passwords">How to rotate passwords<a class="headerlink" href="#how-to-rotate-passwords" title="Permanent link">&para;</a></h2>
-<p>Manually rotating the passwords is an anti-pattern and should not be done as it
+<p>Manually rotating the passwords is an antipattern and should not be done as it
 exposes the password to the human rotating it and may result in security and
 system incidents. Manual rotation processes also introduce the risk that the
 rotation isn't actually performed due to human error, for example forgetting or
 typos.</p>
 <p>This necessitates having a workflow that automates password rotation. The
-password could be of an application, a database, a 3rd party service or a SaaS
+password could be of an application, a database, a third-party service or a SaaS
 vendor etc.</p>
 <h2 id="automatic-password-rotation">Automatic password rotation<a class="headerlink" href="#automatic-password-rotation" title="Permanent link">&para;</a></h2>
 <p>Typically, rotating a password requires these steps:</p>
 <ul>
-<li>Change the password in the underlying software or system  </li>
+<li>Change the password in the underlying software or system</li>
 </ul>
 <p>(such as applications,databases, SaaS).</p>
 <ul>
@@ -1655,40 +1683,28 @@ vendor etc.</p>
 </li>
 </ul>
 <p>application source the latest passwords.</p>
-<h3 id="review-secret-manager">Review Secret Manager<a class="headerlink" href="#review-secret-manager" title="Permanent link">&para;</a></h3>
-<ol>
-<li>In the Cloud Console, using the naviagion menu select
-    <code>Security &gt; Secret Manager</code>. Confirm that <code>cloudsql-pswd</code> is present in the
-    list.</li>
-<li>Click on <code>cloudsql-pswd</code>.</li>
-<li>Click three dots icon and select <code>View secret value</code> to view the password
-    for Cloud SQL database.</li>
-<li>Copy the secret value, you will use this in the next section to confirm
-   access to the Cloud SQL instance.</li>
-</ol>
 <p>The following architecture represents a general design for a systems that can
 rotate password for any underlying software/system.</p>
 <p><img alt="design" src="resources/generic-password-rotation-flow.png" /></p>
 <h3 id="workflow">Workflow<a class="headerlink" href="#workflow" title="Permanent link">&para;</a></h3>
 <ul>
 <li>A pipeline or a <a href="https://cloud.google.com/scheduler">cloud scheduler job</a> sends a message to a
-    pub/sub topic. The message contains the information about the password that
-    is to be rotated. For example, this information may include secret id in
-    secret manager, database instance and username if it is a database password.</li>
-<li>The message arriving to the pub/sub topic triggers a
-    <a href="https://cloud.google.com/functions?hl=en">Cloud Run Function</a> that reads the message and
-    gathers information as supplied in the message.</li>
-<li>The function changes the password in the corresponding system.
-    For example, if the message contained a database instance, database
-    name and  user,the function changes the password for that user in the
-    given database.</li>
-<li>The function updates the password  in secret manager to reflect the =
-    new password. It knows what secret id to update since it was provided in
-    the pub/sub message.</li>
-<li>The function publishes a message to a different pub/sub topic indicating
-    that the password has been rotated. This topic can be subscribed any
-    application or system that may want to know in the event of password rotation,
-    whether to re-start themselves or perform any other task.</li>
+  pub/sub topic. The message contains the information about the password that is
+  to be rotated. For example, this information may include secret ID in secret
+  manager, database instance and username if it is a database password.</li>
+<li>The message arriving to the pub/sub topic triggers a <a href="https://cloud.google.com/functions?hl=en">Cloud Run
+  Function</a> that reads the message and gathers information as
+  supplied in the message.</li>
+<li>The function changes the password in the corresponding system. For example, if
+  the message contained a database instance, database name and user,the function
+  changes the password for that user in the given database.</li>
+<li>The function updates the password in secret manager to reflect the new
+  password. It knows what secret ID to update since it was provided in the
+  pub/sub message.</li>
+<li>The function publishes a message to a different pub/sub topic indicating that
+  the password has been rotated. This topic can be subscribed any application or
+  system that may want to know in the event of password rotation, whether to
+  re-start themselves or perform any other task.</li>
 </ul>
 <h2 id="example-deployment-for-automatic-password-rotation-in-cloudsql">Example deployment for automatic password rotation in CloudSQL<a class="headerlink" href="#example-deployment-for-automatic-password-rotation-in-cloudsql" title="Permanent link">&para;</a></h2>
 <p>The following architecture demonstrates a way to automatically rotate CloudSQL
@@ -1697,28 +1713,27 @@ password.</p>
 <h3 id="workflow-of-the-example-deployment">Workflow of the example deployment<a class="headerlink" href="#workflow-of-the-example-deployment" title="Permanent link">&para;</a></h3>
 <ul>
 <li>A <a href="https://cloud.google.com/scheduler">Cloud Scheduler</a> job is scheduled to run every 1st day on
-    the month. The jobs publishes a message to a Pub/Sub topic containing
-    secret id, Cloud SQL instance name, database, region and database user in the
-    payload.</li>
-<li>The message arrival on the pub/sub topic triggers a
-    <a href="https://cloud.google.com/functions?hl=en">Cloud Run Function</a>, which uses the
-    information provided in the message to connect to the CloudSQL instance via
-    <a href="https://cloud.google.com/vpc/docs/serverless-vpc-access">Serverless VPC Connector</a> and changes the password. The
-    function uses a <a href="https://cloud.google.com/iam/docs/service-account-overview">service account</a> that has <a href="https://cloud.google.com/security/products/iam">IAM roles</a>
-    required to connect to the Cloud Sql instance.</li>
+  the month. The jobs publishes a message to a Pub/Sub topic containing secret
+  ID, Cloud SQL instance name, database, region and database user in the
+  payload.</li>
+<li>The message arrival on the pub/sub topic triggers a <a href="https://cloud.google.com/functions?hl=en">Cloud Run
+  Function</a>, which uses the information provided in the message
+  to connect to the CloudSQL instance via <a href="https://cloud.google.com/vpc/docs/serverless-vpc-access">Serverless VPC
+  Connector</a> and changes the password. The function uses a
+  <a href="https://cloud.google.com/iam/docs/service-account-overview">service account</a> that has <a href="https://cloud.google.com/security/products/iam">IAM roles</a> required to
+  connect to the Cloud Sql instance.</li>
 <li>The function then updates the secret in Secret Manager.</li>
 </ul>
 <p><strong>Note</strong> : The architecture doesn't show the flow to restart the application
-after the password rotation as shown in thee
-<a href="#workflow">Generic architecture</a>
+after the password rotation as shown in thee <a href="#workflow">Generic architecture</a>
 but it can be added easily with minimal changes to the Terraform code.</p>
 <h3 id="deploy-the-architecture">Deploy the architecture<a class="headerlink" href="#deploy-the-architecture" title="Permanent link">&para;</a></h3>
-<p>The code to build the architecture has been provided with this repo. Follow
-these instructions to create the architecture and use it:</p>
+<p>The code to build the architecture has been provided with this repository.
+Follow these instructions to create the architecture and use it:</p>
 <ol>
 <li>
-<p>Open <a href="https://console.cloud.google.com/welcome?cloudshell=true">Cloud Shell</a> on Google Cloud Console and log in with
-    your credentials.</p>
+<p>Open <a href="https://console.cloud.google.com/welcome?cloudshell=true">Cloud Shell</a> on Google Cloud Console and log in with your
+    credentials.</p>
 </li>
 <li>
 <p>If you want to use an existing project, get <code>role/project.owner</code> role on the
@@ -1727,11 +1742,11 @@ these instructions to create the architecture and use it:</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="w"> </span><span class="c1">#set shell environment variable</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">PROJECT_ID</span><span class="o">=</span>&lt;PROJECT_ID&gt;
 </span></code></pre></div>
-<p>Replace <code>&lt;PROJECT_ID&gt;</code> with the id of the existing project.</p>
+<p>Replace <code>&lt;PROJECT_ID&gt;</code> with the ID of the existing project.</p>
 </li>
 <li>
-<p>If you want to create a new GCP project run the following commands in
-    Cloud Shell.</p>
+<p>If you want to create a new GCP project run the following commands in Cloud
+    Shell.</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="w"> </span><span class="c1">#set shell environment variable</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">PROJECT_ID</span><span class="o">=</span>&lt;PROJECT_ID&gt;
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w"> </span><span class="c1">#create project</span>
@@ -1739,18 +1754,22 @@ these instructions to create the architecture and use it:</p>
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w"> </span><span class="c1">#associate the project with billing account</span>
 </span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w"> </span>gcloud<span class="w"> </span>billing<span class="w"> </span>projects<span class="w"> </span>link<span class="w"> </span><span class="si">${</span><span class="nv">PROJECT_ID</span><span class="si">}</span><span class="w"> </span>--billing-account<span class="o">=</span>&lt;BILLING_ACCOUNT_ID&gt;
 </span></code></pre></div>
-<p>Replace <code>&lt;PROJECT_ID&gt;</code> with the id of the new project.
-Replace <code>&lt;BILLING_ACCOUNT_ID&gt;</code> with the billing account id that the project
-should be associated with.</p>
+<p>Replace <code>&lt;PROJECT_ID&gt;</code> with the ID of the new project. Replace
+<code>&lt;BILLING_ACCOUNT_ID&gt;</code> with the billing account ID that the project should
+be associated with.</p>
 </li>
 <li>
-<p>Set the project id in Cloud Shell and enable APIs in the project:</p>
+<p>Set the project ID in Cloud Shell and enable APIs in the project:</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="w"> </span>gcloud<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>project<span class="w"> </span><span class="si">${</span><span class="nv">PROJECT_ID</span><span class="si">}</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w"> </span>gcloud<span class="w"> </span>services<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>cloudresourcemanager.googleapis.com<span class="w"> </span>serviceusage.googleapis.com<span class="w"> </span>--project<span class="w"> </span><span class="si">${</span><span class="nv">PROJECT_ID</span><span class="si">}</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w"> </span>gcloud<span class="w"> </span>services<span class="w"> </span><span class="nb">enable</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>cloudresourcemanager.googleapis.com<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>serviceusage.googleapis.com<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--project<span class="w"> </span><span class="si">${</span><span class="nv">PROJECT_ID</span><span class="si">}</span>
 </span></code></pre></div>
 </li>
 <li>
-<p>Download the git repo containing the code to build the example architecture:</p>
+<p>Download the Git repository containing the code to build the example
+    architecture:</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>~
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/GoogleCloudPlatform/platform-engineering
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>platform-engineering/reference-architectures/automated-password-rotation/terraform
@@ -1759,12 +1778,13 @@ should be associated with.</p>
 </span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w"> </span>terraform<span class="w"> </span>plan<span class="w"> </span>-var<span class="w"> </span><span class="s2">&quot;project_id=</span><span class="nv">$PROJECT_ID</span><span class="s2">&quot;</span>
 </span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w"> </span>terraform<span class="w"> </span>apply<span class="w"> </span>-var<span class="w"> </span><span class="s2">&quot;project_id=</span><span class="nv">$PROJECT_ID</span><span class="s2">&quot;</span><span class="w"> </span>--auto-approve
 </span></code></pre></div>
+<p><strong>Note:</strong> It takes around 30 mins for the entire architecture to get
+deployed.</p>
 </li>
 </ol>
-<p><strong>Note:</strong> It takes around 30 mins for the entire architecture to get deployed.</p>
 <h2 id="review-the-deployed-architecture">Review the deployed architecture<a class="headerlink" href="#review-the-deployed-architecture" title="Permanent link">&para;</a></h2>
 <p>Once the Terraform apply has successfully finished, the example architecture
-will be deployed in the your Google Cloud project.  Before exercising the
+will be deployed in the your Google Cloud project. Before exercising the
 rotation process, review and verify the deployment in the Google Cloud Console.</p>
 <h3 id="review-cloud-sql-database">Review Cloud SQL database<a class="headerlink" href="#review-cloud-sql-database" title="Permanent link">&para;</a></h3>
 <ol>
@@ -1777,14 +1797,25 @@ rotation process, review and verify the deployment in the Google Cloud Console.<
     named <code>test</code>.</li>
 <li>In the left hand menu select <code>Overview</code>.</li>
 <li>In the <code>Connect to this instance</code> section, note that only
-    <code>Private IP address</code> is present and no public IP address. This restricts access
-    to the instance over public network.</li>
+    <code>Private IP address</code> is present and no public IP address. This restricts
+    access to the instance over public network.</li>
+</ol>
+<h3 id="review-secret-manager">Review Secret Manager<a class="headerlink" href="#review-secret-manager" title="Permanent link">&para;</a></h3>
+<ol>
+<li>In the Cloud Console, using the naviagion menu select
+    <code>Security &gt; Secret Manager</code>. Confirm that <code>cloudsql-pswd</code> is present in the
+    list.</li>
+<li>Click on <code>cloudsql-pswd</code>.</li>
+<li>Click three dots icon and select <code>View secret value</code> to view the password
+    for Cloud SQL database.</li>
+<li>Copy the secret value, you will use this in the next section to confirm
+    access to the Cloud SQL instance.</li>
 </ol>
 <h3 id="review-cloud-scheduler-job">Review Cloud Scheduler job<a class="headerlink" href="#review-cloud-scheduler-job" title="Permanent link">&para;</a></h3>
 <ol>
 <li>In the Cloud Console, using the naviagion menu select
-    <code>Integration Services &gt; Cloud Scheduler</code>. Confirm that <code>password-rotator-job</code>
-    is present in the Scheduler Jobs list.</li>
+    <code>Integration Services &gt; Cloud Scheduler</code>. Confirm that
+    <code>password-rotator-job</code> is present in the Scheduler Jobs list.</li>
 <li>Click on <code>password-rotator-job</code>, confirm it is configured to run on 1st of
     every month.</li>
 <li>
@@ -1794,9 +1825,11 @@ rotation process, review and verify the deployment in the Google Cloud Console.<
 <li><code>Target type</code> is Pub/Sub</li>
 <li><code>Select a Cloud Pub/Sub topic</code> is set to <code>pswd-rotation-topic</code></li>
 <li><code>Message body</code> contains a JSON object with the details of the Cloud SQL
-    isntance and secret to be rotated.</li>
-<li>Click <code>Cancel</code>, to exit the Cloud Scheduler job details.</li>
+  isntance and secret to be rotated.</li>
 </ul>
+</li>
+<li>
+<p>Click <code>Cancel</code>, to exit the Cloud Scheduler job details.</p>
 </li>
 </ol>
 <h3 id="review-pubsub-topic-configuration">Review Pub/Sub topic configuration<a class="headerlink" href="#review-pubsub-topic-configuration" title="Permanent link">&para;</a></h3>
@@ -1820,12 +1853,12 @@ rotation process, review and verify the deployment in the Google Cloud Console.<
 <h3 id="review-cloud-run-function">Review Cloud Run Function<a class="headerlink" href="#review-cloud-run-function" title="Permanent link">&para;</a></h3>
 <ol>
 <li>In the Cloud Console, using the naviagion menu select
-   <code>Serverless &gt; Cloud Run Functions</code>. Confirm that <code>pswd_rotator_function</code> is present
-   in the list.</li>
+    <code>Serverless &gt; Cloud Run Functions</code>. Confirm that <code>pswd_rotator_function</code> is
+    present in the list.</li>
 <li>Click on <code>pswd_rotator_function</code>.</li>
 <li>Click on the <code>Trigger</code> tab. Confirm that the field <code>Receive events from</code> has
-    the Pub/Sub topic <code>pswd-rotation-topic</code>. This indicates that the function will
-    run when a message arrives to that topic.</li>
+    the Pub/Sub topic <code>pswd-rotation-topic</code>. This indicates that the function
+    will run when a message arrives to that topic.</li>
 <li>Click on the <code>Details</code> tab. Confirm that under <code>Network Settings</code> VPC
     connector is set to <code>connector-for-sql</code>. This allows the function to connect
     to the CloudSQL over private IPs.</li>
@@ -1833,8 +1866,8 @@ rotation process, review and verify the deployment in the Google Cloud Console.<
 </ol>
 <p><strong>Note:</strong> For the purpose of this tutorial, the secret is accessible to the
 human users and not encrypted. See
-<a href="#storing-passwords-in-google-cloud">the section</a>
-and <a href="https://cloud.google.com/secret-manager/docs/best-practices">Secret Manager best practice</a></p>
+<a href="#storing-passwords-in-google-cloud">the section</a> and <a href="https://cloud.google.com/secret-manager/docs/best-practices">Secret Manager best
+practice</a></p>
 <h3 id="verify-that-you-are-able-to-connect-to-the-cloud-sql-instance">Verify that you are able to connect to the Cloud SQL instance<a class="headerlink" href="#verify-that-you-are-able-to-connect-to-the-cloud-sql-instance" title="Permanent link">&para;</a></h3>
 <ol>
 <li>In the Cloud Console, using the naviagion menu select <code>Databases &gt; SQL</code></li>
@@ -1847,11 +1880,10 @@ and <a href="https://cloud.google.com/secret-manager/docs/best-practices">Secret
 <li>Click <code>Authenticate</code>. Confirm you were able to log in to the database.</li>
 </ol>
 <h2 id="rotate-the-cloud-sql-password">Rotate the Cloud SQL password<a class="headerlink" href="#rotate-the-cloud-sql-password" title="Permanent link">&para;</a></h2>
-<p>Typically, the Cloud Scheduler will automatically run on 1st day of
-every month triggering password rotation. However, for this tutorial
-you will run the Cloud Scheuler job manually, which causes the Cloud Run Function
-to generate a new password,
-update it in Cloud SQL and store it in Secret Manager.</p>
+<p>Typically, the Cloud Scheduler will automatically run on 1st day of every month
+triggering password rotation. However, for this tutorial you will run the Cloud
+Scheduler job manually, which causes the Cloud Run Function to generate a new
+password, update it in Cloud SQL and store it in Secret Manager.</p>
 <ol>
 <li>In the Cloud Console, using the naviagion menu select
     <code>Integration Services &gt; Cloud Scheduler</code>.</li>
@@ -1864,8 +1896,9 @@ update it in Cloud SQL and store it in Secret Manager.</p>
 <li>Select the <code>Logs</code> tab.</li>
 <li>Review the logs and verify the function has run and completed without
     errors. Successful completion will be noted with log entries containing
-    <code>DB password changed successfully</code> , <code>DB password verified successfully</code> and
-    <code>Secret cloudsql-pswd rotated successfully!</code>.</li>
+    <code>Secret cloudsql-pswd changed in Secret Manager!</code>,
+    <code>DB password changed successfully!</code> and
+    <code>DB password verified successfully!</code>.</li>
 </ol>
 <h2 id="test-the-new-password">Test the new password<a class="headerlink" href="#test-the-new-password" title="Permanent link">&para;</a></h2>
 <ol>
@@ -1886,23 +1919,28 @@ update it in Cloud SQL and store it in Secret Manager.</p>
     secret.</li>
 <li>Click <code>Authenticate</code>. Confirm you were able to log in to the database.</li>
 </ol>
+<h3 id="destroy-the-architecture">Destroy the architecture<a class="headerlink" href="#destroy-the-architecture" title="Permanent link">&para;</a></h3>
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="w">  </span><span class="nb">cd</span><span class="w"> </span>platform-engineering/reference-architectures/automated-password-rotation/terraform
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>terraform<span class="w"> </span>init
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>terraform<span class="w"> </span>plan<span class="w"> </span>-var<span class="w"> </span><span class="s2">&quot;project_id=</span><span class="nv">$PROJECT_ID</span><span class="s2">&quot;</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>terraform<span class="w"> </span>destroy<span class="w"> </span>-var<span class="w"> </span><span class="s2">&quot;project_id=</span><span class="nv">$PROJECT_ID</span><span class="s2">&quot;</span><span class="w"> </span>--auto-approve
+</span></code></pre></div>
 <h2 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link">&para;</a></h2>
 <p>In this tutorial, you saw a way to automate password rotation on Google Cloud.
 First, you saw a generic reference architecture that can be used to automate
-password rotation in any password management system.
-In the later section, you saw an example deployment that uses Google Cloud
-services to rotate password of Cloud Sql database in Google Cloud
-Secret Manager.</p>
+password rotation in any password management system. In the later section, you
+saw an example deployment that uses Google Cloud services to rotate password of
+Cloud Sql database in Google Cloud Secret Manager.</p>
 <p>Implementing an automatic flow to rotate passwords takes away manual overhead
-and provide seamless way to tighten your password security. It is recommended
-to create an automation flow that runs on a regular schedule but can also be
-easily triggered manually when needed. There can be
-many variations of this architecture that can be adopted.
-For example, you can directly trigger a Cloud Run Function from a Google Cloud
-Scheduler job without sending a message to pub/sub if you don't want to
-broadcast the password rotation. You should identify a flow that
-fits your organization requirements and modify the reference
-architecture to implement it.</p>
+and provide seamless way to tighten your password security. It is recommended to
+create an automation flow that runs on a regular schedule but can also be easily
+triggered manually when needed. There can be many variations of this
+architecture that can be adopted. For example, you can directly trigger a Cloud
+Run Function from a Google Cloud Scheduler job without sending a message to
+pub/sub if you don't want to broadcast the password rotation. You should
+identify a flow that fits your organization requirements and modify the
+reference architecture to implement it.</p>
 
 
 

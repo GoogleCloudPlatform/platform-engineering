@@ -390,28 +390,28 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#website" class="md-nav__link">
+  <a href="#site" class="md-nav__link">
     <span class="md-ellipsis">
-      Website
+      Site
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Website">
+    <nav class="md-nav" aria-label="Site">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#build-the-website" class="md-nav__link">
+  <a href="#build-the-site" class="md-nav__link">
     <span class="md-ellipsis">
-      Build the website
+      Build the site
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#preview-the-website" class="md-nav__link">
+  <a href="#preview-the-site" class="md-nav__link">
     <span class="md-ellipsis">
-      Preview the website
+      Preview the site
     </span>
   </a>
   
@@ -419,6 +419,15 @@
         
       </ul>
     </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#linting-and-formatting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Linting and formatting
+    </span>
+  </a>
   
 </li>
         
@@ -1382,28 +1391,28 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#website" class="md-nav__link">
+  <a href="#site" class="md-nav__link">
     <span class="md-ellipsis">
-      Website
+      Site
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Website">
+    <nav class="md-nav" aria-label="Site">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#build-the-website" class="md-nav__link">
+  <a href="#build-the-site" class="md-nav__link">
     <span class="md-ellipsis">
-      Build the website
+      Build the site
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#preview-the-website" class="md-nav__link">
+  <a href="#preview-the-site" class="md-nav__link">
     <span class="md-ellipsis">
-      Preview the website
+      Preview the site
     </span>
   </a>
   
@@ -1411,6 +1420,15 @@
         
       </ul>
     </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#linting-and-formatting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Linting and formatting
+    </span>
+  </a>
   
 </li>
         
@@ -1461,23 +1479,35 @@ use GitHub pull requests for this purpose. Consult
 information on using pull requests.</p>
 <h2 id="development-guide">Development guide<a class="headerlink" href="#development-guide" title="Permanent link">&para;</a></h2>
 <p>This document contains technical information to contribute to this repository.</p>
-<h3 id="website">Website<a class="headerlink" href="#website" title="Permanent link">&para;</a></h3>
-<p>This repository includes scripts and configuration to build a website using
+<h3 id="site">Site<a class="headerlink" href="#site" title="Permanent link">&para;</a></h3>
+<p>This repository includes scripts and configuration to build a site using
 <a href="https://squidfunk.github.io/mkdocs-material/">Material for MkDocs</a>:</p>
 <ul>
 <li><code>config/mkdocs</code>: MkDocs configuration files</li>
-<li><code>scripts/run-mkdocssh</code>: script to build the website</li>
+<li><code>scripts/run-mkdocssh</code>: script to build the site</li>
 <li><code>.github/workflows/documentation.yaml</code>: GitHub Actions workflow that builds
-    the website, and pushes a commit with changes on the current branch.</li>
+  the site, and pushes a commit with changes on the current branch.</li>
 </ul>
-<h4 id="build-the-website">Build the website<a class="headerlink" href="#build-the-website" title="Permanent link">&para;</a></h4>
-<p>To build the website, run the following command from the root of the repository:</p>
+<h4 id="build-the-site">Build the site<a class="headerlink" href="#build-the-site" title="Permanent link">&para;</a></h4>
+<p>To build the site, run the following command from the root of the repository:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>scripts/run-mkdocs.sh
 </span></code></pre></div>
-<h4 id="preview-the-website">Preview the website<a class="headerlink" href="#preview-the-website" title="Permanent link">&para;</a></h4>
-<p>To preview the website, run the following command from the root of the
-repository:</p>
+<h4 id="preview-the-site">Preview the site<a class="headerlink" href="#preview-the-site" title="Permanent link">&para;</a></h4>
+<p>To preview the site, run the following command from the root of the repository:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>scripts/run-mkdocs.sh<span class="w"> </span><span class="s2">&quot;serve&quot;</span>
+</span></code></pre></div>
+<h3 id="linting-and-formatting">Linting and formatting<a class="headerlink" href="#linting-and-formatting" title="Permanent link">&para;</a></h3>
+<p>We configured several linters and formatters for code and documentation in this
+repository. Linting and formatting checks run as part of CI workflows.</p>
+<p>Linting and formatting checks are configured to check changed files only by
+default. If you change the configuration of any linter or formatter, these
+checks run against the entire repository.</p>
+<p>To run linting and formatting checks locally, you do the following:</p>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>scripts/lint.sh
+</span></code></pre></div>
+<p>To automatically fix certain linting and formatting errors, you do the
+following:</p>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nv">LINTER_CONTAINER_FIX_MODE</span><span class="o">=</span><span class="s2">&quot;true&quot;</span><span class="w"> </span>scripts/lint.sh
 </span></code></pre></div>
 
 
