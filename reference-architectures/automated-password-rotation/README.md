@@ -39,7 +39,7 @@ compromised.
 
 ## How to rotate passwords
 
-Manually rotating the passwords is an anti-pattern and should not be done as it
+Manually rotating the passwords is an antipattern and should not be done as it
 exposes the password to the human rotating it and may result in security and
 system incidents. Manual rotation processes also introduce the risk that the
 rotation isn't actually performed due to human error, for example forgetting or
@@ -70,24 +70,23 @@ rotate password for any underlying software/system.
 
 ### Workflow
 
-*   A pipeline or a [cloud scheduler job][cloud-scheduler] sends a message to a
-    pub/sub topic. The message contains the information about the password that
-    is to be rotated. For example, this information may include secret id in
-    secret manager, database instance and username if it is a database password.
-*   The message arriving to the pub/sub topic triggers a
-    [Cloud Run Function][cloud-function] that reads the message and
-    gathers information as supplied in the message.
-*   The function changes the password in the corresponding system.
-    For example, if the message contained a database instance, database
-    name and  user,the function changes the password for that user in the
-    given database.
-*   The function updates the password  in secret manager to reflect the
-    new password. It knows what secret id to update since it was provided in
-    the pub/sub message.
-*   The function publishes a message to a different pub/sub topic indicating
-    that the password has been rotated. This topic can be subscribed any
-    application or system that may want to know in the event of password rotation,
-    whether to re-start themselves or perform any other task.
+- A pipeline or a [cloud scheduler job][cloud-scheduler] sends a message to a
+  pub/sub topic. The message contains the information about the password that is
+  to be rotated. For example, this information may include secret ID in secret
+  manager, database instance and username if it is a database password.
+- The message arriving to the pub/sub topic triggers a [Cloud Run
+  Function][cloud-function] that reads the message and gathers information as
+  supplied in the message.
+- The function changes the password in the corresponding system. For example, if
+  the message contained a database instance, database name and user,the function
+  changes the password for that user in the given database.
+- The function updates the password in secret manager to reflect the new
+  password. It knows what secret ID to update since it was provided in the
+  pub/sub message.
+- The function publishes a message to a different pub/sub topic indicating that
+  the password has been rotated. This topic can be subscribed any application or
+  system that may want to know in the event of password rotation, whether to
+  re-start themselves or perform any other task.
 
 ## Example deployment for automatic password rotation in CloudSQL
 
@@ -192,8 +191,8 @@ rotation process, review and verify the deployment in the Google Cloud Console.
     named `test`.
 5.  In the left hand menu select `Overview`.
 6.  In the `Connect to this instance` section, note that only
-    `Private IP address` is present and no public IP address. This restricts access
-    to the instance over public network.
+    `Private IP address` is present and no public IP address. This restricts
+    access to the instance over public network.
 
 ### Review Secret Manager
 
@@ -204,7 +203,7 @@ rotation process, review and verify the deployment in the Google Cloud Console.
 3.  Click three dots icon and select `View secret value` to view the password
     for Cloud SQL database.
 4.  Copy the secret value, you will use this in the next section to confirm
-   access to the Cloud SQL instance.
+    access to the Cloud SQL instance.
 
 ### Review Cloud Scheduler job
 
@@ -290,7 +289,8 @@ password, update it in Cloud SQL and store it in Secret Manager.
 7.  Review the logs and verify the function has run and completed without
     errors. Successful completion will be noted with log entries containing
     `Secret cloudsql-pswd changed in Secret Manager!`,
-    `DB password changed successfully!` and `DB password verified successfully!`.
+    `DB password changed successfully!` and
+    `DB password verified successfully!`.
 
 ## Test the new password
 
@@ -309,17 +309,17 @@ password, update it in Cloud SQL and store it in Secret Manager.
 9.  In `User` dropdown, choose `user1`.
 10. In `Password` textbox paste the password copied from the `cloudsql-pswd`
     secret.
-11.  Click `Authenticate`. Confirm you were able to log in to the database.
+11. Click `Authenticate`. Confirm you were able to log in to the database.
 
 ### Destroy the architecture
 
-   ```shell
-     cd platform-engineering/reference-architectures/automated-password-rotation/terraform
+```shell
+  cd platform-engineering/reference-architectures/automated-password-rotation/terraform
 
-     terraform init
-     terraform plan -var "project_id=$PROJECT_ID"
-     terraform destroy -var "project_id=$PROJECT_ID" --auto-approve
-   ```
+  terraform init
+  terraform plan -var "project_id=$PROJECT_ID"
+  terraform destroy -var "project_id=$PROJECT_ID" --auto-approve
+```
 
 ## Conclusion
 
