@@ -454,15 +454,6 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#review-secret-manager" class="md-nav__link">
-    <span class="md-ellipsis">
-      Review Secret Manager
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#workflow" class="md-nav__link">
     <span class="md-ellipsis">
       Workflow
@@ -529,6 +520,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#review-secret-manager" class="md-nav__link">
+    <span class="md-ellipsis">
+      Review Secret Manager
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#review-cloud-scheduler-job" class="md-nav__link">
     <span class="md-ellipsis">
       Review Cloud Scheduler job
@@ -584,6 +584,21 @@
       Test the new password
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Test the new password">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#destroy-the-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Destroy the architecture
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1431,15 +1446,6 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#review-secret-manager" class="md-nav__link">
-    <span class="md-ellipsis">
-      Review Secret Manager
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#workflow" class="md-nav__link">
     <span class="md-ellipsis">
       Workflow
@@ -1506,6 +1512,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#review-secret-manager" class="md-nav__link">
+    <span class="md-ellipsis">
+      Review Secret Manager
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#review-cloud-scheduler-job" class="md-nav__link">
     <span class="md-ellipsis">
       Review Cloud Scheduler job
@@ -1561,6 +1576,21 @@
       Test the new password
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Test the new password">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#destroy-the-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Destroy the architecture
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1653,17 +1683,6 @@ vendor etc.</p>
 </li>
 </ul>
 <p>application source the latest passwords.</p>
-<h3 id="review-secret-manager">Review Secret Manager<a class="headerlink" href="#review-secret-manager" title="Permanent link">&para;</a></h3>
-<ol>
-<li>In the Cloud Console, using the naviagion menu select
-    <code>Security &gt; Secret Manager</code>. Confirm that <code>cloudsql-pswd</code> is present in the
-    list.</li>
-<li>Click on <code>cloudsql-pswd</code>.</li>
-<li>Click three dots icon and select <code>View secret value</code> to view the password
-    for Cloud SQL database.</li>
-<li>Copy the secret value, you will use this in the next section to confirm
-    access to the Cloud SQL instance.</li>
-</ol>
 <p>The following architecture represents a general design for a systems that can
 rotate password for any underlying software/system.</p>
 <p><img alt="design" src="resources/generic-password-rotation-flow.png" /></p>
@@ -1679,7 +1698,7 @@ rotate password for any underlying software/system.</p>
 <li>The function changes the password in the corresponding system. For example, if
   the message contained a database instance, database name and user,the function
   changes the password for that user in the given database.</li>
-<li>The function updates the password in secret manager to reflect the = new
+<li>The function updates the password in secret manager to reflect the new
   password. It knows what secret ID to update since it was provided in the
   pub/sub message.</li>
 <li>The function publishes a message to a different pub/sub topic indicating that
@@ -1781,6 +1800,17 @@ rotation process, review and verify the deployment in the Google Cloud Console.<
     <code>Private IP address</code> is present and no public IP address. This restricts
     access to the instance over public network.</li>
 </ol>
+<h3 id="review-secret-manager">Review Secret Manager<a class="headerlink" href="#review-secret-manager" title="Permanent link">&para;</a></h3>
+<ol>
+<li>In the Cloud Console, using the naviagion menu select
+    <code>Security &gt; Secret Manager</code>. Confirm that <code>cloudsql-pswd</code> is present in the
+    list.</li>
+<li>Click on <code>cloudsql-pswd</code>.</li>
+<li>Click three dots icon and select <code>View secret value</code> to view the password
+    for Cloud SQL database.</li>
+<li>Copy the secret value, you will use this in the next section to confirm
+    access to the Cloud SQL instance.</li>
+</ol>
 <h3 id="review-cloud-scheduler-job">Review Cloud Scheduler job<a class="headerlink" href="#review-cloud-scheduler-job" title="Permanent link">&para;</a></h3>
 <ol>
 <li>In the Cloud Console, using the naviagion menu select
@@ -1852,7 +1882,7 @@ practice</a></p>
 <h2 id="rotate-the-cloud-sql-password">Rotate the Cloud SQL password<a class="headerlink" href="#rotate-the-cloud-sql-password" title="Permanent link">&para;</a></h2>
 <p>Typically, the Cloud Scheduler will automatically run on 1st day of every month
 triggering password rotation. However, for this tutorial you will run the Cloud
-Scheuler job manually, which causes the Cloud Run Function to generate a new
+Scheduler job manually, which causes the Cloud Run Function to generate a new
 password, update it in Cloud SQL and store it in Secret Manager.</p>
 <ol>
 <li>In the Cloud Console, using the naviagion menu select
@@ -1866,8 +1896,9 @@ password, update it in Cloud SQL and store it in Secret Manager.</p>
 <li>Select the <code>Logs</code> tab.</li>
 <li>Review the logs and verify the function has run and completed without
     errors. Successful completion will be noted with log entries containing
-    <code>DB password changed successfully</code> , <code>DB password verified successfully</code> and
-    <code>Secret cloudsql-pswd rotated successfully!</code>.</li>
+    <code>Secret cloudsql-pswd changed in Secret Manager!</code>,
+    <code>DB password changed successfully!</code> and
+    <code>DB password verified successfully!</code>.</li>
 </ol>
 <h2 id="test-the-new-password">Test the new password<a class="headerlink" href="#test-the-new-password" title="Permanent link">&para;</a></h2>
 <ol>
@@ -1888,6 +1919,13 @@ password, update it in Cloud SQL and store it in Secret Manager.</p>
     secret.</li>
 <li>Click <code>Authenticate</code>. Confirm you were able to log in to the database.</li>
 </ol>
+<h3 id="destroy-the-architecture">Destroy the architecture<a class="headerlink" href="#destroy-the-architecture" title="Permanent link">&para;</a></h3>
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="w">  </span><span class="nb">cd</span><span class="w"> </span>platform-engineering/reference-architectures/automated-password-rotation/terraform
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>terraform<span class="w"> </span>init
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>terraform<span class="w"> </span>plan<span class="w"> </span>-var<span class="w"> </span><span class="s2">&quot;project_id=</span><span class="nv">$PROJECT_ID</span><span class="s2">&quot;</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>terraform<span class="w"> </span>destroy<span class="w"> </span>-var<span class="w"> </span><span class="s2">&quot;project_id=</span><span class="nv">$PROJECT_ID</span><span class="s2">&quot;</span><span class="w"> </span>--auto-approve
+</span></code></pre></div>
 <h2 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link">&para;</a></h2>
 <p>In this tutorial, you saw a way to automate password rotation on Google Cloud.
 First, you saw a generic reference architecture that can be used to automate

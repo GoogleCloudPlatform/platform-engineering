@@ -18,14 +18,26 @@ terraform {
       source  = "hashicorp/google"
       version = "5.32.0"
     }
+    google-beta = {
+      source  = "hashicorp/google-beta"
+      version = "~>4"
+    }
   }
-
   provider_meta "google" {
     module_name = "cloud-solutions/platform-engineering-pwd-rotation-deploy-v1"
   }
+  provider_meta "google-beta" {
+    module_name = "cloud-solutions/platform-engineering-pwd-rotation-deploy-v1"
+  }
+
 }
 
 provider "google" {
+  project = var.project_id
+  region  = var.region
+}
+
+provider "google-beta" {
   project = var.project_id
   region  = var.region
 }
