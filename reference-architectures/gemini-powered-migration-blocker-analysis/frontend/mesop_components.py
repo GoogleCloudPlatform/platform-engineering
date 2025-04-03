@@ -16,7 +16,7 @@ import mesop as me
 
 from mesop_styles import _STYLE_MAIN_HEADER, _STYLE_TITLE_BOX, GEMINI_TEXT_GRADIENT
 
-from main import GEMINI_TITLE_PREFIX, PAGE_TITLE_SUFFIX
+from constants import GEMINI_TITLE_PREFIX, PAGE_TITLE_SUFFIX
 
 
 @me.component

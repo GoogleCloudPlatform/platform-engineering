@@ -17,3 +17,5 @@ services:
     build: .
     ports:
       - "8080:8080"
+    volumes:
+      - .:/srv/mesop-app
