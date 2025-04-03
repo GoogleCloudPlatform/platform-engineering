@@ -167,7 +167,7 @@ def update_secret(project_id, secret_id, new_secret_value):
         )
         print(f"Updated secret {secret_id} to version: {updated_secret.name}")
         return True
-    except Exception as e:
+    except Exception as e:  # pylint: disable=broad-exception-caught
         print(e)
         return False
 
@@ -204,7 +204,8 @@ def reset_password(instance_name, db_name, location, db_user, db_pass, new_db_pa
          db_pass(string)        : postgres db password
          new_db_pass(string)    : new password
     Returns:
-         True/False(bool)       : flag indicating success or failure in restting the password
+         True/False(bool)       : flag indicating success or failure in
+                                  resetting the password
     """
     project_id = get_project_id()
     instance_connection_name = project_id + ":" + location + ":" + instance_name
@@ -218,7 +219,7 @@ def reset_password(instance_name, db_name, location, db_user, db_pass, new_db_pa
             "postgresql+pg8000://",
             creator=conn,
         )
-    except Exception as e:
+    except Exception as e:  # pylint: disable=broad-exception-caught
         print(e)
 
     try:
@@ -229,7 +230,7 @@ def reset_password(instance_name, db_name, location, db_user, db_pass, new_db_pa
         pool.dispose()
         time.sleep(10)
         return True
-    except Exception as e:
+    except Exception as e:  # pylint: disable=broad-exception-caught
         print("Failed to reset password due to the following exception")
         print(e)
         return False
@@ -244,7 +245,8 @@ def verify_change_password(instance_name, db_name, location, db_user, db_pass):
          db_user(string)        : posygres db user
          db_pass(string)        : postgres db password
     Returns:
-         True/False(bool)       : flag indicating success or failure in verifying the password
+         True/False(bool)       : flag indicating success or failure in
+                                  verifying the password
     """
     project_id = get_project_id()
     instance_connection_name = project_id + ":" + location + ":" + instance_name
@@ -266,7 +268,7 @@ def verify_change_password(instance_name, db_name, location, db_user, db_pass):
             for row in results:
                 print(row)
         return True
-    except Exception as e:
+    except Exception as e:  # pylint: disable=broad-exception-caught
         print("Cannot verify that the new password due to the following exception")
         print(e)
         return False
