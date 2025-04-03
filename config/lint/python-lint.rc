@@ -242,7 +242,8 @@ generated-members=
 [FORMAT]
 
 # Maximum number of characters on a single line.
-max-line-length=80
+# Ref: https://black.readthedocs.io/en/stable/guides/using_black_with_other_tools.html#pylint
+max-line-length = 88
 
 # TODO(https://github.com/pylint-dev/pylint/issues/3352): Direct pylint to exempt
 # lines made too long by directives to pytype.
