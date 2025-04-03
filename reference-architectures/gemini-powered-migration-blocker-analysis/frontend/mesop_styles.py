@@ -12,15 +12,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 import mesop as me
 
-from google import genai
+_DEFAULT_BORDER = me.Border.all(
+    me.BorderSide(
+        color="#e0e0e0",
+        width=1,
+        style="solid",
+    )
+)
 
-PROJECT_ID = os.environ.get("GOOGLE_CLOUD_PROJECT")  # Your Google Cloud Project ID
-LOCATION = os.environ.get("GOOGLE_CLOUD_REGION")  # Your Google Cloud Project Region
-client = genai.Client(vertexai=True, project=PROJECT_ID, location=LOCATION)
+_STYLE_MAIN_HEADER = me.Style(
+    border=_DEFAULT_BORDER,
+    padding=me.Padding.all(5),
+)
 
-GEMINI_TITLE_PREFIX = "Gemini-powered"
-PAGE_TITLE_SUFFIX = "migration blocker analysis"
-PAGE_TITLE = f"{GEMINI_TITLE_PREFIX} {PAGE_TITLE_SUFFIX}"
+_STYLE_TITLE_BOX = me.Style(display="inline-block")
+
+GEMINI_TEXT_GRADIENT = me.Style(
+    color="transparent",
+    background=(
+        "linear-gradient(72.83deg,#4285f4 11.63%,#9b72cb 40.43%,#d96570 68.07%)" " text"
+    ),
+)

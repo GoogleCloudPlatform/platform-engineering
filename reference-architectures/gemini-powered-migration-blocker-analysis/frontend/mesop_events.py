@@ -12,15 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 import mesop as me
 
-from google import genai
+from mesop_state import MesopState
 
-PROJECT_ID = os.environ.get("GOOGLE_CLOUD_PROJECT")  # Your Google Cloud Project ID
-LOCATION = os.environ.get("GOOGLE_CLOUD_REGION")  # Your Google Cloud Project Region
-client = genai.Client(vertexai=True, project=PROJECT_ID, location=LOCATION)
 
-GEMINI_TITLE_PREFIX = "Gemini-powered"
-PAGE_TITLE_SUFFIX = "migration blocker analysis"
-PAGE_TITLE = f"{GEMINI_TITLE_PREFIX} {PAGE_TITLE_SUFFIX}"
+def on_load(e: me.LoadEvent) -> None:
+    """On load event"""
+    state = me.state(MesopState)
+    state.current_page = "/"
