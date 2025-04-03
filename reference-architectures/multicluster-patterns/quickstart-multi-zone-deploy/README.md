@@ -260,6 +260,86 @@ spec: {}
 updateTime: '2025-04-02T23:48:41.391830411Z'
 ```
 
+## Multi-cluster Gateway and multi-cluster Service
+
+#[TODO Add image]
+In this section, you will:
+
+* Deploy a the multi-cluster ServiceExport for for cross-cluster discovery. This YAML defines a ServiceExport resource using GKE's Multi-cluster Services API (net.gke.io/v1). Its name, whereami-frontend, signals the intent to export the Kubernetes Service with the exact same name located in the same namespace. Creating this resource makes the whereami-frontend Service's Pods discoverable across the GKE fleet. This allows multi-cluster Gateways to find and route traffic to this service, even across different clusters.
+
+```yaml
+kind: ServiceExport
+apiVersion: net.gke.io/v1
+metadata:
+  name: whereami-frontend
+```
+
+* Configure a [Gateway](https://cloud.google.com/kubernetes-engine/docs/how-to/deploying-multi-cluster-gateways#deploy-gateway) using the gke-l7-global-external-managed-mc GatewayClass. This Gateway creates an external Application Load Balancer configured to distribute traffic across your target clusters.
+
+```yaml
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: Gateway
+metadata:
+  name: external-http
+spec:
+  gatewayClassName: gke-l7-global-external-managed-mc
+  listeners:
+  - name: http
+    protocol: HTTP
+    port: 80
+    allowedRoutes:
+      kinds:
+      - kind: HTTPRoute
+```
+
+* Create a HTTPRoute resource. It attaches to the Gateway external-http and sets
+up traffic routing rules. Specifically, it matches all incoming requests
+ (path prefix /) and forwards them to port 80 of the whereami-frontend Service.
+
+```yaml
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: public-store-route
+  labels:
+    gateway: external-http
+spec:
+  parentRefs:
+  - name: external-http
+  rules:
+  - matches: # Match requests based on criteria
+    - path:
+        type: PathPrefix # Match any path starting with /
+        value: /
+    backendRefs: # Forward matched traffic to the backend service
+    - name: whereami-frontend
+      port: 80
+```
+
+1. Deploy the only ServiceExport to zonal-cluster-2
+
+```sh
+gcloud container clusters get-credentials zonal-cluster-2 --zone us-central1-b --project $PROJECT_ID
+kubectl apply -f manifests/mcg/frontend-serviceexport.yaml
+
+```
+
+1. Deploy the ServiceExport, Gateway and the HTTPRoute to cluster1. This cluster
+ serve as the controller cluster
+
+```sh
+gcloud container clusters get-credentials zonal-cluster-1 --zone us-central1-a --project $PROJECT_ID
+kubectl apply -f manifests/mcg
+```
+
+> Note: It might take upto 10 minutes for the endpoint to beginning accepting traffic
+
+1. Once the Gateway has deployed successfully retrieve the external IP address from external-http Gateway.
+
+```sh
+export VIP=$(kubectl get gateways.gateway.networking.k8s.io external-http -o=jsonpath="{.status.addresses[0].value}")
+curl http://$VIP/
+```
 
 1. Watch the traffic
 
