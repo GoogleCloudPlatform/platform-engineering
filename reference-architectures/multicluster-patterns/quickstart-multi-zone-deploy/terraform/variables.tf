@@ -17,47 +17,26 @@
 # variables.tf
 
 variable "project_id" {
-  description = "The ID of the Google Cloud project."
   type        = string
+  description = "The GCP project ID"
 }
 
-variable "vpc_config" {
-  description = "Configuration for the VPC network."
-  type = object({
-    network_name = string
-    routing_mode = string
-    subnets = list(object({
-      subnet_name           = string
-      subnet_ip             = string
-      subnet_region         = string
-      subnet_private_access = bool
-    }))
-    secondary_ranges = map(object({
-      pod_range_name        = string
-      pod_ip_cidr_range     = string
-      service_range_name    = string
-      service_ip_cidr_range = string
-    }))
-  })
-}
 variable "region" {
-  description = "The region for Artifact Registry and Cloud Deploy."
   type        = string
+  default     = "us-central1"
 }
 
-variable "clusters" {
-  description = "A map of cluster names and their corresponding zones."
-  type = map(object({
-    name                   = string
-    zone                   = string
-    is_config              = bool
-    node_pool_machine_type = optional(string, "c2-standard-4")
-    node_pool_disk_size_gb = optional(number, 30)
-    labels                 = optional(map(string), {})
-  }))
+variable "zone_1" {
+  type        = string
+  default     = "us-central1-a"
 }
 
-variable "labels" {
-  description = "Resource labels"
-  type        = map(string)
+variable "zone_2" {
+  type        = string
+  default     = "us-central1-b"
+}
+
+variable "vpc_name" {
+  type        = string
+  default     = "gke-vpc"
 }

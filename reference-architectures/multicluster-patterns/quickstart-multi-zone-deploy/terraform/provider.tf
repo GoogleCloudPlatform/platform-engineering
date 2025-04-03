@@ -22,7 +22,7 @@
   }
 
   provider_meta "google-beta" {
-    module_name = "cloud-solutions/platform-engineering-multipattern-zonal-mcs-mcg-v1"
+    module_name = "cloud-solutions/platform-engineering-multipattern-zonal-mcs-v1"
   }
 }
 provider "google" {

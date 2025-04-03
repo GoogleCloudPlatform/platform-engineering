@@ -1,7 +1,26 @@
-output "delivery_pipeline_name" {
-  value = google_clouddeploy_delivery_pipeline.multi-cluster-pipeline.name
-  }
+/**
+ * Copyright 2025 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+output "vpc_name" {
+  value = google_compute_network.vpc.name
+}
 
-output "cluster_ids" {
-  value = { for k, v in module.gke : k => v.cluster_id }
+output "cluster_1_name" {
+  value = google_container_cluster.cluster_1.name
+}
+
+output "cluster_2_name" {
+  value = google_container_cluster.cluster_2.name
 }
