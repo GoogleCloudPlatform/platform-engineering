@@ -12,27 +12,64 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""Automates Cloud SQL PostgreSQL password rotation via a Cloud Function.
+
+This script defines a Google Cloud Function triggered by a Pub/Sub message.
+The function orchestrates the rotation of a database user's password for a
+Cloud SQL PostgreSQL instance. The password (secret) is managed using
+Google Cloud Secret Manager.
+
+Workflow:
+1.  Trigger: Receives a CloudEvent from a Pub/Sub topic. The message payload
+    (JSON format, base64 encoded) contains details like the Secret Manager
+    secret ID, database user, database name, Cloud SQL instance name, and
+    location.
+2.  Decode Message: Decodes the Pub/Sub message to extract necessary parameters.
+3.  Fetch Current Secret: Retrieves the current database password from the
+    specified secret ID in Secret Manager.
+4.  Generate New Password: Creates a new random password.
+5.  Update Secret Manager: Adds a new version to the secret in Secret Manager
+    containing the newly generated password.
+6.  Reset Database Password: Connects to the specified Cloud SQL instance
+    (using the Cloud SQL Python Connector and SQLAlchemy) using the *old*
+    password and executes an `ALTER USER` command to set the password to the
+    *new* one.
+7.  Verify New Password: Attempts to connect to the database using the *new*
+    password and executes a simple query to confirm the rotation was successful.
+8.  Logging: Prints status messages throughout the process.
+
+Helper Functions:
+- get_project_id: Retrieves the Google Cloud Project ID from the
+                  metadata server.
+- get_random_string: Generates a random string for the new password.
+- update_secret: Handles adding a new version to a secret in Secret Manager.
+- getconn: Establishes a database connection using the Cloud SQL Connector.
+- reset_password: Connects to the database and executes the password change SQL.
+- verify_change_password: Connects to the database with the new password to
+  verify it works.
+"""
 import base64
-import time
 import json
-import os
-import urllib.request
-import string
 import random
-import sqlalchemy
-from sqlalchemy.sql import text
-from sqlalchemy.sql.expression import bindparam
-from google.cloud.sql.connector import Connector, IPTypes
-from google.cloud import secretmanager
-from cloudevents.http import CloudEvent
+import string
+import time
+import urllib.request
+
 import functions_framework
+import sqlalchemy
+from cloudevents.http import CloudEvent
+from google.cloud import secretmanager
+from google.cloud.sql.connector import Connector, IPTypes
+from sqlalchemy.sql import text
 
 
 @functions_framework.cloud_event
 def password_rotation_function(cloud_event: CloudEvent):
     """Background Cloud Function to be triggered by Pub/Sub.
     Args:
-         cloud_event (CloudEvent):  Event of type google.cloud.pubsub.topic.v1.messagePublished
+         cloud_event (CloudEvent):  Event of type
+                                    google.cloud.pubsub.topic.v1.
+                                    messagePublished
     """
     pubsub_message = base64.b64decode(cloud_event.data["message"]["data"]).decode()
     message_data = json.loads(pubsub_message)
@@ -64,7 +101,8 @@ def password_rotation_function(cloud_event: CloudEvent):
         print("DB password changed successfully!")
     else:
         print("Unable to change password")
-        # TODO: Rollback the secret to the previous version in secret manager if the password reset in the DB failed
+        # Add code to rollback the secret to the previous version
+        # in secret manager if the password reset in the DB failed
         return reset_password_status
     verify = verify_change_password(
         instance_name, db_name, location, db_user, new_db_pass
@@ -73,6 +111,7 @@ def password_rotation_function(cloud_event: CloudEvent):
         print("DB password verified successfully!")
     else:
         print("Unable to verify password.")
+    return verify
 
 
 def get_project_id():
@@ -82,7 +121,9 @@ def get_project_id():
     Returns:
         project_id: Id of the project
     """
-    url = "http://metadata.google.internal/computeMetadata/v1/project/project-id"
+    metadata_base_url = "http://metadata.google.internal/computeMetadata/v1/"
+    project_id_path = "project/project-id"
+    url = metadata_base_url + project_id_path
     req = urllib.request.Request(url)
     req.add_header("Metadata-Flavor", "Google")
     project_id = urllib.request.urlopen(req).read().decode()
@@ -116,8 +157,6 @@ def update_secret(project_id, secret_id, new_secret_value):
 
     # Prepare the payload with the updated secret data
     payload = {"data": new_secret_value.encode("UTF-8")}
-
-    response = client.access_secret_version(request={"name": name + "/versions/latest"})
     # Perform the update
     try:
         updated_secret = client.add_secret_version(
