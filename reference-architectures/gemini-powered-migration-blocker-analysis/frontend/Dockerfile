@@ -15,7 +15,7 @@
 FROM python:3.13.2-bookworm
 
 RUN apt-get update && \
-  apt-get install -y \
+  apt-get --assume-yes --no-install-recommends install \
   locales \
   locales-all && \
   apt-get clean && \
@@ -25,7 +25,7 @@ ENV LC_ALL=en_US.UTF-8
 ENV LANG=en_US.UTF-8
 ENV LANGUAGE=en_US.UTF-8
 
-COPY requirements.txt ./
+COPY requirements.txt /srv/mesop-app/
 
 RUN pip install --no-cache-dir -r requirements.txt
 
