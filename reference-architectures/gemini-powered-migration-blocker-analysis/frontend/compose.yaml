@@ -14,7 +14,11 @@
 
 services:
   mesop-app:
-    build: .
+    build:
+      context: .
+      args:
+        GID: "${GID}"
+        UID: "${UID}"
     ports:
       - "8080:8080"
     volumes:

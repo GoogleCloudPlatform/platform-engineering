@@ -30,7 +30,10 @@ COPY requirements.txt /srv/mesop-app/
 WORKDIR /srv/mesop-app
 RUN pip install --no-cache-dir -r requirements.txt
 
-RUN groupadd -g 10000 mesop && useradd -u 10000 -s /bin/bash -g mesop mesop
+ARG UID=10000
+ARG GID=10000
+
+RUN groupadd -g "${GID}" mesop && useradd -u "${UID}" -s /bin/bash -g mesop mesop
 USER mesop
 
 COPY --chown=mesop:mesop . /srv/mesop-app
