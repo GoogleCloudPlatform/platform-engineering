@@ -1185,6 +1185,17 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Gemini-powered migration blocker analysis frontend
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1194,6 +1205,58 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#deploy-and-run-the-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deploy and run the application
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Deploy and run the application">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#google-cloud" class="md-nav__link">
+    <span class="md-ellipsis">
+      Google Cloud
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#docker-compose" class="md-nav__link">
+    <span class="md-ellipsis">
+      Docker Compose
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1307,6 +1370,47 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#deploy-and-run-the-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deploy and run the application
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Deploy and run the application">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#google-cloud" class="md-nav__link">
+    <span class="md-ellipsis">
+      Google Cloud
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#docker-compose" class="md-nav__link">
+    <span class="md-ellipsis">
+      Docker Compose
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1324,6 +1428,24 @@
 
 
 <h1 id="gemini-powered-migration-blocker-analysis-frontend">Gemini-powered migration blocker analysis frontend<a class="headerlink" href="#gemini-powered-migration-blocker-analysis-frontend" title="Permanent link">&para;</a></h1>
+<h2 id="deploy-and-run-the-application">Deploy and run the application<a class="headerlink" href="#deploy-and-run-the-application" title="Permanent link">&para;</a></h2>
+<h3 id="google-cloud">Google Cloud<a class="headerlink" href="#google-cloud" title="Permanent link">&para;</a></h3>
+<h3 id="docker-compose">Docker Compose<a class="headerlink" href="#docker-compose" title="Permanent link">&para;</a></h3>
+<p>Pre-requisites:</p>
+<ul>
+<li>Docker Compose. Tested with v2.34.0</li>
+</ul>
+<p>To run this application using Docker Compose, you do the following:</p>
+<ol>
+<li>
+<p>Open your shell.</p>
+</li>
+<li>
+<p>Run the application using Docker Compose</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">UID</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>id<span class="w"> </span>-u<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="nv">GID</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>id<span class="w"> </span>-g<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>--build<span class="w"> </span>--renew-anon-volumes
+</span></code></pre></div>
+</li>
+</ol>
 
 
 
