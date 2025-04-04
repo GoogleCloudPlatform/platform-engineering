@@ -1,4 +1,0 @@
-kind: ServiceExport
-apiVersion: net.gke.io/v1
-metadata:
-  name: whereami-frontend

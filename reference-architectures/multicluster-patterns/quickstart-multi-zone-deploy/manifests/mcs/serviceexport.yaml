@@ -11,18 +11,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-apiVersion: skaffold/v4beta7
-kind: Config
-metadata: 
-  name: gke-application
-profiles:
-  - name: config-cluster
-    manifests:
-      kustomize:
-        paths:
-          - manifests/overlays/config-cluster
-  - name: worker-cluster
-    manifests:
-      kustomize:
-        paths:
-          - manifests/overlays/worker-cluster
+
+kind: ServiceExport
+apiVersion: net.gke.io/v1
+metadata:
+  name: whereami-backend
+  namespace: my-app
+spec:
+  ports:
+  - port: 80

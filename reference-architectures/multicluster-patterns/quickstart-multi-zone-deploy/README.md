@@ -21,7 +21,6 @@ This setup is ideal for understanding the
 fundamentals of distributed Kubernetes
 deployments on GKE and how Multi-Cluster Services
 enhances reliability and resilience.
-![diagram](images/diagram.svg)
 
 ## Key Concepts Covered
 
@@ -60,10 +59,12 @@ Replace `YOUR PROJECT_ID` with your Google Cloud project ID.
 ```sh
 gcloud services enable \
   compute.googleapis.com \
-  container.googleapis.com \
-  cloudresourcemanager.googleapis.com \
-  iam.googleapis.com \
-  serviceusage.googleapis.com \
+    container.googleapis.com \
+    multiclusterservicediscovery.googleapis.com \
+    gkehub.googleapis.com \
+    cloudresourcemanager.googleapis.com \
+    trafficdirector.googleapis.com \
+    dns.googleapis.com \
   --project=$PROJECT_ID
 ```
 
@@ -73,10 +74,22 @@ Navigate to the terraform directory and update the terraform.tfvars
 cd multicluster-patterns/quickstart-multi-zone-deploy
 ```
 
-## Step 1: Create the Base GKE Infrastructure (Terraform)
+## Create the Base GKE Infrastructure (Terraform)
 
-You will use Terraform to create two zonal GKE
-clusters with fleets enabled in the same region but different zones.
+You will use Terraform to create:
+
+* Networking Setup
+  * Creates a custom Google Cloud VPC without auto-subnets.
+  * Defines two specific subnetworks (`10.10.0.0/20` and `10.10.16.0/20`) within the VPC and the region specified by `us-central`.
+
+* GKE Cluster Deployment
+  * Deploys `zonal-cluster-1` in zone `us-central1-a`, utilizing the first subnet.
+  * Deploys `zonal-cluster-2` in zone `us-central1-b`, utilizing the second subnet.
+
+* Cluster Configuration (Identical for Both)
+  * Gateway API enabled (Standard Channel).
+  * Workload Identity enabled.
+  * Registered to a Google Cloud Fleet.
 
 ```sh
 cd terraform
@@ -90,267 +103,314 @@ We will deploy a simple [whereami](https://github.com/GoogleCloudPlatform/kubern
 consisting of a frontend and a backend to both GKE
 clusters.
 
-1. Connect to your cluster in `us-central1-a`
+1.  Rename contexts for easy access
 
-```sh
-gcloud container clusters get-credentials zonal-cluster-1 --zone us-central1-a --project $PROJECT_ID
-```
+    ```sh
+    gcloud container clusters get-credentials zonal-cluster-1 \
+    --region us-central1-a --project $PROJECT_ID
+    kubectl config rename-context "$(kubectl config current-context)" zone-a
 
-1. Deploy the frontend and backend
+    gcloud container clusters get-credentials zonal-cluster-2 \
+    --region us-central1-b --project $PROJECT_ID
+    kubectl config rename-context "$(kubectl config current-context)" zone-b
+    ```
 
-```sh
-cd ../
-kubectl apply -f manifests/
-```
+1.  Deploy the sample application to each cluster
 
-1. Verify the service is up and running
+    ```sh
+    cd ../
+    kubectl delete -f manifests/ --context zone-a
+    kubectl delete -f manifests/ --context zone-b
+    ```
 
-```sh
-kubectl run temp-curl-client --rm -it --image=curlimages/curl -- /bin/sh
-curl http://whereami-frontend:80
-```
+1. Verify the service is up and running in `zone-a`
 
-This command creates a temporary pod client to access the frontend service from
-inside of the the clustr
+    ```sh
+    kubectl run temp-curl-client  --context zone-b --rm -it --image=curlimages/curl -- /bin/sh
+    ```
 
-Output should similar to:
+1. Execute the curl to see the frontend service running in`zone-a`
 
-```sh
-{
-  "backend_result": {
-    "cluster_name": "zonal-cluster-1",
-    "gce_instance_id": "5796686052760489681",
-    "gce_service_account": "807562725141-compute@developer.gserviceaccount.com",
-    "host_header": "whereami-backend",
-    "metadata": "backend",
-    "node_name": "gke-zonal-cluster-1-default-pool-08f46fa6-n01h",
-    "pod_ip": "10.68.3.5",
-    "pod_name": "whereami-backend-76ff54c56d-k6qk7",
-    "pod_name_emoji": "🤽‍♀",
-    "pod_namespace": "default",
-    "pod_service_account": "whereami-backend",
-    "project_id": "test-mcs1",
-    "timestamp": "2025-04-02T22:20:36",
-    "zone": "us-central1-b"
-  },
-  "cluster_name": "zonal-cluster-1",
-  "gce_instance_id": "3363897077431012570",
-  "gce_service_account": "807562725141-compute@developer.gserviceaccount.com",
-  "host_header": "34.58.94.74",
-  "metadata": "frontend",
-  "node_name": "gke-zonal-cluster-1-default-pool-08f46fa6-t894",
-  "pod_ip": "10.68.2.4",
-  "pod_name": "whereami-frontend-7f984d8f64-djnh4",
-  "pod_name_emoji": "🇫🇮",
-  "pod_namespace": "default",
-  "pod_service_account": "whereami-frontend",
-  "project_id": "test-mcs1",
-  "timestamp": "2025-04-02T22:20:36",
-  "zone": "us-central1-b"
-}
-```
+    ```sh
+    curl http://whereami-frontend.my-app.svc.cluster.local:80
+    ```
 
-1. Deploy the application into the second cluster
+    This command creates a temporary pod client to access the frontend service from
+    inside of the the cluster
 
-```sh
-gcloud container clusters get-credentials zonal-cluster-2 --zone us-central1-b --project $PROJECT_ID
-kubectl apply -f manifests/
-```
+    Output should similar to:
 
-## Configure multi-cluster management
+    ```json
+    {
+      "backend_result": {
+        "cluster_name": "zonal-cluster-2",
+        "gce_instance_id": "5927732544413042383",
+        "gce_service_account": "pemulti1.svc.id.goog",
+        "host_header": "whereami-backend",
+        "metadata": "backend",
+        "node_name": "gke-zonal-cluster-2-default-pool-69474490-5t14",
+        "pod_ip": "10.68.0.6",
+        "pod_name": "whereami-backend-76ff54c56d-xdfr5",
+        "pod_name_emoji": "🫙",
+        "pod_namespace": "my-app",
+        "pod_service_account": "whereami-backend",
+        "project_id": "pemulti1",
+        "timestamp": "2025-04-04T14:49:26",
+        "zone": "us-central1-b"
+      },
+      "cluster_name": "zonal-cluster-2",
+      "gce_instance_id": "5927732544413042383",
+      "gce_service_account": "pemulti1.svc.id.goog",
+      "host_header": "whereami-frontend.my-app.svc.cluster.local",
+      "metadata": "frontend",
+      "node_name": "gke-zonal-cluster-2-default-pool-69474490-5t14",
+      "pod_ip": "10.68.0.7",
+      "pod_name": "whereami-frontend-7f984d8f64-j856n",
+      "pod_name_emoji": "🚶🏽‍♀‍➡",
+      "pod_namespace": "my-app",
+      "pod_service_account": "whereami-frontend",
+      "project_id": "pemulti1",
+      "timestamp": "2025-04-04T14:49:26",
+      "zone": "us-central1-b"
+    }
+    ```
 
-When deploying multiple clusters in different zones/regions a common challenge
-occurs when exposing workloads through a single endpoint. Manually configuring
- this using Network Endpoint Groups (NEGs), custom Ingress resources, and
- load balancer settings is possible, but the process is error-prone, operationally
- complex, and hard to scale.
-[Multi-cluster Gateway](https://cloud.google.com/kubernetes-engine/docs/how-to/migrate-gke-multi-cluster)
-rovides a fully managed solution for seamless traffic routing across clusters
-behind a single external IP, without the need for custom routing logic or manual
- NEG configuration.
+1. Attempt accessing the `zone-b` backend from the frontend the `zone-a` cluster
 
-# [TODO ADD image to illustrate]
+    ```sh
+    ZONE_B_BACKEND_IP="$(kubectl get po -l app=whereami-backend -n my-app --context zone-b -ojsonpath='{.items[*].status.podIP}')"
+    echo ${ZONE_B_BACKEND_IP}
+    kubectl run temp-curl-client --image=curlimages/curl -it --rm --pod-running-timeout=4m --context zone-a -- curl -v http://$ZONE_B_BACKEND_IP:80
+    ```
 
-In the following section, you will:
+Notice you're unable to get the same response as there no connection setup between the clusters
 
-*   Register both clusters to a Fleet
-*   Enable Multi-Cluster Services (MCS)
-*   Configure Gateway API support on both GKE clusters
+## Configure multi-cluster Service
 
-1. Enable required services
+[Multi-cluster Services (MCS)](https://cloud.google.com/kubernetes-engine/docs/concepts/multi-cluster-services)
+enables GKE services to be discovered and accessed across a fleet of VPC-native clusters using virtual IPs and FQDNs.
+It configures DNS, firewalls, and health checks without requiring Anthos licensing or Istio.
+To use MCS, enable the feature, register clusters to a fleet, and export services (excluding default and kube-system namespaces).
+Clients connect using SERVICE_EXPORT_NAME.NAMESPACE.svc.clusterset.local.
 
-```sh
-gcloud services enable \
-  gkehub.googleapis.com \
-  trafficdirector.googleapis.com \
-  multiclusterservicediscovery.googleapis.com \
-  multiclusteringress.googleapis.com \
-  --project=$PROJECT_ID
-```
+MultiClusterService (MCS) is a custom resource for multi-cluster Gateways, representing a service across clusters.
+It creates derived, headless Services with NEGs in member clusters based on pod selectors, acting as endpoint groups.
+While defaulting to all member clusters, MCS can target specific clusters for advanced routing scenarios.
 
-> Note As part of the Terraform setup, each cluster was registered as part of a [fleet](https://cloud.google.com/kubernetes-engine/fleet-management/docs)
+1. Enable multi-cluster-Services in the fleet
 
-```sh
-resource "google_container_cluster" "cluster_1" {
-  name     = "zonal-cluster-1"
-...
-  fleet {
-    project = var.project_id
-  }
-}
-```
-
-1. Confirm the clusters are registered
-
-```sh
-gcloud container fleet memberships list --project=$PROJECT_ID
-```
-
-1. Enable multi-cluster-Services in the fleet to activate the
-[multi-cluster Services (MCS)](https://cloud.google.com/kubernetes-engine/docs/concepts/multi-cluster-services)
-controllers on your fleet clusters, which is required to enable cross-cluster
- service discovery and communication between them.
-
-```sh
-gcloud container fleet multi-cluster-services enable \
-    --project $PROJECT_ID
-```
+    ```sh
+    gcloud container fleet multi-cluster-services enable \
+        --project $PROJECT_ID
+    ```
 
 1. Grant Identity and Access Management (IAM) permissions required by the MCS controller:
 
-```sh
-gcloud projects add-iam-policy-binding $PROJECT_ID \
-    --member "serviceAccount:$PROJECT_ID.svc.id.goog[gke-mcs/gke-mcs-importer]" \
-    --role "roles/compute.networkViewer" \
-    --project=$PROJECT_ID
-```
+    ```sh
+    gcloud projects add-iam-policy-binding $PROJECT_ID \
+        --member "serviceAccount:$PROJECT_ID.svc.id.goog[gke-mcs/gke-mcs-importer]" \
+        --role "roles/compute.networkViewer" \
+        --project=$PROJECT_ID
+    ```
 
 1. Confirm that MCS is enabled for the registered clusters. You will see the
  memberships for the three registered clusters. It may take several minutes
   for all of the clusters to show.
 
-```sh
-gcloud container fleet multi-cluster-services describe --project=$PROJECT_ID
-```
+    ```sh
+    gcloud container fleet multi-cluster-services describe --project=$PROJECT_ID
+    ```
 
-Output should be similar to the follow:
+    Output should be similar to the follow:
 
-```sh
-createTime: '2025-04-02T23:48:38.171804547Z'
-membershipStates:
-  projects/807562725141/locations/us-central1/memberships/autopilot-cluster-1:
-    state:
-      code: OK
-      description: Firewall successfully updated
-      updateTime: '2025-04-02T23:52:29.790474720Z'
-  projects/807562725141/locations/us-central1/memberships/zonal-cluster-1:
-    state:
-      code: OK
-      description: Firewall successfully updated
-      updateTime: '2025-04-02T23:52:35.843646177Z'
-  projects/807562725141/locations/us-central1/memberships/zonal-cluster-2:
-    state:
-      code: OK
-      description: Firewall successfully updated
-      updateTime: '2025-04-02T23:52:30.629358192Z'
-name: projects/test-mcs1/locations/global/features/multiclusterservicediscovery
-resourceState:
-  state: ACTIVE
-spec: {}
-updateTime: '2025-04-02T23:48:41.391830411Z'
-```
+    ```sh
+    createTime: '2025-04-02T23:48:38.171804547Z'
+    membershipStates:
+      projects/807562725141/locations/us-central1/memberships/zonal-cluster-1:
+        state:
+          code: OK
+          description: Firewall successfully updated
+          updateTime: '2025-04-02T23:52:35.843646177Z'
+      projects/807562725141/locations/us-central1/memberships/zonal-cluster-2:
+        state:
+          code: OK
+          description: Firewall successfully updated
+          updateTime: '2025-04-02T23:52:30.629358192Z'
+    name: projects/test-mcs1/locations/global/features/multiclusterservicediscovery
+    resourceState:
+      state: ACTIVE
+    spec: {}
+    updateTime: '2025-04-02T23:48:41.391830411Z'
+    ```
 
-## Multi-cluster Gateway and multi-cluster Service
+1. Create a [ServiceExport](manifests/mcs/serviceexport.yaml) for both the frontend and backend service
 
-#[TODO Add image]
-In this section, you will:
+    ```sh
+    kubectl apply -f manifests/mcs/serviceexport.yaml --context zone-a
+    kubectl apply -f manifests/mcs/serviceexport.yaml --context zone-b
+    ```
 
-* Deploy a the multi-cluster ServiceExport for for cross-cluster discovery. This YAML defines a ServiceExport resource using GKE's Multi-cluster Services API (net.gke.io/v1). Its name, whereami-frontend, signals the intent to export the Kubernetes Service with the exact same name located in the same namespace. Creating this resource makes the whereami-frontend Service's Pods discoverable across the GKE fleet. This allows multi-cluster Gateways to find and route traffic to this service, even across different clusters.
+When the ServiceExport resource is created, MCS will automatically perform the following actions:
 
-```yaml
-kind: ServiceExport
-apiVersion: net.gke.io/v1
-metadata:
-  name: whereami-frontend
-```
+* Configure Cloud DNS zones and records for the exported service. This allows clients in other clusters to resolve the service's FQDN to a virtual IP.
+* Configure firewall rules to allow pods on each cluster to communicate with each other.
 
-* Configure a [Gateway](https://cloud.google.com/kubernetes-engine/docs/how-to/deploying-multi-cluster-gateways#deploy-gateway) using the gke-l7-global-external-managed-mc GatewayClass. This Gateway creates an external Application Load Balancer configured to distribute traffic across your target clusters.
+* Configure Traffic Director resources to enable health checks and endpoint information to each cluster.
 
-```yaml
-apiVersion: gateway.networking.k8s.io/v1beta1
-kind: Gateway
-metadata:
-  name: external-http
-spec:
-  gatewayClassName: gke-l7-global-external-managed-mc
-  listeners:
-  - name: http
-    protocol: HTTP
-    port: 80
-    allowedRoutes:
-      kinds:
-      - kind: HTTPRoute
-```
+* Generate a ServiceImport resource on the other clusters in the fleet (including cluster 1)
 
-* Create a HTTPRoute resource. It attaches to the Gateway external-http and sets
-up traffic routing rules. Specifically, it matches all incoming requests
- (path prefix /) and forwards them to port 80 of the whereami-frontend Service.
+## Test cross cluster access
 
-```yaml
-apiVersion: gateway.networking.k8s.io/v1beta1
-kind: HTTPRoute
-metadata:
-  name: public-store-route
-  labels:
-    gateway: external-http
-spec:
-  parentRefs:
-  - name: external-http
-  rules:
-  - matches: # Match requests based on criteria
-    - path:
-        type: PathPrefix # Match any path starting with /
-        value: /
-    backendRefs: # Forward matched traffic to the backend service
-    - name: whereami-frontend
-      port: 80
-```
+Now you will attempt to connect from the cluster in `zone-b` from the `zone-a` cluster
 
-1. Deploy the only ServiceExport to zonal-cluster-2
+1. Get the `zone-b` endpoint
 
-```sh
-gcloud container clusters get-credentials zonal-cluster-2 --zone us-central1-b --project $PROJECT_ID
-kubectl apply -f manifests/mcg/frontend-serviceexport.yaml
+    ```sh
+    export ZONE_B_BACKEND=$(kubectl get Endpoints whereami-backend -n my-app --context zone-b -o jsonpath='{.subsets[0].addresses[0].ip}:{.subsets[0].ports[0].port}')
+    echo $ZONE_B_BACKEND
+    ```
 
-```
+1. Log back into the client pod running in the `zone-a` cluster run the curl command on the `zone-b` cluster
 
-1. Deploy the ServiceExport, Gateway and the HTTPRoute to cluster1. This cluster
- serve as the controller cluster
+    ```sh
+    kubectl run temp-curl-client  --context zone-a --rm -it --image=curlimages/curl -- curl http://$ZONE_B_BACKEND
+    ```
 
-```sh
-gcloud container clusters get-credentials zonal-cluster-1 --zone us-central1-a --project $PROJECT_ID
-kubectl apply -f manifests/mcg
-```
+    Output should be similar to:
 
-> Note: It might take upto 10 minutes for the endpoint to beginning accepting traffic
+    ```json
+    {
+      "cluster_name": "zonal-cluster-2", # Backend service in the zone-b(us-central1-b)
+      "gce_instance_id": "5927732544413042383",
+      "gce_service_account": "pemulti1.svc.id.goog",
+      "host_header": "10.68.0.6:8080",
+      "metadata": "backend",
+      "node_name": "gke-zonal-cluster-2-default-pool-69474490-5t14",
+      "pod_ip": "10.68.0.6",
+      "pod_name": "whereami-backend-76ff54c56d-xdfr5",
+      "pod_name_emoji": "🫙",
+      "pod_namespace": "my-app",
+      "pod_service_account": "whereami-backend",
+      "project_id": "pemulti1",
+      "timestamp": "2025-04-03T18:28:17",
+      "zone": "us-central1-b" # zone-b
+    }
+    ```
 
-1. Once the Gateway has deployed successfully retrieve the external IP address from external-http Gateway.
+    The frontend service in `zone-a` cluster can then access the exported backend
+    service in the `zone-b` cluster using its Fully Qualified Domain Name (FQDN).
+    The format of this FQDN is: `[SERVICE_EXPORT_NAME].[NAMESPACE].svc.clusterset.local`
 
-```sh
-export VIP=$(kubectl get gateways.gateway.networking.k8s.io external-http -o=jsonpath="{.status.addresses[0].value}")
-curl http://$VIP/
-```
+## Testing Failover
 
-1. Watch the traffic
+Now that we have Multi-Cluster Services (MCS) configured and our `whereami` application
+deployed across both clusters, let's simulate a failure scenario. This will help us observe
+the automatic failover capabilities.
 
-```sh
-for i in {1..3}; do curl $ENDPOINT -s | jq '{frontend: .zone, backend: .backend_result.zone}' -c; done
-````
+The goal is to make the backend service in `zone-a` unavailable. We will then verify
+that the `zone-a` frontend can still reach a healthy backend instance. This failover
+to the `zone-b` backend happens automatically thanks to MCS. We will achieve this by
+scaling the backend deployment in `zone-a` down to zero replicas.
 
-Output should be similar to the following:
+1. Run a temporary client pod in zone-a within the 'my-app' namespace
 
-```sh
-{"frontend":"us-central1-b","backend":"us-central1-b"}
-{"frontend":"us-central1-b","backend":"us-central1-b"}
-{"frontend":"us-central1-b","backend":"us-central1-b"}
-```
+    ```sh
+    kubectl run temp-curl-client --context zone-a --rm -it \
+        --image=curlimages/curl -n my-app -- curl http://whereami-frontend.my-app.svc.cluster.local:80
+    ```
+
+1. Scale down the `whereami-backend` deployment in the `zone-a` cluster to zero replicas. This effectively takes the backend service offline in that cluster.
+
+    ```sh
+    kubectl scale deployment whereami-backend --replicas=0 --context zone-a -n my-app
+    ```
+
+    Note: Observe the `"cluster_name"` and `"zone"` fields in the JSON output. You should see a mix of `zonal-cluster-1`/`us-central1-a` and `zonal-cluster-2`/`us-central1-b` responses. This demonstrates load balancing.
+
+1. Confirm that no backend pods are running in `zone-a`.
+
+    ```sh
+    kubectl get pods -l app=whereami-backend --context zone-a -n my-app
+    ```
+
+    Expected output: `No resources found in my-app namespace.`*
+
+    Now, run the temporary client pod in `zone-a` again. Attempt to reach the backend using
+    the same multi-cluster service address: `whereami-backend.my-app.svc.clusterset.local`.
+
+1.  Test Failover from `zone-a` Frontend:
+
+    ```sh
+    kubectl run temp-curl-client --context zone-a --rm -it \
+    --image=curlimages/curl -n my-app -- curl http://whereami-frontend.my-app.svc.cluster.local:80
+    ```
+
+    Observe the Results:
+    Examine the JSON output from the `curl` commands.
+
+    ```json
+    {
+      "backend_result": {
+        "cluster_name": "zonal-cluster-2",
+        "gce_instance_id": "5927732544413042383",
+        "gce_service_account": "pemulti1.svc.id.goog",
+        "host_header": "whereami-backend",
+        "metadata": "backend",
+        "node_name": "gke-zonal-cluster-2-default-pool-69474490-5t14",
+        "pod_ip": "10.68.0.6",
+        "pod_name": "whereami-backend-76ff54c56d-xdfr5",
+        "pod_name_emoji": "🫙",
+        "pod_namespace": "my-app",
+        "pod_service_account": "whereami-backend",
+        "project_id": "pemulti1",
+        "timestamp": "2025-04-04T14:49:26",
+        "zone": "us-central1-b"
+      },
+      "cluster_name": "zonal-cluster-1",
+      "gce_instance_id": "3363897077431012570",
+      "gce_service_account": "807562725141-compute@developer.gserviceaccount.com",
+      "host_header": "34.58.94.74",
+      "metadata": "frontend",
+      "node_name": "gke-zonal-cluster-1-default-pool-08f46fa6-t894",
+      "pod_ip": "10.68.2.4",
+      "pod_name": "whereami-frontend-7f984d8f64-djnh4",
+      "pod_name_emoji": "🇫🇮",
+      "pod_namespace": "default",
+      "pod_service_account": "whereami-frontend",
+      "project_id": "test-mcs1",
+      "timestamp": "2025-04-02T22:20:36",
+      "zone": "us-central1-b"
+    }
+    ```
+
+    You should consistently see responses only from the backend running in `zonal-cluster-2`
+    (`zone-b`). This shows MCS detected the absence of healthy backend pods in `zone-a`.
+    It automatically redirected all traffic for `whereami-backend.my-app.svc.clusterset.local`
+    to the available instances in `zone-b`. The frontend in `zone-a` remains functional by
+    using the backend in the other cluster.
+
+1.  Restore Backend in `zone-a`
+
+    To return the system to its original state, scale the backend deployment in `zone-a`
+    back up. Let's assume the original replica count was 1 (adjust if different).
+
+    ```sh
+    kubectl scale deployment whereami-backend --replicas=1 --context zone-a -n my-app
+    ```
+
+1.  Verify pods are running again
+
+    ```sh
+    kubectl get pods -l app=whereami-backend --context zone-a -n my-app -w
+    ```
+
+    Wait for a pod to reach Running state, then press Ctrl+C
+
+After the pod is running and registered as healthy (this may take a minute), requests to*
+`whereami-backend.my-app.svc.clusterset.local` should start being load-balanced across*
+both clusters again.*
+
+This test successfully demonstrates the resilience provided by GKE Multi-Cluster Services.
+By exporting services, you create a unified service endpoint. This endpoint automatically
+routes traffic away from unavailable instances, ensuring higher availability for your
+applications spanning multiple clusters.

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+ data "google_project" "project" {}
 
 # Create a VPC
 resource "google_compute_network" "vpc" {
@@ -37,10 +38,15 @@ resource "google_compute_subnetwork" "subnet_2" {
 resource "google_container_cluster" "cluster_1" {
   name     = "zonal-cluster-1"
   location = var.zone_1
-  networking_mode = "VPC_NATIVE"
   network         = google_compute_network.vpc.id
   subnetwork      = google_compute_subnetwork.subnet_1.name
   initial_node_count = 3
+  gateway_api_config {
+    channel = "CHANNEL_STANDARD"
+  }
+  workload_identity_config {
+    workload_pool = "${data.google_project.project.project_id}.svc.id.goog"
+  }
   fleet {
     project = var.project_id
   }
@@ -50,11 +56,15 @@ resource "google_container_cluster" "cluster_1" {
 resource "google_container_cluster" "cluster_2" {
   name     = "zonal-cluster-2"
   location = var.zone_2
-
-  networking_mode = "VPC_NATIVE"
   network         = google_compute_network.vpc.id
   subnetwork      = google_compute_subnetwork.subnet_2.name
   initial_node_count = 3
+  gateway_api_config {
+    channel = "CHANNEL_STANDARD"
+  }
+  workload_identity_config {
+    workload_pool = "${data.google_project.project.project_id}.svc.id.goog"
+  }
   fleet {
     project = var.project_id
   }
