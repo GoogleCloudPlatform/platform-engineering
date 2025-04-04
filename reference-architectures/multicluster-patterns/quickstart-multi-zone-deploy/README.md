@@ -70,21 +70,21 @@ You will use Terraform to create:
 
 -   Networking Setup
 
-    -   Creates a custom Google Cloud VPC without auto-subnets.
-    -   Defines two specific subnetworks (`10.10.0.0/20` and `10.10.16.0/20`)
-        within the VPC and the region specified by `us-central`.
+-   Creates a custom Google Cloud VPC without auto-subnets.
+-   Defines two specific subnetworks (`10.10.0.0/20` and `10.10.16.0/20`) within
+    the VPC and the region specified by `us-central`.
 
 -   GKE Cluster Deployment
 
-    -   Deploys `zonal-cluster-1` in zone `us-central1-a`, utilizing the first
-        subnet.
-    -   Deploys `zonal-cluster-2` in zone `us-central1-b`, utilizing the second
-        subnet.
+-   Deploys `zonal-cluster-1` in zone `us-central1-a`, utilizing the first
+    subnet.
+-   Deploys `zonal-cluster-2` in zone `us-central1-b`, utilizing the second
+    subnet.
 
 -   Cluster Configuration (Identical for Both)
-    -   Gateway API enabled (Standard Channel).
-    -   Workload Identity enabled.
-    -   Registered to a Google Cloud Fleet.
+-   Gateway API enabled (Standard Channel).
+-   Workload Identity enabled.
+-   Registered to a Google Cloud Fleet.
 
 ```sh
 cd terraform
@@ -437,8 +437,8 @@ replicas.
     Wait for a pod to reach Running state, then press Ctrl+C
 
 After the pod is running and registered as healthy (this may take a minute),
-requests to* `whereami-backend.my-app.svc.clusterset.local` should start being
-load-balanced across* both clusters again.\*
+requests to `whereami-backend.my-app.svc.clusterset.local` should start being
+load-balanced across\* both clusters again.\*
 
 This test successfully demonstrates the resilience provided by GKE Multi-Cluster
 Services. By exporting services, you create a unified service endpoint. This
