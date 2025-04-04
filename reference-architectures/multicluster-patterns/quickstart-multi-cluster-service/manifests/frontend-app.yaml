@@ -23,9 +23,7 @@ metadata:
 apiVersion: v1
 data:
   BACKEND_ENABLED: "True"
-  #BACKEND_SERVICE: http://whereami-backend
-  #BACKEND_SERVICE: "whereami-backend.my-app.svc.clusterset.local"
-  BACKEND_SERVICE: "http://whereami-backend.my-app.svc.cluster.local"
+  BACKEND_SERVICE: "http://whereami-backend.app.svc.clusterset.local"
   ECHO_HEADERS: "False"
   GRPC_ENABLED: "False"
   HOST: 0.0.0.0
