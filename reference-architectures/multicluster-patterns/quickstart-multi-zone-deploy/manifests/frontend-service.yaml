@@ -28,4 +28,3 @@ spec:
   selector:
     app: whereami-frontend
   type: ClusterIP
-

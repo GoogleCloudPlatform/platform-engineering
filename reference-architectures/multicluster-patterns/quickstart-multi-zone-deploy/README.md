@@ -79,17 +79,18 @@ cd multicluster-patterns/quickstart-multi-zone-deploy
 You will use Terraform to create:
 
 * Networking Setup
-  * Creates a custom Google Cloud VPC without auto-subnets.
-  * Defines two specific subnetworks (`10.10.0.0/20` and `10.10.16.0/20`) within the VPC and the region specified by `us-central`.
+    * Creates a custom Google Cloud VPC without auto-subnets.
+    * Defines two specific subnetworks (`10.10.0.0/20` and `10.10.16.0/20`)
+    within the VPC and the region specified by `us-central`.
 
 * GKE Cluster Deployment
-  * Deploys `zonal-cluster-1` in zone `us-central1-a`, utilizing the first subnet.
-  * Deploys `zonal-cluster-2` in zone `us-central1-b`, utilizing the second subnet.
+    * Deploys `zonal-cluster-1` in zone `us-central1-a`, utilizing the first subnet.
+    * Deploys `zonal-cluster-2` in zone `us-central1-b`, utilizing the second subnet.
 
 * Cluster Configuration (Identical for Both)
-  * Gateway API enabled (Standard Channel).
-  * Workload Identity enabled.
-  * Registered to a Google Cloud Fleet.
+    * Gateway API enabled (Standard Channel).
+    * Workload Identity enabled.
+    * Registered to a Google Cloud Fleet.
 
 ```sh
 cd terraform
@@ -99,7 +100,8 @@ terraform apply -var project_id=$PROJECT_ID
 
 ## Deploy sample application
 
-We will deploy a simple [whereami](https://github.com/GoogleCloudPlatform/kubernetes-engine-samples/blob/1a90cfeeaed43e2d8bd571f624ba69770300e958/quickstarts/whereami/README.md) application
+We will deploy a simple
+[whereami](https://github.com/GoogleCloudPlatform/kubernetes-engine-samples/blob/1a90cfeeaed43e2d8bd571f624ba69770300e958/quickstarts/whereami/README.md) application
 consisting of a frontend and a backend to both GKE
 clusters.
 
@@ -126,7 +128,8 @@ clusters.
 1. Verify the service is up and running in `zone-a`
 
     ```sh
-    kubectl run temp-curl-client  --context zone-b --rm -it --image=curlimages/curl -- /bin/sh
+    kubectl run temp-curl-client --context zone-b --rm -it \
+    --image=curlimages/curl -- /bin/sh
     ```
 
 1. Execute the curl to see the frontend service running in`zone-a`
@@ -273,14 +276,15 @@ Now you will attempt to connect from the cluster in `zone-b` from the `zone-a` c
 1. Log back into the client pod running in the `zone-a` cluster run the curl command on the `zone-b` cluster
 
     ```sh
-    kubectl run temp-curl-client  --context zone-a --rm -it --image=curlimages/curl -- curl http://$ZONE_B_BACKEND
+    kubectl run temp-curl-client  --context zone-a --rm -it \
+    --image=curlimages/curl -- curl http://$ZONE_B_BACKEND
     ```
 
     Output should be similar to:
 
     ```json
     {
-      "cluster_name": "zonal-cluster-2", # Backend service in the zone-b(us-central1-b)
+      "cluster_name": "zonal-cluster-2", # Backend service in(us-central1-b)
       "gce_instance_id": "5927732544413042383",
       "gce_service_account": "pemulti1.svc.id.goog",
       "host_header": "10.68.0.6:8080",
@@ -316,7 +320,8 @@ scaling the backend deployment in `zone-a` down to zero replicas.
 
     ```sh
     kubectl run temp-curl-client --context zone-a --rm -it \
-        --image=curlimages/curl -n my-app -- curl http://whereami-frontend.my-app.svc.cluster.local:80
+        --image=curlimages/curl -n my-app -- \
+        curl http://whereami-frontend.my-app.svc.cluster.local:80
     ```
 
 1. Scale down the `whereami-backend` deployment in the `zone-a` cluster to zero replicas. This effectively takes the backend service offline in that cluster.
@@ -325,7 +330,9 @@ scaling the backend deployment in `zone-a` down to zero replicas.
     kubectl scale deployment whereami-backend --replicas=0 --context zone-a -n my-app
     ```
 
-    Note: Observe the `"cluster_name"` and `"zone"` fields in the JSON output. You should see a mix of `zonal-cluster-1`/`us-central1-a` and `zonal-cluster-2`/`us-central1-b` responses. This demonstrates load balancing.
+    Note: Observe the `"cluster_name"` and `"zone"` fields in the JSON output.
+    You should see a mix of `zonal-cluster-1`/`us-central1-a` and
+    `zonal-cluster-2`/`us-central1-b` responses. This demonstrates load balancing.
 
 1. Confirm that no backend pods are running in `zone-a`.
 
@@ -342,7 +349,8 @@ scaling the backend deployment in `zone-a` down to zero replicas.
 
     ```sh
     kubectl run temp-curl-client --context zone-a --rm -it \
-    --image=curlimages/curl -n my-app -- curl http://whereami-frontend.my-app.svc.cluster.local:80
+    --image=curlimages/curl -n my-app \
+    -- curl http://whereami-frontend.my-app.svc.cluster.local:80
     ```
 
     Observe the Results:
