@@ -22,21 +22,21 @@ variable "project_id" {
 }
 
 variable "region" {
-  type        = string
-  default     = "us-central1"
+  type    = string
+  default = "us-central1"
 }
 
 variable "zone_1" {
-  type        = string
-  default     = "us-central1-a"
+  type    = string
+  default = "us-central1-a"
 }
 
 variable "zone_2" {
-  type        = string
-  default     = "us-central1-b"
+  type    = string
+  default = "us-central1-b"
 }
 
 variable "vpc_name" {
-  type        = string
-  default     = "gke-vpc"
+  type    = string
+  default = "gke-vpc"
 }
