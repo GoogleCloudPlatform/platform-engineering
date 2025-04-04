@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import mesop as me
-
 from dataclasses import dataclass
+
+import mesop as me
 
 
 @dataclass
@@ -22,4 +22,5 @@ from dataclasses import dataclass
 class MesopState:
     """Mesop state class"""
 
+    app_repository_url: str
     vertex_ai_model_id: str

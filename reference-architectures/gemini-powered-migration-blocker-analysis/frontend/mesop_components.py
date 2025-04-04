@@ -12,19 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from mesop_event_handlers import on_selection_change_model
-from vertex_ai import get_available_models
 from typing import List
-import mesop as me
 
+import mesop as me
+from constants import GEMINI_TITLE_PREFIX, PAGE_TITLE_SUFFIX
+from mesop_event_handlers import on_blur_app_repository_url, on_selection_change_model
 from mesop_styles import (
+    _STYLE_MAIN_BODY,
     _STYLE_MAIN_HEADER,
     _STYLE_TITLE_BOX,
     GEMINI_TEXT_GRADIENT,
-    _STYLE_MAIN_BODY,
 )
-
-from constants import GEMINI_TITLE_PREFIX, PAGE_TITLE_SUFFIX
+from vertex_ai import get_available_models
 
 
 @me.component
@@ -65,6 +64,12 @@ def migration_blocker_analysis_input() -> None:
             on_selection_change=on_selection_change_model,
             options=model_select_options,
             multiple=False,
+        )
+        me.input(
+            label="App source code repository URL",
+            on_blur=on_blur_app_repository_url,
+            type="url",
+            required=True,
         )
 
 

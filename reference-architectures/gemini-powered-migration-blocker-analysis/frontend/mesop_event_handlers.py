@@ -12,18 +12,49 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import mesop as me
+import logging
 
+import mesop as me
 from mesop_state import MesopState
+
+logger = logging.getLogger(__name__)
 
 
 def on_load(e: me.LoadEvent) -> None:
-    """On load event"""
+    """On load event handler"""
+    logger.debug("on_load mesop event handler")
     state = me.state(MesopState)
     state.current_page = "/"
     me.set_theme_mode("system")
 
 
-def on_selection_change_model(e: me.SelectSelectionChangeEvent):
+def update_mesop_state_event_handler(
+    event_handler_name: str, state_attribute_name: str, e: me.events.MesopEvent
+):
+    logger.debug("%s mesop event handler", event_handler_name)
     state = me.state(MesopState)
-    state.vertex_ai_model_id = e.value
+    try:
+        new_value = e.value
+        # Use setattr to update the attribute dynamically by name
+        setattr(state, state_attribute_name, new_value)
+        logger.debug("Set state.%s to %s", state_attribute_name, new_value)
+    except AttributeError as ae:
+        # Event might not have a value or state lacks attribute
+        logger.error(
+            """Error in %s: Could not access value on event %s or attribute %s on Mesop
+            state: %s""",
+            event_handler_name,
+            type(e),
+            state_attribute_name,
+            ae,
+        )
+
+
+def on_selection_change_model(e: me.SelectSelectionChangeEvent):
+    """On selection change model event handler"""
+    update_mesop_state_event_handler(__name__, "vertex_ai_model_id", e)
+
+
+def on_blur_app_repository_url(e: me.InputBlurEvent):
+    """On blur repository URL event handler"""
+    update_mesop_state_event_handler(__name__, "app_repository_url", e)

@@ -12,14 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import logging
 import os
-import mesop as me
 
-from mesop_event_handlers import on_load
-from mesop_components import vertex_gemini_header, migration_blocker_analysis_body
-from google import genai
-from mesop_state import MesopState
+import mesop as me
 from constants import GEMINI_TITLE_PREFIX, PAGE_TITLE_SUFFIX
+from google import genai
+from mesop_components import migration_blocker_analysis_body, vertex_gemini_header
+from mesop_event_handlers import on_load
+from mesop_state import MesopState
+
+logging.basicConfig(level=logging.DEBUG)
 
 
 @me.page(
