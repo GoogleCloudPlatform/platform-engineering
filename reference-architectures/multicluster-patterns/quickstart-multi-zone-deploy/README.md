@@ -117,7 +117,7 @@ clusters.
     kubectl config rename-context "$(kubectl config current-context)" zone-b
     ```
 
-1.  Deploy the sample application to each cluster
+2.  Deploy the sample application to each cluster
 
     ```sh
     cd ../
@@ -125,14 +125,14 @@ clusters.
     kubectl delete -f manifests/ --context zone-b
     ```
 
-1. Verify the service is up and running in `zone-a`
+3. Verify the service is up and running in `zone-a`
 
     ```sh
     kubectl run temp-curl-client --context zone-b --rm -it \
     --image=curlimages/curl -- /bin/sh
     ```
 
-1. Execute the curl to see the frontend service running in`zone-a`
+4.  Execute the curl to see the frontend service running in`zone-a`
 
     ```sh
     curl http://whereami-frontend.my-app.svc.cluster.local:80
@@ -178,45 +178,58 @@ clusters.
     }
     ```
 
-1. Attempt accessing the `zone-b` backend from the frontend the `zone-a` cluster
+5.  Attempt accessing the `zone-b` backend from the frontend the `zone-a` cluster
 
     ```sh
-    ZONE_B_BACKEND_IP="$(kubectl get po -l app=whereami-backend -n my-app --context zone-b -ojsonpath='{.items[*].status.podIP}')"
+    ZONE_B_BACKEND_IP="$(kubectl get po -l app=whereami-backend \
+    -n my-app --context zone-b -ojsonpath='{.items[*].status.podIP}')"
     echo ${ZONE_B_BACKEND_IP}
-    kubectl run temp-curl-client --image=curlimages/curl -it --rm --pod-running-timeout=4m --context zone-a -- curl -v http://$ZONE_B_BACKEND_IP:80
+
+    kubectl run temp-curl-client \
+    --image=curlimages/curl -it --rm --pod-running-timeout=4m \
+    --context zone-a -- curl -v http://$ZONE_B_BACKEND_IP:80
     ```
 
-Notice you're unable to get the same response as there no connection setup between the clusters
+Notice you're unable to get the same response as there no connection setup
+between the clusters
 
 ## Configure multi-cluster Service
 
-[Multi-cluster Services (MCS)](https://cloud.google.com/kubernetes-engine/docs/concepts/multi-cluster-services)
-enables GKE services to be discovered and accessed across a fleet of VPC-native clusters using virtual IPs and FQDNs.
-It configures DNS, firewalls, and health checks without requiring Anthos licensing or Istio.
-To use MCS, enable the feature, register clusters to a fleet, and export services (excluding default and kube-system namespaces).
+[Multi-cluster Services (MCS)]
+(https://cloud.google.com/kubernetes-engine/docs/concepts/multi-cluster-services)
+enables GKE services to be discovered and accessed across a fleet of VPC-native
+clusters using virtual IPs and FQDNs.
+It configures DNS, firewalls, and health checks without requiring Anthos
+licensing or Istio.
+To use MCS, enable the feature, register clusters to a fleet, and export
+services (excluding default and kube-system namespaces).
 Clients connect using SERVICE_EXPORT_NAME.NAMESPACE.svc.clusterset.local.
 
-MultiClusterService (MCS) is a custom resource for multi-cluster Gateways, representing a service across clusters.
-It creates derived, headless Services with NEGs in member clusters based on pod selectors, acting as endpoint groups.
-While defaulting to all member clusters, MCS can target specific clusters for advanced routing scenarios.
+MultiClusterService (MCS) is a custom resource for multi-cluster Gateways,
+representing a service across clusters.
+It creates derived, headless Services with NEGs in member clusters based on
+pod selectors, acting as endpoint groups.
+While defaulting to all member clusters, MCS can target specific clusters for
+advanced routing scenarios.
 
-1. Enable multi-cluster-Services in the fleet
+1.  Enable multi-cluster-Services in the fleet
 
     ```sh
     gcloud container fleet multi-cluster-services enable \
         --project $PROJECT_ID
     ```
 
-1. Grant Identity and Access Management (IAM) permissions required by the MCS controller:
+2.  Grant Identity and Access Management (IAM) permissions required by the MCS
+    controller:
 
     ```sh
     gcloud projects add-iam-policy-binding $PROJECT_ID \
-        --member "serviceAccount:$PROJECT_ID.svc.id.goog[gke-mcs/gke-mcs-importer]" \
-        --role "roles/compute.networkViewer" \
-        --project=$PROJECT_ID
+    --member "serviceAccount:$PROJECT_ID.svc.id.goog[gke-mcs/gke-mcs-importer]" \
+    --role "roles/compute.networkViewer" \
+    --project=$PROJECT_ID
     ```
 
-1. Confirm that MCS is enabled for the registered clusters. You will see the
+3.  Confirm that MCS is enabled for the registered clusters. You will see the
  memberships for the three registered clusters. It may take several minutes
   for all of the clusters to show.
 
@@ -239,41 +252,50 @@ While defaulting to all member clusters, MCS can target specific clusters for ad
           code: OK
           description: Firewall successfully updated
           updateTime: '2025-04-02T23:52:30.629358192Z'
-    name: projects/test-mcs1/locations/global/features/multiclusterservicediscovery
+    name: projects/[]/locations/global/features/multiclusterservicediscovery
     resourceState:
       state: ACTIVE
     spec: {}
     updateTime: '2025-04-02T23:48:41.391830411Z'
     ```
 
-1. Create a [ServiceExport](manifests/mcs/serviceexport.yaml) for both the frontend and backend service
+4.  Create a [ServiceExport](manifests/mcs/serviceexport.yaml) for both the
+    frontend and backend service
 
     ```sh
     kubectl apply -f manifests/mcs/serviceexport.yaml --context zone-a
     kubectl apply -f manifests/mcs/serviceexport.yaml --context zone-b
     ```
 
-When the ServiceExport resource is created, MCS will automatically perform the following actions:
+When the ServiceExport resource is created, MCS will automatically perform the
+following actions:
 
-* Configure Cloud DNS zones and records for the exported service. This allows clients in other clusters to resolve the service's FQDN to a virtual IP.
-* Configure firewall rules to allow pods on each cluster to communicate with each other.
+* Configure Cloud DNS zones and records for the exported service. This allows
+clients in other clusters to resolve the service's FQDN to a virtual IP.
+* Configure firewall rules to allow pods on each cluster to communicate with
+each other.
 
-* Configure Traffic Director resources to enable health checks and endpoint information to each cluster.
+* Configure Traffic Director resources to enable health checks and endpoint
+information to each cluster.
 
-* Generate a ServiceImport resource on the other clusters in the fleet (including cluster 1)
+* Generate a ServiceImport resource on the other clusters in the fleet
 
 ## Test cross cluster access
 
-Now you will attempt to connect from the cluster in `zone-b` from the `zone-a` cluster
+Now you will attempt to connect from the cluster in `zone-b` from the `zone-a`
+cluster
 
-1. Get the `zone-b` endpoint
+1.  Get the `zone-b` endpoint
 
     ```sh
-    export ZONE_B_BACKEND=$(kubectl get Endpoints whereami-backend -n my-app --context zone-b -o jsonpath='{.subsets[0].addresses[0].ip}:{.subsets[0].ports[0].port}')
+    export ZONE_B_BACKEND=$(kubectl get Endpoints whereami-backend -n my-app \
+    --context zone-b \
+    -o jsonpath='{.subsets[0].addresses[0].ip}:{.subsets[0].ports[0].port}')
     echo $ZONE_B_BACKEND
     ```
 
-1. Log back into the client pod running in the `zone-a` cluster run the curl command on the `zone-b` cluster
+2.  Log back into the client pod running in the `zone-a` cluster run the curl
+    command on the `zone-b`     cluster
 
     ```sh
     kubectl run temp-curl-client  --context zone-a --rm -it \
@@ -303,20 +325,22 @@ Now you will attempt to connect from the cluster in `zone-b` from the `zone-a` c
 
     The frontend service in `zone-a` cluster can then access the exported backend
     service in the `zone-b` cluster using its Fully Qualified Domain Name (FQDN).
-    The format of this FQDN is: `[SERVICE_EXPORT_NAME].[NAMESPACE].svc.clusterset.local`
+    The format of this FQDN is: 
+    `[SERVICE_EXPORT_NAME].[NAMESPACE].svc.clusterset.local`
 
 ## Testing Failover
 
-Now that we have Multi-Cluster Services (MCS) configured and our `whereami` application
-deployed across both clusters, let's simulate a failure scenario. This will help us observe
-the automatic failover capabilities.
+Now that we have Multi-Cluster Services (MCS) configured and our `whereami`
+application deployed across both clusters, let's simulate a failure scenario.
+This will help us observe the automatic failover capabilities.
 
-The goal is to make the backend service in `zone-a` unavailable. We will then verify
-that the `zone-a` frontend can still reach a healthy backend instance. This failover
-to the `zone-b` backend happens automatically thanks to MCS. We will achieve this by
-scaling the backend deployment in `zone-a` down to zero replicas.
+The goal is to make the backend service in `zone-a` unavailable.
+We will then verify that the `zone-a` frontend can still reach a healthy backend
+instance. This failover
+to the `zone-b` backend happens automatically thanks to MCS. We will achieve
+this by scaling the backend deployment in `zone-a` down to zero replicas.
 
-1. Run a temporary client pod in zone-a within the 'my-app' namespace
+1.  Run a temporary client pod in zone-a within the 'my-app' namespace
 
     ```sh
     kubectl run temp-curl-client --context zone-a --rm -it \
@@ -324,17 +348,19 @@ scaling the backend deployment in `zone-a` down to zero replicas.
         curl http://whereami-frontend.my-app.svc.cluster.local:80
     ```
 
-1. Scale down the `whereami-backend` deployment in the `zone-a` cluster to zero replicas. This effectively takes the backend service offline in that cluster.
+2.  Scale down the `whereami-backend` deployment in the `zone-a` cluster to zero
+    replicas. This effectively takes the backend service offline.
 
     ```sh
-    kubectl scale deployment whereami-backend --replicas=0 --context zone-a -n my-app
+    kubectl scale deployment whereami-backend --replicas=0 \
+    --context zone-a -n my-app
     ```
 
     Note: Observe the `"cluster_name"` and `"zone"` fields in the JSON output.
     You should see a mix of `zonal-cluster-1`/`us-central1-a` and
     `zonal-cluster-2`/`us-central1-b` responses. This demonstrates load balancing.
 
-1. Confirm that no backend pods are running in `zone-a`.
+3.  Confirm that no backend pods are running in `zone-a`.
 
     ```sh
     kubectl get pods -l app=whereami-backend --context zone-a -n my-app
@@ -342,10 +368,11 @@ scaling the backend deployment in `zone-a` down to zero replicas.
 
     Expected output: `No resources found in my-app namespace.`*
 
-    Now, run the temporary client pod in `zone-a` again. Attempt to reach the backend using
-    the same multi-cluster service address: `whereami-backend.my-app.svc.clusterset.local`.
+    Now, run the temporary client pod in `zone-a` again. Attempt to reach the
+    backend using the same multi-cluster service address:
+    `whereami-backend.my-app.svc.clusterset.local`.
 
-1.  Test Failover from `zone-a` Frontend:
+4.  Test Failover from `zone-a` Frontend:
 
     ```sh
     kubectl run temp-curl-client --context zone-a --rm -it \
@@ -376,7 +403,7 @@ scaling the backend deployment in `zone-a` down to zero replicas.
       },
       "cluster_name": "zonal-cluster-1",
       "gce_instance_id": "3363897077431012570",
-      "gce_service_account": "807562725141-compute@developer.gserviceaccount.com",
+      "gce_service_account": "[]-compute@developer.gserviceaccount.com",
       "host_header": "34.58.94.74",
       "metadata": "frontend",
       "node_name": "gke-zonal-cluster-1-default-pool-08f46fa6-t894",
@@ -391,22 +418,28 @@ scaling the backend deployment in `zone-a` down to zero replicas.
     }
     ```
 
-    You should consistently see responses only from the backend running in `zonal-cluster-2`
-    (`zone-b`). This shows MCS detected the absence of healthy backend pods in `zone-a`.
-    It automatically redirected all traffic for `whereami-backend.my-app.svc.clusterset.local`
-    to the available instances in `zone-b`. The frontend in `zone-a` remains functional by
+    You should consistently see responses only from the backend running in
+    `zonal-cluster-2`
+    (`zone-b`). This shows MCS detected the absence of healthy backend pods in
+    `zone-a`.
+    It automatically redirected all traffic for
+    `whereami-backend.my-app.svc.clusterset.local`
+    to the available instances in `zone-b`. The frontend in `zone-a` remains
+    functional by
     using the backend in the other cluster.
 
-1.  Restore Backend in `zone-a`
+5.  Restore Backend in `zone-a`
 
-    To return the system to its original state, scale the backend deployment in `zone-a`
+    To return the system to its original state, scale the backend deployment in
+    `zone-a`
     back up. Let's assume the original replica count was 1 (adjust if different).
 
     ```sh
-    kubectl scale deployment whereami-backend --replicas=1 --context zone-a -n my-app
+    kubectl scale deployment whereami-backend --replicas=1 \
+    --context zone-a -n my-app
     ```
 
-1.  Verify pods are running again
+6.  Verify pods are running again
 
     ```sh
     kubectl get pods -l app=whereami-backend --context zone-a -n my-app -w
@@ -414,11 +447,16 @@ scaling the backend deployment in `zone-a` down to zero replicas.
 
     Wait for a pod to reach Running state, then press Ctrl+C
 
-After the pod is running and registered as healthy (this may take a minute), requests to*
-`whereami-backend.my-app.svc.clusterset.local` should start being load-balanced across*
+After the pod is running and registered as healthy (this may take a minute),
+requests to*
+`whereami-backend.my-app.svc.clusterset.local` should start being load-balanced
+across*
 both clusters again.*
 
-This test successfully demonstrates the resilience provided by GKE Multi-Cluster Services.
-By exporting services, you create a unified service endpoint. This endpoint automatically
-routes traffic away from unavailable instances, ensuring higher availability for your
+This test successfully demonstrates the resilience provided by GKE Multi-Cluster
+Services.
+By exporting services, you create a unified service endpoint. This endpoint
+automatically
+routes traffic away from unavailable instances, ensuring higher availability
+for your
 applications spanning multiple clusters.
