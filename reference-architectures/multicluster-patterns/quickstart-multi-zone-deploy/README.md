@@ -18,18 +18,18 @@ resilience.
 
 ## Key Concepts Covered
 
--   GKE Cluster Creation: Provisioning zonal GKE clusters using Terraform.
--   Application Deployment: Deploying a simple frontend/backend application to
-    multiple GKE clusters.
--   Multi-Cluster Services (MCS): Configuring and utilizing MCS to enable
-    service discovery and access across clusters.
--   Failover Demonstration: Simulating a pod failure to showcase the automatic
-    failover capabilities of MCS.
+- GKE Cluster Creation: Provisioning zonal GKE clusters using Terraform.
+- Application Deployment: Deploying a simple frontend/backend application to
+  multiple GKE clusters.
+- Multi-Cluster Services (MCS): Configuring and utilizing MCS to enable service
+  discovery and access across clusters.
+- Failover Demonstration: Simulating a pod failure to showcase the automatic
+  failover capabilities of MCS.
 
 ## Prerequisites
 
--   A Google Cloud project with billing account linked.
--   Terraform: Install Terraform on your local machine or use Cloud Shell.
+- A Google Cloud project with billing account linked.
+- Terraform: Install Terraform on your local machine or use Cloud Shell.
 
 ## Usage
 
@@ -68,23 +68,22 @@ cd multicluster-patterns/quickstart-multi-zone-deploy
 
 You will use Terraform to create:
 
--   Networking Setup
+- Networking Setup
 
--   Creates a custom Google Cloud VPC without auto-subnets.
--   Defines two specific subnetworks (`10.10.0.0/20` and `10.10.16.0/20`) within
-    the VPC and the region specified by `us-central`.
+- Creates a custom Google Cloud VPC without auto-subnets.
+- Defines two specific subnetworks (`10.10.0.0/20` and `10.10.16.0/20`) within
+  the VPC and the region specified by `us-central`.
 
--   GKE Cluster Deployment
+- GKE Cluster Deployment
 
--   Deploys `zonal-cluster-1` in zone `us-central1-a`, utilizing the first
-    subnet.
--   Deploys `zonal-cluster-2` in zone `us-central1-b`, utilizing the second
-    subnet.
+- Deploys `zonal-cluster-1` in zone `us-central1-a`, utilizing the first subnet.
+- Deploys `zonal-cluster-2` in zone `us-central1-b`, utilizing the second
+  subnet.
 
--   Cluster Configuration (Identical for Both)
--   Gateway API enabled (Standard Channel).
--   Workload Identity enabled.
--   Registered to a Google Cloud Fleet.
+- Cluster Configuration (Identical for Both)
+- Gateway API enabled (Standard Channel).
+- Workload Identity enabled.
+- Registered to a Google Cloud Fleet.
 
 ```sh
 cd terraform
@@ -262,15 +261,15 @@ advanced routing scenarios.
 When the ServiceExport resource is created, MCS will automatically perform the
 following actions:
 
--   Configure Cloud DNS zones and records for the exported service. This allows
-    clients in other clusters to resolve the service's FQDN to a virtual IP.
--   Configure firewall rules to allow pods on each cluster to communicate with
-    each other.
+- Configure Cloud DNS zones and records for the exported service. This allows
+  clients in other clusters to resolve the service's FQDN to a virtual IP.
+- Configure firewall rules to allow pods on each cluster to communicate with
+  each other.
 
--   Configure Traffic Director resources to enable health checks and endpoint
-    information to each cluster.
+- Configure Traffic Director resources to enable health checks and endpoint
+  information to each cluster.
 
--   Generate a ServiceImport resource on the other clusters in the fleet
+- Generate a ServiceImport resource on the other clusters in the fleet
 
 ## Test cross cluster access
 
