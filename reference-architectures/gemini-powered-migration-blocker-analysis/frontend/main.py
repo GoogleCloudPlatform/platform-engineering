@@ -15,15 +15,11 @@
 import os
 import mesop as me
 
-from mesop_events import on_load
-from mesop_components import vertex_gemini_header
+from mesop_event_handlers import on_load
+from mesop_components import vertex_gemini_header, migration_blocker_analysis_body
 from google import genai
 from mesop_state import MesopState
 from constants import GEMINI_TITLE_PREFIX, PAGE_TITLE_SUFFIX
-
-# PROJECT_ID = os.environ.get("GOOGLE_CLOUD_PROJECT")  # Your Google Cloud Project ID
-# LOCATION = os.environ.get("GOOGLE_CLOUD_REGION")  # Your Google Cloud Project Region
-# client = genai.Client(vertexai=True, project=PROJECT_ID, location=LOCATION)
 
 
 @me.page(
@@ -39,3 +35,4 @@ def app() -> None:
     state = me.state(MesopState)
     # Main header
     vertex_gemini_header()
+    migration_blocker_analysis_body()

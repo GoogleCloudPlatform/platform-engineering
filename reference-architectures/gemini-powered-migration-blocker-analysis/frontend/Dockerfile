@@ -40,4 +40,4 @@ COPY --chown=mesop:mesop . /srv/mesop-app
 
 EXPOSE 8080
 
-CMD ["gunicorn", "--bind", "0.0.0.0:8080", "main:me"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8080", "--reload", "main:me"]

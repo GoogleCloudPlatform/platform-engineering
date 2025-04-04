@@ -21,3 +21,9 @@ def on_load(e: me.LoadEvent) -> None:
     """On load event"""
     state = me.state(MesopState)
     state.current_page = "/"
+    me.set_theme_mode("system")
+
+
+def on_selection_change_model(e: me.SelectSelectionChangeEvent):
+    state = me.state(MesopState)
+    state.vertex_ai_model_id = e.value

@@ -14,7 +14,12 @@
 
 import mesop as me
 
+from dataclasses import dataclass
 
+
+@dataclass
 @me.stateclass
 class MesopState:
     """Mesop state class"""
+
+    vertex_ai_model_id: str

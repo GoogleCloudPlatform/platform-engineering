@@ -29,6 +29,8 @@ _STYLE_MAIN_HEADER = me.Style(
 
 _STYLE_TITLE_BOX = me.Style(display="inline-block")
 
+_STYLE_MAIN_BODY = me.Style()
+
 GEMINI_TEXT_GRADIENT = me.Style(
     color="transparent",
     background=(

@@ -12,9 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from mesop_event_handlers import on_selection_change_model
+from vertex_ai import get_available_models
+from typing import List
 import mesop as me
 
-from mesop_styles import _STYLE_MAIN_HEADER, _STYLE_TITLE_BOX, GEMINI_TEXT_GRADIENT
+from mesop_styles import (
+    _STYLE_MAIN_HEADER,
+    _STYLE_TITLE_BOX,
+    GEMINI_TEXT_GRADIENT,
+    _STYLE_MAIN_BODY,
+)
 
 from constants import GEMINI_TITLE_PREFIX, PAGE_TITLE_SUFFIX
 
@@ -35,3 +43,33 @@ def vertex_gemini_header() -> None:
                     style=GEMINI_TEXT_GRADIENT,
                 )
                 me.text(PAGE_TITLE_SUFFIX, type="headline-5")
+
+
+@me.component
+def migration_blocker_analysis_body() -> None:
+    """Migration blocker analysis body Mesop component"""
+    with me.box(style=_STYLE_MAIN_BODY):
+        migration_blocker_analysis_input()
+        with me.box():
+            me.text("report")
+
+
+@me.component
+def migration_blocker_analysis_input() -> None:
+    """Migration blocker analysis input Mesop component"""
+    model_select_options = build_model_select_options()
+    with me.box():
+        me.select(
+            appearance="outline",
+            label="Gemini Model",
+            on_selection_change=on_selection_change_model,
+            options=model_select_options,
+            multiple=False,
+        )
+
+
+def build_model_select_options() -> List[me.SelectOption]:
+    select_options = []
+    for model in get_available_models():
+        select_options.append(me.SelectOption(label=model, value=model))
+    return select_options
