@@ -106,17 +106,17 @@ def migration_blocker_analysis_input() -> None:
             type="url",
             required=True,
         )
-        me.button(
-            label="Generate report",
-            type="stroked",
-            on_click=on_click_generate_report_button,
-        )
         me.select(
             appearance="outline",
             label="Report template",
             on_selection_change=on_selection_change_report_template,
             options=build_report_template_select_options(),
             multiple=False,
+        )
+        me.button(
+            label="Generate report",
+            type="stroked",
+            on_click=on_click_generate_report_button,
         )
 
 
