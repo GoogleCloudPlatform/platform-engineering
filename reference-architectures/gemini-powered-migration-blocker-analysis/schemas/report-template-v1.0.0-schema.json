@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/GoogleCloudPlatform/platform-engineering/blob/main/reference-architectures/gemini-powered-migration-blocker-analysis/schemas/report-template-v1.0.0-schema.json",
+  "title": "Template of Gemini-powered migration blocker analysis report",
+  "description": "Template of a report that Gemini produces to analyze migration blockers",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "The schema to verify this document against."
+    },
+    "version": {
+      "description": "Report template version",
+      "type": "string",
+      "pattern": "^(?P<major>0|[1-9]\\d*)\\.(?P<minor>0|[1-9]\\d*)\\.(?P<patch>0|[1-9]\\d*)(?:-(?P<prerelease>(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
+      "$comment": "Regex source: https://semver.org/spec/v2.0.0.html#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string"
+    },
+    "id": {
+      "description": "Unique identifier for the report template",
+      "type": "string"
+    },
+    "name": {
+      "description": "Name of the report template",
+      "type": "string"
+    },
+    "reportSections": {
+      "description": "List of main sections within the report template",
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "Name of the report section",
+            "type": "string"
+          },
+          "id": {
+            "description": "Unique identifier for the report section",
+            "type": "string"
+          },
+          "heading": {
+            "description": "Heading text for the section",
+            "type": "string"
+          },
+          "reportSubsections": {
+            "description": "List of subsections within this section",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "description": "Name of the subsection.",
+                  "type": "string"
+                },
+                "id": {
+                  "description": "Unique identifier for the subsection",
+                  "type": "string"
+                },
+                "prompt": {
+                  "description": "Prompt to generate the subsection's body",
+                  "type": "string"
+                },
+                "heading": {
+                  "description": "Heading text for the subsection",
+                  "type": "string"
+                }
+              },
+              "required": ["name", "id", "prompt", "heading"],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": ["name", "id", "heading", "reportSubsections"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["$schema", "version", "name", "id", "reportSections"],
+  "additionalProperties": false
+}
