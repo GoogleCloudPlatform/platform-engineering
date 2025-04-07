@@ -15,11 +15,13 @@
 services:
   mesop-app:
     build:
-      context: .
+      context: frontend
+      additional_contexts:
+        report-templates: templates
       args:
         GID: "${GID}"
         UID: "${UID}"
     ports:
       - "8080:8080"
     volumes:
-      - .:/srv/mesop-app
+      - ./frontend:/srv/mesop-app

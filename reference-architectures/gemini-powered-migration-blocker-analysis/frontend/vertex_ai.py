@@ -16,9 +16,14 @@
 # LOCATION = os.environ.get("GOOGLE_CLOUD_REGION")  # Your Google Cloud Project Region
 # client = genai.Client(vertexai=True, project=PROJECT_ID, location=LOCATION)
 
+import os
 
 from google import genai
 from typing import List
+
+# PROJECT_ID = os.environ.get("GOOGLE_CLOUD_PROJECT")  # Your Google Cloud Project ID
+# LOCATION = os.environ.get("GOOGLE_CLOUD_REGION")  # Your Google Cloud Project Region
+# client = genai.Client(vertexai=True, project=PROJECT_ID, location=LOCATION)
 
 
 def get_available_models() -> List[str]:

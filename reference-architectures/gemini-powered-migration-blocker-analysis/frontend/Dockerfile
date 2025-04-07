@@ -37,6 +37,7 @@ RUN groupadd -g "${GID}" mesop && useradd --no-log-init -u "${UID}" -s /bin/bash
 USER mesop
 
 COPY --chown=mesop:mesop . /srv/mesop-app
+COPY --chown=mesop:mesop --from=report-templates . /srv/mesop-app/templates/
 
 EXPOSE 8080
 
