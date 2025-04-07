@@ -2,70 +2,70 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://googlecloudplatform.github.io/platform-engineering/</loc>
-         <lastmod>2025-04-04</lastmod>
+         <lastmod>2025-04-07</lastmod>
     </url>
     <url>
          <loc>https://googlecloudplatform.github.io/platform-engineering/code-of-conduct/</loc>
-         <lastmod>2025-04-04</lastmod>
+         <lastmod>2025-04-07</lastmod>
     </url>
     <url>
          <loc>https://googlecloudplatform.github.io/platform-engineering/contributing/</loc>
-         <lastmod>2025-04-04</lastmod>
+         <lastmod>2025-04-07</lastmod>
     </url>
     <url>
          <loc>https://googlecloudplatform.github.io/platform-engineering/reference-architectures/automated-password-rotation/</loc>
-         <lastmod>2025-04-04</lastmod>
+         <lastmod>2025-04-07</lastmod>
     </url>
     <url>
          <loc>https://googlecloudplatform.github.io/platform-engineering/reference-architectures/backstage/</loc>
-         <lastmod>2025-04-04</lastmod>
+         <lastmod>2025-04-07</lastmod>
     </url>
     <url>
          <loc>https://googlecloudplatform.github.io/platform-engineering/reference-architectures/backstage/backstage-quickstart/</loc>
-         <lastmod>2025-04-04</lastmod>
+         <lastmod>2025-04-07</lastmod>
     </url>
     <url>
          <loc>https://googlecloudplatform.github.io/platform-engineering/reference-architectures/backstage/backstage-quickstart/docs/backstage-quickstart-architecture/</loc>
-         <lastmod>2025-04-04</lastmod>
+         <lastmod>2025-04-07</lastmod>
     </url>
     <url>
          <loc>https://googlecloudplatform.github.io/platform-engineering/reference-architectures/cloud_deploy_flow/</loc>
-         <lastmod>2025-04-04</lastmod>
+         <lastmod>2025-04-07</lastmod>
     </url>
     <url>
          <loc>https://googlecloudplatform.github.io/platform-engineering/reference-architectures/cloud_deploy_flow/CloudFunctions/cloudDeployApprovals/</loc>
-         <lastmod>2025-04-04</lastmod>
+         <lastmod>2025-04-07</lastmod>
     </url>
     <url>
          <loc>https://googlecloudplatform.github.io/platform-engineering/reference-architectures/cloud_deploy_flow/CloudFunctions/cloudDeployInteractions/</loc>
-         <lastmod>2025-04-04</lastmod>
+         <lastmod>2025-04-07</lastmod>
     </url>
     <url>
          <loc>https://googlecloudplatform.github.io/platform-engineering/reference-architectures/cloud_deploy_flow/CloudFunctions/cloudDeployOperations/</loc>
-         <lastmod>2025-04-04</lastmod>
+         <lastmod>2025-04-07</lastmod>
     </url>
     <url>
          <loc>https://googlecloudplatform.github.io/platform-engineering/reference-architectures/cloud_deploy_flow/CloudFunctions/createRelease/</loc>
-         <lastmod>2025-04-04</lastmod>
+         <lastmod>2025-04-07</lastmod>
     </url>
     <url>
          <loc>https://googlecloudplatform.github.io/platform-engineering/reference-architectures/cloud_deploy_flow/CloudRun/</loc>
-         <lastmod>2025-04-04</lastmod>
+         <lastmod>2025-04-07</lastmod>
     </url>
     <url>
          <loc>https://googlecloudplatform.github.io/platform-engineering/reference-architectures/cloud_deploy_flow/WebsiteDemo/</loc>
-         <lastmod>2025-04-04</lastmod>
+         <lastmod>2025-04-07</lastmod>
     </url>
     <url>
          <loc>https://googlecloudplatform.github.io/platform-engineering/reference-architectures/gemini-powered-migration-blocker-analysis/</loc>
-         <lastmod>2025-04-04</lastmod>
+         <lastmod>2025-04-07</lastmod>
     </url>
     <url>
          <loc>https://googlecloudplatform.github.io/platform-engineering/reference-architectures/gemini-powered-migration-blocker-analysis/frontend/</loc>
-         <lastmod>2025-04-04</lastmod>
+         <lastmod>2025-04-07</lastmod>
     </url>
     <url>
          <loc>https://googlecloudplatform.github.io/platform-engineering/reference-architectures/github-runners-gke/</loc>
-         <lastmod>2025-04-04</lastmod>
+         <lastmod>2025-04-07</lastmod>
     </url>
 </urlset>
