@@ -17,6 +17,7 @@
 # client = genai.Client(vertexai=True, project=PROJECT_ID, location=LOCATION)
 
 
+from google import genai
 from typing import List
 
 

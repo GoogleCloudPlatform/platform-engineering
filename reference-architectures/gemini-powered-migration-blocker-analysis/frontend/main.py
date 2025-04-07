@@ -13,14 +13,13 @@
 # limitations under the License.
 
 import logging
-import os
 
 import mesop as me
 from constants import GEMINI_TITLE_PREFIX, PAGE_TITLE_SUFFIX
-from google import genai
-from mesop_components import migration_blocker_analysis_body, vertex_gemini_header
+from mesop_components import (
+    main_page,
+)
 from mesop_event_handlers import on_load
-from mesop_state import MesopState
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -35,7 +34,4 @@ logging.basicConfig(level=logging.DEBUG)
 )
 def app() -> None:
     """Main Mesop App"""
-    state = me.state(MesopState)
-    # Main header
-    vertex_gemini_header()
-    migration_blocker_analysis_body()
+    main_page()

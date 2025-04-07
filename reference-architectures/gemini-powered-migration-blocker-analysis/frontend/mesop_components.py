@@ -16,21 +16,60 @@ from typing import List
 
 import mesop as me
 from constants import GEMINI_TITLE_PREFIX, PAGE_TITLE_SUFFIX
-from mesop_event_handlers import on_blur_app_repository_url, on_selection_change_model
+from mesop_event_handlers import (
+    on_blur_app_repository_url,
+    on_selection_change_model,
+    on_click_generate_report_button,
+)
 from mesop_styles import (
-    _STYLE_MAIN_BODY,
-    _STYLE_MAIN_HEADER,
-    _STYLE_TITLE_BOX,
-    GEMINI_TEXT_GRADIENT,
+    DEFAULT_BORDER,
+    STYLE_GEMINI_TEXT_GRADIENT,
 )
 from vertex_ai import get_available_models
 
 
 @me.component
+def main_page() -> None:
+    """Main page"""
+    with me.box(
+        style=me.Style(
+            display="grid", grid_template_rows="auto auto 1fr auto", height="100%"
+        )
+    ):
+        # Header
+        with me.box(style=me.Style(padding=me.Padding.all(24))):
+            vertex_gemini_header()
+
+        migration_blocker_analysis_input()
+
+        # Body
+        with me.box(
+            style=me.Style(
+                display="grid", grid_template_columns="250px 1fr", height="100%"
+            )
+        ):
+            with me.box(style=me.Style(padding=me.Padding.all(24), overflow_y="auto")):
+                me.text("Sidebar")
+
+            # Main content
+            with me.box(style=me.Style(padding=me.Padding.all(24), overflow_y="auto")):
+                me.text("Main Content")
+
+        # Footer
+        with me.box(style=me.Style(padding=me.Padding.all(24))):
+            me.text("Footer")
+
+
+@me.component
 def vertex_gemini_header() -> None:
     """Vertex AI Gemini Header component"""
-    with me.box(style=_STYLE_MAIN_HEADER):
-        with me.box(style=_STYLE_TITLE_BOX):
+    with me.box(
+        style=me.Style(
+            border=DEFAULT_BORDER,
+            padding=me.Padding.all(5),
+        )
+    ):
+        with me.box(style=me.Style(display="inline-block")):
             with me.box(
                 style=me.Style(
                     display="flex", flex_direction="row", gap=5, align_content="center"
@@ -39,18 +78,9 @@ def vertex_gemini_header() -> None:
                 me.text(
                     GEMINI_TITLE_PREFIX,
                     type="headline-5",
-                    style=GEMINI_TEXT_GRADIENT,
+                    style=STYLE_GEMINI_TEXT_GRADIENT,
                 )
                 me.text(PAGE_TITLE_SUFFIX, type="headline-5")
-
-
-@me.component
-def migration_blocker_analysis_body() -> None:
-    """Migration blocker analysis body Mesop component"""
-    with me.box(style=_STYLE_MAIN_BODY):
-        migration_blocker_analysis_input()
-        with me.box():
-            me.text("report")
 
 
 @me.component
@@ -70,6 +100,11 @@ def migration_blocker_analysis_input() -> None:
             on_blur=on_blur_app_repository_url,
             type="url",
             required=True,
+        )
+        me.button(
+            label="Generate report",
+            type="stroked",
+            on_click=on_click_generate_report_button,
         )
 
 

@@ -14,7 +14,7 @@
 
 import mesop as me
 
-_DEFAULT_BORDER = me.Border.all(
+DEFAULT_BORDER = me.Border.all(
     me.BorderSide(
         color="#e0e0e0",
         width=1,
@@ -22,16 +22,7 @@ _DEFAULT_BORDER = me.Border.all(
     )
 )
 
-_STYLE_MAIN_HEADER = me.Style(
-    border=_DEFAULT_BORDER,
-    padding=me.Padding.all(5),
-)
-
-_STYLE_TITLE_BOX = me.Style(display="inline-block")
-
-_STYLE_MAIN_BODY = me.Style()
-
-GEMINI_TEXT_GRADIENT = me.Style(
+STYLE_GEMINI_TEXT_GRADIENT = me.Style(
     color="transparent",
     background=(
         "linear-gradient(72.83deg,#4285f4 11.63%,#9b72cb 40.43%,#d96570 68.07%)" " text"

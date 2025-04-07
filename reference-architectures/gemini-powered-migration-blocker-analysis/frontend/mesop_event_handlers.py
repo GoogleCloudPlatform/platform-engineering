@@ -22,9 +22,10 @@ logger = logging.getLogger(__name__)
 
 def on_load(e: me.LoadEvent) -> None:
     """On load event handler"""
-    logger.debug("on_load mesop event handler")
+    logger.debug("on_load mesop event handler. Path: %s", e.path)
     state = me.state(MesopState)
-    state.current_page = "/"
+    state.current_page = e.path
+    logger.debug("Set current page to: %s", state.current_page)
     me.set_theme_mode("system")
 
 
@@ -58,3 +59,10 @@ def on_selection_change_model(e: me.SelectSelectionChangeEvent):
 def on_blur_app_repository_url(e: me.InputBlurEvent):
     """On blur repository URL event handler"""
     update_mesop_state_event_handler(__name__, "app_repository_url", e)
+
+
+def on_click_generate_report_button(e: me.ClickEvent):
+    """On generate report button click event handler"""
+    logger.debug(
+        "on click generate report button. key: %s, is_target: %s", e.key, e.is_target
+    )

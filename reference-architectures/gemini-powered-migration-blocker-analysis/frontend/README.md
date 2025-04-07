@@ -8,7 +8,8 @@
 
 Pre-requisites:
 
-- Docker Compose. Tested with v2.34.0
+- Docker. Tested with version `28.0.4`
+- Docker Compose. Tested with version `v2.34.0`
 
 To run this application using Docker Compose, you do the following:
 
