@@ -25,3 +25,4 @@ services:
       - "8080:8080"
     volumes:
       - ./frontend:/srv/mesop-app
+      - ./templates:/srv/mesop-app/templates

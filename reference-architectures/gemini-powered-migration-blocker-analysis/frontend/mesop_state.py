@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from typing import Dict
 
 import mesop as me
 
@@ -24,3 +25,4 @@ class MesopState:
 
     app_repository_url: str
     vertex_ai_model_id: str
+    report_template: Dict[str, str] = None

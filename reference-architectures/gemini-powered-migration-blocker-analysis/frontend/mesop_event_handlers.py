@@ -56,6 +56,11 @@ def on_selection_change_model(e: me.SelectSelectionChangeEvent):
     update_mesop_state_event_handler(__name__, "vertex_ai_model_id", e)
 
 
+def on_selection_change_report_template(e: me.SelectSelectionChangeEvent):
+    """On selection change report template event handler"""
+    update_mesop_state_event_handler(__name__, "report_template", e)
+
+
 def on_blur_app_repository_url(e: me.InputBlurEvent):
     """On blur repository URL event handler"""
     update_mesop_state_event_handler(__name__, "app_repository_url", e)

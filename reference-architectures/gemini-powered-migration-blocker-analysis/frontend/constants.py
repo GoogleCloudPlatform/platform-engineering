@@ -14,3 +14,6 @@
 
 GEMINI_TITLE_PREFIX = "Gemini-powered"
 PAGE_TITLE_SUFFIX = "migration blocker analysis"
+
+APP_ROOT_DIRECTORY_PATH = "/srv/mesop-app"
+REPORT_TEMPLATES_PATH = f"{APP_ROOT_DIRECTORY_PATH}/templates"

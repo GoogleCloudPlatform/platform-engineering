@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import List
+import logging
+from typing import Callable, Iterable, List, TypeVar
 
 import mesop as me
 from constants import GEMINI_TITLE_PREFIX, PAGE_TITLE_SUFFIX
@@ -20,12 +21,17 @@ from mesop_event_handlers import (
     on_blur_app_repository_url,
     on_selection_change_model,
     on_click_generate_report_button,
+    on_selection_change_report_template,
 )
 from mesop_styles import (
     DEFAULT_BORDER,
     STYLE_GEMINI_TEXT_GRADIENT,
 )
-from vertex_ai import get_available_models
+
+from vertex_ai import get_available_models, get_available_report_templates
+
+
+logger = logging.getLogger(__name__)
 
 
 @me.component
@@ -86,13 +92,12 @@ def vertex_gemini_header() -> None:
 @me.component
 def migration_blocker_analysis_input() -> None:
     """Migration blocker analysis input Mesop component"""
-    model_select_options = build_model_select_options()
     with me.box():
         me.select(
             appearance="outline",
             label="Gemini Model",
             on_selection_change=on_selection_change_model,
-            options=model_select_options,
+            options=build_model_select_options(),
             multiple=False,
         )
         me.input(
@@ -106,10 +111,65 @@ def migration_blocker_analysis_input() -> None:
             type="stroked",
             on_click=on_click_generate_report_button,
         )
+        me.select(
+            appearance="outline",
+            label="Report template",
+            on_selection_change=on_selection_change_report_template,
+            options=build_report_template_select_options(),
+            multiple=False,
+        )
+
+
+# Define a TypeVar for better type hinting
+T = TypeVar("T")
+
+
+def create_select_options(
+    items: Iterable[T],
+    label_extractor: Callable[[T], str],
+    value_extractor: Callable[[T], str],
+) -> List[me.SelectOption]:
+    """
+    Creates a list of SelectOption objects from an iterable of items.
+
+    Args:
+        items: An iterable of source items.
+        label_extractor: A function that takes an item and returns the string
+                         to be used as the SelectOption's label.
+        value_extractor: A function that takes an item and returns the string
+                         to be used as the SelectOption's value.
+
+    Returns:
+        A list of SelectOption objects.
+    """
+    select_options = []
+    logger.debug(
+        "Building SelectOptions list from %s",
+        items,
+    )
+    for item in items:
+        logger.debug("Processing item: %s", item)
+        label = label_extractor(item)
+        logger.debug("Label: %s", label)
+        value = value_extractor(item)
+        logger.debug("Value: %s", value)
+        select_options.append(me.SelectOption(label=label, value=value))
+    logger.debug("Built SelectOptions: %s", select_options)
+    return select_options
 
 
 def build_model_select_options() -> List[me.SelectOption]:
-    select_options = []
-    for model in get_available_models():
-        select_options.append(me.SelectOption(label=model, value=model))
-    return select_options
+    return create_select_options(
+        items=get_available_models(),
+        label_extractor=lambda model: model,
+        value_extractor=lambda model: model,
+    )
+
+
+def build_report_template_select_options() -> List[me.SelectOption]:
+    report_templates = get_available_report_templates()
+    return create_select_options(
+        items=report_templates,
+        label_extractor=lambda template: report_templates[template]["name"],
+        value_extractor=lambda template: template,
+    )

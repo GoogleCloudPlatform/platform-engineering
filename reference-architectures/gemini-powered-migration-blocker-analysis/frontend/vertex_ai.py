@@ -16,14 +16,20 @@
 # LOCATION = os.environ.get("GOOGLE_CLOUD_REGION")  # Your Google Cloud Project Region
 # client = genai.Client(vertexai=True, project=PROJECT_ID, location=LOCATION)
 
+import json
+import logging
 import os
 
+from constants import REPORT_TEMPLATES_PATH
+from file_system import list_files_in_directory
 from google import genai
-from typing import List
+from typing import Dict, List
 
 # PROJECT_ID = os.environ.get("GOOGLE_CLOUD_PROJECT")  # Your Google Cloud Project ID
 # LOCATION = os.environ.get("GOOGLE_CLOUD_REGION")  # Your Google Cloud Project Region
 # client = genai.Client(vertexai=True, project=PROJECT_ID, location=LOCATION)
+
+logger = logging.getLogger(__name__)
 
 
 def get_available_models() -> List[str]:
@@ -42,3 +48,18 @@ def get_available_models() -> List[str]:
         "gemini-2.0-flash",
         "gemini-2.0-flash-thinking-exp-01-21",
     ]
+
+
+def get_available_report_templates() -> Dict[str, Dict[str, object]]:
+    report_template_paths = list_files_in_directory(REPORT_TEMPLATES_PATH)
+
+    report_templates = {}
+    for template_path in report_template_paths:
+        logger.debug("Loading report template from %s", template_path)
+        with open(template_path, encoding="utf-8") as template_data:
+            value = json.load(template_data)
+            key = value["id"]
+            logger.debug("Adding %s: %s", key, value)
+            report_templates[key] = value
+    logger.debug("Built report templates: %s", report_templates)
+    return report_templates
