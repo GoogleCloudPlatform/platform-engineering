@@ -51,6 +51,15 @@ def get_available_models() -> List[str]:
 
 
 def get_available_report_templates() -> Dict[str, Dict[str, object]]:
+    """Returns a map of report templates.
+
+    This function returns a dict of report templates. Each element of the map is
+    a tuple where the key is the report template id, and the value is the report
+    template.
+
+    Returns:
+        Dict[str, Dict[str, object]]: A dict of report templates.
+    """
     report_template_paths = list_files_in_directory(REPORT_TEMPLATES_PATH)
 
     report_templates = {}
