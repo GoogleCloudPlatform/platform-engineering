@@ -1,26 +1,60 @@
 # GKE Multi-Cluster Blue/Green Deployment for Resilient Applications
 
-This document guides you through setting up a resilient application deployment across multiple Google Kubernetes Engine (GKE) clusters using Multi-Cluster Services (MCS) and a blue/green deployment strategy managed by Google Cloud Deploy. This approach enhances application availability and minimizes downtime during updates by leveraging the strengths of both technologies.
+This document guides you through setting up a resilient application deployment across multiple Google Kubernetes Engine (GKE) clusters using Multi-Cluster Services (MCS) and a blue/green deployment strategy managed by Google Cloud Deploy. This approach enhances application availability and minimizes downtime during updates.
 
 ## Objectives
 
 This setup demonstrates:
 
 * Provisioning zonal GKE clusters using Terraform.
-* Deploying a sample application (`whereami`) to multiple GKE clusters.
-* Configuring and utilizing Multi-Cluster Services (MCS) to enable cross-cluster service discovery and load balancing.
-* Performing a blue/green deployment using Google Cloud Deploy to manage the rollout process.
-* Simulating pod failure (implicitly addressed by MCS load balancing) to showcase automatic failover capabilities.
-* Understanding how MCS enhances application resilience, especially within a blue/green deployment scenario.
+* Deploying a sample application to multiple GKE clusters.
+* Configuring and utilizing Multi-Cluster Services (MCS) to enable cross-cluster
+  service discovery and load balancing.
+* Performing a blue/green deployment using Google Cloud Deploy to manage the
+  rollout process.
+* Simulating pod failure (implicitly addressed by MCS load balancing) to
+  showcase automatic failover capabilities.
+* Understanding how MCS enhances application resilience, especially within a
+  blue/green deployment scenario.
 
 ## Key Concepts
 
-* **GKE Cluster Creation**: Using Terraform to automate the provisioning of zonal GKE clusters ensures reproducible infrastructure.
-* **Application Deployment**: Deploying a simple frontend/backend application (`whereami`) to multiple GKE clusters serves as the workload for verifying cross-cluster connectivity and deployment strategies.
-* **Multi-Cluster Services (MCS)**: Configuring and utilizing MCS enables seamless service discovery and access across registered GKE clusters within a Fleet. MCS abstracts networking complexities, allowing services in one cluster to be discovered and consumed by applications in others using a common DNS name (`<service>.<namespace>.svc.clusterset.local`).
-* **Failover Demonstration**: MCS inherently provides load balancing across healthy endpoints in participating clusters. If pods in one cluster fail, MCS automatically directs traffic to healthy pods in other clusters, demonstrating improved resilience.
-* **Blue/Green Deployment**: A deployment strategy that minimizes downtime and risk during application updates. A new version ("blue") is deployed alongside the existing version ("green"). Traffic is gradually shifted (or switched) to the blue environment once it's verified. Cloud Deploy orchestrates this process across clusters.
-* **Resilience**: Understanding how the combination of multiple clusters, MCS for cross-cluster load balancing/failover, and controlled blue/green rollouts significantly enhances an application's ability to withstand failures and remain available.
+* **GKE Cluster Creation**: Using Terraform to automate the provisioning of
+  zonal GKE clusters ensures reproducible infrastructure.
+* **Application Deployment**: Deploying a simple frontend/backend application
+to multiple GKE clusters serves as the workload for verifying cross-cluster
+ connectivity and deployment strategies.
+* **Multi-Cluster Services (MCS)**: Configuring and utilizing MCS enables
+ seamless service discovery and access across registered GKE clusters within
+  a Fleet. MCS abstracts networking complexities, allowing services in one
+   cluster to be discovered and consumed by applications in others using a
+    common DNS name (`<service>.<namespace>.svc.clusterset.local`).
+* **Failover Demonstration**: MCS inherently provides load balancing across
+ healthy endpoints in participating clusters. If pods in one cluster fail,
+  MCS automatically directs traffic to healthy pods in other clusters,
+   demonstrating improved resilience.
+* **Blue/Green Deployment**: A deployment strategy that minimizes downtime and
+ risk during application updates. A new version ("blue") is deployed alongside
+  the existing version ("green"). Traffic is gradually shifted (or switched) to
+   the blue environment once it's verified. Cloud Deploy orchestrates this
+    process across clusters.
+* **Resilience**: Understanding how the combination of multiple clusters, MCS
+ for cross-cluster load balancing/failover, and controlled blue/green rollouts
+  significantly enhances an application's ability to withstand failures and
+   remain available.
+
+### Terminology
+
+| Term           | Definition                                     |
+| :------------- | :--------------------------------------------- |
+| ServiceExport  | User object exporting a K8s Svc across clusters. |
+| ServiceImport  | Auto-created object for an imported service.     |
+| Endpoints      | Auto-created list of backend pods for exported Svc.|
+| DerivativeSvc  | Auto-created ClusterIP Svc for local Import access.|
+| MCS Importer   | Auto-deployed workload updating Endpoints via TD.  |
+| MCS Hub Ctrl   | Manages resources (Import, DNS, TD) for Exports. |
+| Traffic Dir    | GCP service sending multi-cluster config via xDS.  |
+| Cloud DNS Zone | Regional private DNS (`clusterset.local`) for Svc records. |
 
 ## Prerequisites
 
@@ -30,9 +64,7 @@ This setup demonstrates:
 * `kubectl` command-line tool installed.
 * Terraform installed.
 * Git installed.
-* `jq` installed (for parsing JSON output in verification steps).
 * Docker installed and running (or another container build tool).
-
 
 ## Setting up the Google Cloud Environment
 
@@ -42,9 +74,10 @@ This section guides you through setting up the necessary Google Cloud environmen
     Define environment variables for your Project ID and the default region for resource creation.
 
     ```sh
-    export PROJECT_ID="your-project-id" # Replace with your actual GCP Project ID
-    export REGION="us-central1"       # Default region for resources like Cloud Deploy pipeline
-    export PROJECT_NUMBER=$(gcloud projects describe "${PROJECT_ID}" --format="value(projectNumber)")
+    export PROJECT_ID="your-project-id"
+    export REGION="us-central1"
+    export PROJECT_NUMBER=$(gcloud projects describe "${PROJECT_ID}" \
+    --format="value(projectNumber)")
     echo "Project Number: ${PROJECT_NUMBER}"
     gcloud config set project "${PROJECT_ID}"
     ```
@@ -60,7 +93,7 @@ This section guides you through setting up the necessary Google Cloud environmen
 
     *  GKE
     *  GKE Hub (Fleet management)
-    *  MCS
+    *  Multi-cluster Service
     *  Compute Engine
     *  Cloud Build
     *  Artifact Registry,
@@ -78,7 +111,7 @@ This section guides you through setting up the necessary Google Cloud environmen
         cloudbuild.googleapis.com \
         artifactregistry.googleapis.com \
         clouddeploy.googleapis.com \
-        --project="${PROJECT_ID}"
+        --project=$PROJECT_ID
     ```
 
 ## Create the Base GKE Infrastructure (Terraform)
@@ -122,7 +155,9 @@ and set up other required resources like Artifact Registry.
     The output will be similar to the following:
 
     ```sh
-    TODO
+    NAME   UNIQUE_ID                             LOCATION
+    gke-2  4ff62f84-bc3e-4bd2-b77b-c1c16ad8bc5b  us-central1
+    gke-1  0b7fd8bb-a1ad-4ba2-8c07-3b74d52c20ac  us-central1
     ```
 
 3.  Grant Identity and Access Management (IAM) permissions required by
@@ -141,13 +176,13 @@ and set up other required resources like Artifact Registry.
 
     ```sh
     gcloud container clusters get-credentials gke-1 \
-    --zone us-central1-a --project "${PROJECT_ID}"
-    kubectl config rename-context "gke_${PROJECT_ID}_us-${REGION}-a_gke-1" green
+    --zone ${REGION}-a --project "${PROJECT_ID}"
+    kubectl config rename-context "gke_${PROJECT_ID}_${REGION}-a_gke-1" green
 
 
     gcloud container clusters get-credentials gke-2 \
-    --zone us-${REGION}-b --project "${PROJECT_ID}"
-    kubectl config rename-context "gke_${PROJECT_ID}_us-${REGION}-b_gke-2" blue
+    --zone ${REGION}-b --project "${PROJECT_ID}"
+    kubectl config rename-context "gke_${PROJECT_ID}_${REGION}-b_gke-2" blue
     ```
 
 ## Deploy the sample application
@@ -173,119 +208,15 @@ Artifact Registry repository created by Terraform.
 3.  Apply Deployment to both cluster
 
     ```sh
-    cat << EOF | kubectl apply --context green -f -
-    apiVersion: v1
-    kind: Namespace
-    metadata:
-    name: app
-    ---
-    apiVersion: apps/v1
-    kind: Deployment
-    metadata:
-    name: myapp
-    labels:
-        app: myapp
-        color: green
-    namespace: app
-    spec:
-    replicas: 1
-    selector:
-        matchLabels:
-        app: myapp
-    template:
-        metadata:
-        labels:
-            app: myapp
-        spec:
-        containers:
-        - name: myapp
-            image: us-docker.pkg.dev/${PROJECT_ID}/my-repo/app:latest
-            ports:
-            - containerPort: 8080
-            resources:
-            limits:
-                cpu: 250m
-                memory: 512Mi
-            requests:
-                cpu: 250m
-                memory: 512Mi
-    ---
-    kind: Service
-    apiVersion: v1
-    metadata:
-    name: myapp
-    namespace: app
-    labels:
-        color: green
-    spec:
-    selector:
-        app: myapp
-    ports:
-    - port: 8080
-        targetPort: 8080
+    envsubst < ./k8s/deployment.yaml.tpl | kubectl apply --context blue -f -
+    envsubst < ./k8s/deployment.yaml.tpl | kubectl apply --context green -f -
     ```
-
-    Now deploy the same manifest with minor updates for labels to the second
-    cluster
-
-    ```sh
-    cat << EOF | kubectl apply --context green -f -
-    apiVersion: v1
-    kind: Namespace
-    metadata:
-    name: app
-    ---
-    apiVersion: apps/v1
-    kind: Deployment
-    metadata:
-    name: myapp
-    labels:
-        app: myapp
-        color: blue #update label color
-    namespace: app
-    spec:
-    replicas: 1
-    selector:
-        matchLabels:
-        app: myapp
-    template:
-        metadata:
-        labels:
-            app: myapp
-        spec:
-        containers:
-        - name: myapp
-            image: us-docker.pkg.dev/${PROJECT_ID}/my-repo/app:latest
-            ports:
-            - containerPort: 8080
-            resources:
-            limits:
-                cpu: 250m
-                memory: 512Mi
-            requests:
-                cpu: 250m
-                memory: 512Mi
-    ---
-    kind: Service
-    apiVersion: v1
-    metadata:
-    name: myapp
-    namespace: app
-    labels:
-        color: blue # Update label colors
-    spec:
-    selector:
-        app: myapp
-    ports:
-    - port: 8080
-        targetPort: 8080
-    ---
 
 4.  Verify rollout stat
 
     ```sh
-    kubectl rollout status deployment/myapp -n app --context green --timeout=120s
-    kubectl rollout status deployment/myapp -n app --context blue --timeout=120s
+    kubectl get deployments -n app --context green
+    kubectl get deployments -n app --context blue
     ```
 
     wait for the deployment to become `Ready`
@@ -294,11 +225,8 @@ Artifact Registry repository created by Terraform.
     cluster.
 
     ```sh
-    BLUE_SVC_IP=$(kubectl get service myapp -n app \
-    --context=blue -o jsonpath='{.spec.clusterIP}')
-    GREEN_SVC_IP=$(kubectl get service myapp -n app 
-    --context=green -o jsonpath='{.spec.clusterIP}')
-
+    GREEN_SVC_IP=$(kubectl get service myapp -n app \
+    --context=green -o jsonpath='{.spec.clusterIP}') && \
     kubectl run curl-client \
         --image=curlimages/curl:latest -n app --context=green \
         --restart=Never -it --rm -- curl -v -m 10 http://${GREEN_SVC_IP}:8080
@@ -307,11 +235,14 @@ Artifact Registry repository created by Terraform.
     Example output:
 
     ```sh
+    Hello World!
     ```
 
 6.  Test connecting to the blue cluster from within the green cluster
 
     ```sh
+    BLUE_SVC_IP=$(kubectl get service myapp -n app \
+    --context=blue -o jsonpath='{.spec.clusterIP}') && \
     kubectl run curl-client \
     --image=curlimages/curl:latest -n app --context=green \
     --restart=Never -it --rm -- curl -v -m 10 http://${BLUE_SVC_IP}:8080
@@ -320,6 +251,12 @@ Artifact Registry repository created by Terraform.
     Example output:
 
     ```sh
+    * Connection timed out after 10002 milliseconds
+    * closing connection #0
+    curl: (28) Connection timed out after 10002 milliseconds
+    pod "curl-client" deleted
+    pod app/curl-client terminated (Error)
+    ameenahb@ameenahb:~/development/platform
     ```
 
     In the examples you will see the response from the green cluster, to the
@@ -351,6 +288,9 @@ To use MCS enable the feature:
     The output will be similar to the following:
 
     ```sh
+    NAME   UNIQUE_ID                             LOCATION
+    gke-2  4ff62f84-bc3e-4bd2-b77b-c1c16ad8bc5b  us-central1
+    gke-1  0b7fd8bb-a1ad-4ba2-8c07-3b74d52c20ac  us-central1
 
     ```
 
@@ -390,8 +330,23 @@ To use MCS enable the feature:
     The output will be similar to the following:
 
     ```sh
+    NAMESPACE     NAME                            READY   UP-TO-DATE   AVAILABLE
+    app           myapp                           1/1     1            1        
+    gke-mcs       gke-mcs-importer                1/1     1            1        
 
     ```
+
+5.  After a few minutes verify the ServiceImport was created
+
+    ```sh
+    kubectl get serviceimports --context blue --namespace app
+    kubectl get serviceimports --context green --namespace app
+    ```
+
+    > Note: The first MCS you create in your fleet can take up to 20 min to be
+    fully operational. Exporting new services after the first one is created or
+     adding endpoints to existing Multi-cluster Services is faster (up to a few
+      minutes in some cases).
 
 ## Exploring Multi-Cluster Services (MCS) Resources and Connectivity
 
@@ -403,16 +358,18 @@ To use MCS enable the feature:
 
     ```sh
     kubectl logs -n gke-mcs -l k8s-app=gke-mcs-importer \
-    --context=blue | grep "Updating watched zones:"
+    --context=blue
     ```
 
     Output: 
 
     ```sh
-
+    Update from us-central1-a with 2 negs
+    Update from us-central1-b with 2 negs
     ```
 
-     [EXPLANATION TODO]
+    In the response you will see that both zones have corresponding negs created
+    This will allow the cluster to communcate with each other.
 
 2.  Examine the `ServiceImport`
 
@@ -499,6 +456,12 @@ To use MCS enable the feature:
     -- curl -v -m 10 myapp.app.svc.clusterset.local:8080
     ```
 
+    Output:
+
+    ```sh
+    Hello World!
+    ```
+
     MCS enables service discovery is through DNS. It automatically creates DNS
     records. A client pod running in any cluster within the fleet can use this
     exact same DNS name `service-name.namespace.svc.clusterset.local`.
@@ -517,7 +480,8 @@ after code changes, you can automate the process using
 
     ```sh
     cat cloudbuild.yaml
-    gcloud build .
+    gcloud builds submit --config=cloudbuild.yaml \
+    --substitutions=_TAG=v1.1
     ```
 
     The cloudbuild.yaml file contains insturctions to build the container using
@@ -547,9 +511,8 @@ blue/green update of the multi-cluster myapp service.
         --format="value(projectNumber)")-compute@developer.gserviceaccount.com \
         --role="roles/clouddeploy.jobRunner" &&
     gcloud iam service-accounts add-iam-policy-binding \
-    $(PROJECT_NUMBER)-compute@developer.gserviceaccount.com \
-    --member=serviceAccount:$(gcloud projects describe $PROJECT_ID \
-    --format="value(projectNumber)")-compute@developer.gserviceaccount.com \
+    $PROJECT_NUMBER-compute@developer.gserviceaccount.com \
+    --member=serviceAccount:$PROJECT_NUMBER-compute@developer.gserviceaccount.com \
     --role="roles/iam.serviceAccountUser" \
     --project=$PROJECT_ID
     ```
@@ -611,7 +574,31 @@ blue/green update of the multi-cluster myapp service.
             *  profiles: [green]: Activates the green Skaffold profile.
             *  deployParameters: Provides parameters (replicaCount, color)
 
-4.  Create the first Cloud Deploy release for the Kubernetes Deployment
+4.  Replace variables in [deployment.yaml.tpl](k8s/deployment.yaml.tpl)
+    with deploy parameters that work with Cloud Deploy as substituation
+    variables.
+
+    ```sh
+    cp k8s/deployment.yaml.tpl k8s/deployment.yaml
+    ```
+
+5.  In the newly create [deployment.yaml](k8s/deployment.yaml)
+
+    Update the image from..
+    `image: us-docker.pkg.dev/${PROJECT_ID}/my-repo/app:latest`
+
+     to..
+    `my-app-image`
+
+    This allows passing the image the container will using in the
+    gcloud deploy parameter.
+
+    >Note: You can also pass parameters as part of the
+        [pipeline configurations](deploy/pipeline.yaml) using deployparameters
+        `replicas: 1 #from-param: ${replicaCount}` - will update the number of
+        replicas with the value set in the pipeline configurations
+
+6.  Create the first Cloud Deploy release for the Kubernetes Deployment
     manifest.
 
     ```sh
@@ -627,7 +614,7 @@ blue/green update of the multi-cluster myapp service.
      is an immutable snapshot of your application's configuration
       (in this case, the k8s/deployment.yaml manifest).
 
-5.  Review the changes to the application
+7.  Review the changes to the application
 
     ```sh
     kubectl run curl-client --image=curlimages/curl:latest -n app \
