@@ -132,7 +132,7 @@ You will use Terraform to create:
     -   Create clusters:
     -   `gke-1` in zone `us-west1-a`
     -   `gke-2` in zone `us-west1-b`
-    -   [Cloud DNS][cloud-dns] enabled on all clusters
+    -   [Cloud DNS](cloud-dns) enabled on all clusters
     -   Enable the GKE API on all clusters
     -   Enable [Workload Identity](workload-identity) on all cluster
     -   Create a Fleet and register all clusters to the fleet
@@ -268,11 +268,11 @@ Registry repository created by Terraform.
 
 ## Configure multi-cluster Service
 
-In this section we will deploy [Multi-cluster Services
-(MCS)](multi-cluster-services) CRD `Service Exports` to each of the clusters.
-MCS enable GKE services to be discovered and accessed across a fleet of
-VPC-native clusters using virtual IPs and FQDNs without requiring Anthos
-licensing or Istio.
+In this section we will deploy
+[Multi-cluster Services (MCS)](multi-cluster-services) CRD `Service Exports` to
+each of the clusters. MCS enable GKE services to be discovered and accessed
+across a fleet of VPC-native clusters using virtual IPs and FQDNs without
+requiring Anthos licensing or Istio.
 
 To use MCS enable the feature:
 
@@ -476,8 +476,8 @@ To use MCS enable the feature:
 
 Building container images and deploying applications involves several steps. To
 ensure consistency and reliability when building your application container
-after code changes, you can automate the process using [Cloud
-Build](cloud-build).
+after code changes, you can automate the process using
+[Cloud Build](cloud-build).
 
 1.  Make an update the the application. Open the [main.py](app/main.py) file and
     make an update to `hello_world()`
@@ -512,13 +512,14 @@ blue/green update of the multi-cluster myapp service.
 2.  Grant the Cloud Deploy service agent the necessary permissions
 
     ```sh
+    PN=$PROJECT_NUMBER
     gcloud projects add-iam-policy-binding $PROJECT_ID \
         --member=serviceAccount:$(gcloud projects describe $PROJECT_ID \
         --format="value(projectNumber)")-compute@developer.gserviceaccount.com \
         --role="roles/clouddeploy.jobRunner" &&
     gcloud iam service-accounts add-iam-policy-binding \
     $PROJECT_NUMBER-compute@developer.gserviceaccount.com \
-    --member=serviceAccount:$PROJECT_NUMBER-compute@developer.gserviceaccount.com \
+    --member=serviceAccount:$PN-compute@developer.gserviceaccount.com \
     --role="roles/iam.serviceAccountUser" \
     --project=$PROJECT_ID
     ```
@@ -600,8 +601,8 @@ blue/green update of the multi-cluster myapp service.
     > Note: You can also pass parameters as part of the
 
     [pipeline configurations](deploy/pipeline.yaml) using deployparameters
-        `replicas: 1 #from-param: ${replicaCount}` - will update the number of
-        replicas with the value set in the pipeline configurations
+    `replicas: 1 #from-param: ${replicaCount}` - will update the number of
+    replicas with the value set in the pipeline configurations
 
 6.  Create the first Cloud Deploy release for the Kubernetes Deployment
     manifest.

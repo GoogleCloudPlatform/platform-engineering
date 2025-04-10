@@ -19,17 +19,17 @@ metadata:
 description: main application pipeline
 serialPipeline:
   stages:
-  - targetId: blue-target
-    profiles:
-    - blue
-    deployParameters:
-    - value:
-        replicaCount: 1
-        color: blue
-  - targetId: green-target
-    profiles:
-    - green
-    deployParameters:
-    - value:
-        replicaCount: 1
-        color: green
+    - targetId: blue-target
+      profiles:
+        - blue
+      deployParameters:
+        - value:
+            replicaCount: 1
+            color: blue
+    - targetId: green-target
+      profiles:
+        - green
+      deployParameters:
+        - value:
+            replicaCount: 1
+            color: green
