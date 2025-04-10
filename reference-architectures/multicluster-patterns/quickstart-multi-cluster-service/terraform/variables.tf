@@ -36,6 +36,11 @@ variable "zone_2" {
   default = "us-central1-b"
 }
 
+variable "zone_3" {
+  type    = string
+  default = "us-central1-c"
+}
+
 variable "vpc_name" {
   type    = string
   default = "gke-vpc"

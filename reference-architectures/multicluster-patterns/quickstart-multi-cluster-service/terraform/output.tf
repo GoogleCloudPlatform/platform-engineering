@@ -13,14 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-output "vpc_name" {
-  value = google_compute_network.vpc.name
-}
 
-output "cluster_1_name" {
-  value = google_container_cluster.cluster_1.name
+output "gke_1_cluster" {
+  value = google_container_cluster.gke_1.id
 }
-
-output "cluster_2_name" {
-  value = google_container_cluster.cluster_2.name
+output "gke_2_cluster" {
+  value = google_container_cluster.gke_2.id
 }

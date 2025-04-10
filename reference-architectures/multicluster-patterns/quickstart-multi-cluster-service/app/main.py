@@ -12,19 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app: whereami-backend
-  name: whereami-backend
-  namespace: my-app
-spec:
-  ports:
-    - name: http
-      port: 8080
-      protocol: TCP
-      targetPort: 8080
-  selector:
-    app: whereami-backend
-  type: ClusterIP
+import os
+
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route('/')
+def hello_world():
+    target = os.environ.get('TARGET', 'World')
+    return 'Hello {}!\n'.format(target)
+
+if __name__ == "__main__":
+    app.run(debug=True,host='0.0.0.0',port=int(os.environ.get('PORT', 8080)))

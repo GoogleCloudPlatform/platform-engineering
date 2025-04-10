@@ -56,3 +56,31 @@ terraform-provider-*
 *.bak
 *.swp
 *.swo
+
+# Local .terraform directories
+**/.terraform/*
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+
+# Crash log files
+crash.log
+crash.*.log
+
+*.tfvars
+*.tfvars.json
+
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Ignore transient lock info files created by terraform apply
+.terraform.tfstate.lock.info
+
+
+
+# Ignore CLI configuration files
+.terraformrc
+terraform.rc

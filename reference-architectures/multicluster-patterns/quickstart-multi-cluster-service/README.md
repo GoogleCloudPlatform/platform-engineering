@@ -1,68 +1,85 @@
-# GKE Multi-Cluster Service Setup and Failover
+# GKE Multi-Cluster Blue/Green Deployment for Resilient Applications
 
-## Overview
+This document guides you through setting up a resilient application deployment across multiple Google Kubernetes Engine (GKE) clusters using Multi-Cluster Services (MCS) and a blue/green deployment strategy managed by Google Cloud Deploy. This approach enhances application availability and minimizes downtime during updates by leveraging the strengths of both technologies.
 
-This guide provides a walkthrough of setting up a basic Google Kubernetes Engine
-(GKE) infrastructure and demonstrating the capabilities of Multi-Cluster
-Services. We will create two zonal GKE clusters, deploy a sample application
-(`whereami`) to them, and then configure Multi-Cluster Services to enable
-seamless communication between the clusters. The `whereami` application will be
-used to illustrate how services can be accessed across cluster boundaries.
-Finally, we'll simulate a failure scenario by deleting a backend pod to show how
-Multi-Cluster Services facilitates automatic failover, ensuring application
-availability.
+## Objectives
 
-This setup is ideal for understanding the fundamentals of distributed Kubernetes
-deployments on GKE and how Multi-Cluster Services enhances reliability and
-resilience.
+This setup demonstrates:
 
-## Key Concepts Covered
+* Provisioning zonal GKE clusters using Terraform.
+* Deploying a sample application (`whereami`) to multiple GKE clusters.
+* Configuring and utilizing Multi-Cluster Services (MCS) to enable cross-cluster service discovery and load balancing.
+* Performing a blue/green deployment using Google Cloud Deploy to manage the rollout process.
+* Simulating pod failure (implicitly addressed by MCS load balancing) to showcase automatic failover capabilities.
+* Understanding how MCS enhances application resilience, especially within a blue/green deployment scenario.
 
-- GKE Cluster Creation: Provisioning zonal GKE clusters using Terraform.
-- Application Deployment: Deploying a simple frontend/backend application to
-  multiple GKE clusters.
-- Multi-Cluster Services (MCS): Configuring and utilizing MCS to enable service
-  discovery and access across clusters.
-- Failover Demonstration: Simulating a pod failure to showcase the automatic
-  failover capabilities of MCS.
+## Key Concepts
+
+* **GKE Cluster Creation**: Using Terraform to automate the provisioning of zonal GKE clusters ensures reproducible infrastructure.
+* **Application Deployment**: Deploying a simple frontend/backend application (`whereami`) to multiple GKE clusters serves as the workload for verifying cross-cluster connectivity and deployment strategies.
+* **Multi-Cluster Services (MCS)**: Configuring and utilizing MCS enables seamless service discovery and access across registered GKE clusters within a Fleet. MCS abstracts networking complexities, allowing services in one cluster to be discovered and consumed by applications in others using a common DNS name (`<service>.<namespace>.svc.clusterset.local`).
+* **Failover Demonstration**: MCS inherently provides load balancing across healthy endpoints in participating clusters. If pods in one cluster fail, MCS automatically directs traffic to healthy pods in other clusters, demonstrating improved resilience.
+* **Blue/Green Deployment**: A deployment strategy that minimizes downtime and risk during application updates. A new version ("blue") is deployed alongside the existing version ("green"). Traffic is gradually shifted (or switched) to the blue environment once it's verified. Cloud Deploy orchestrates this process across clusters.
+* **Resilience**: Understanding how the combination of multiple clusters, MCS for cross-cluster load balancing/failover, and controlled blue/green rollouts significantly enhances an application's ability to withstand failures and remain available.
 
 ## Prerequisites
 
-- A Google Cloud project with billing account linked.
-- Terraform: Install Terraform on your local machine or use Cloud Shell.
+* A Google Cloud Project with billing enabled.
+* Familiarity with Kubernetes, GKE, and basic networking concepts.
+* Google Cloud SDK (`gcloud` command-line tool) installed and configured.
+* `kubectl` command-line tool installed.
+* Terraform installed.
+* Git installed.
+* `jq` installed (for parsing JSON output in verification steps).
+* Docker installed and running (or another container build tool).
 
-## Usage
 
-Set project details and authenticate
+## Setting up the Google Cloud Environment
 
-```sh
-export PROJECT_ID=`YOUR PROJECT_ID`
+This section guides you through setting up the necessary Google Cloud environment variables and authentication.
 
-gcloud config set project $PROJECT_ID
-gcloud auth application-default login
-```
+1.  **Set environment variable**
+    Define environment variables for your Project ID and the default region for resource creation.
 
-### Enable Required APIs
+    ```sh
+    export PROJECT_ID="your-project-id" # Replace with your actual GCP Project ID
+    export REGION="us-central1"       # Default region for resources like Cloud Deploy pipeline
+    export PROJECT_NUMBER=$(gcloud projects describe "${PROJECT_ID}" --format="value(projectNumber)")
+    echo "Project Number: ${PROJECT_NUMBER}"
+    gcloud config set project "${PROJECT_ID}"
+    ```
 
-Replace `YOUR PROJECT_ID` with your Google Cloud project ID.
+2.  **Authenticate:**
+    Authenticate the Google Cloud SDK to allow it to manage resources on your behalf.
 
-```sh
-gcloud services enable \
-  compute.googleapis.com \
-    container.googleapis.com \
-    multiclusterservicediscovery.googleapis.com \
-    gkehub.googleapis.com \
-    cloudresourcemanager.googleapis.com \
-    trafficdirector.googleapis.com \
-    dns.googleapis.com \
-  --project=$PROJECT_ID
-```
+    ```sh
+    gcloud auth application-default login
+    ```
 
-Navigate to the terraform directory and update the terraform.tfvars
+3.  Enable the necessary APIs for:
 
-```sh
-cd multicluster-patterns/quickstart-multi-zone-deploy
-```
+    *  GKE
+    *  GKE Hub (Fleet management)
+    *  MCS
+    *  Compute Engine
+    *  Cloud Build
+    *  Artifact Registry,
+    *  Cloud Deploy.
+
+    ```sh
+    gcloud services enable \
+        compute.googleapis.com \
+        container.googleapis.com \
+        gkehub.googleapis.com \
+        cloudresourcemanager.googleapis.com \
+        trafficdirector.googleapis.com \
+        multiclusterservicediscovery.googleapis.com \
+        multiclusteringress.googleapis.com \
+        cloudbuild.googleapis.com \
+        artifactregistry.googleapis.com \
+        clouddeploy.googleapis.com \
+        --project="${PROJECT_ID}"
+    ```
 
 ## Create the Base GKE Infrastructure (Terraform)
 
@@ -70,147 +87,46 @@ You will use Terraform to create:
 
 - Networking Setup
 
-    - Creates a custom Google Cloud VPC without auto-subnets.
-    - Defines two specific subnetworks (`10.10.0.0/20` and `10.10.16.0/20`)
-      within the VPC and the region specified by `us-central`.
+    - Creates a custom Google Cloud VPC with auto-subnets.
 
-- GKE Cluster Deployment
+- GKE
 
-    - Deploys `zonal-cluster-1` in zone `us-central1-a`.
-    - Deploys `zonal-cluster-2` in zone `us-central1-b` subnet.
+  -  Create clusters:
+    -  `gke-1` in zone `us-west1-a`
+    -  `gke-2` in zone `us-west1-b`
+    -  [Cloud DNS][cloud-dns] enabled on all clusters
+    -  Enable the GKE API on all clusters
+    -  Enable [Workload Identity][workload-identity]
+       on all cluster
+    -  Create a Fleet and register all clusters to the fleet
+    -  Enables a `Multicluster Service Discovery` and `Multicluster Ingress`
 
-    - Cluster Configuration (Identical for Both)
-    - Gateway API enabled (Standard Channel).
-    - Workload Identity enabled.
-    - Registered to a Google Cloud Fleet.
+Use Terraform to provision the GKE clusters, configure GKE Hub Fleet membership,
+and set up other required resources like Artifact Registry.
 
-```sh
-cd terraform
-terraform init
-terraform apply -var project_id=$PROJECT_ID
-```
-
-## Deploy sample application
-
-We will deploy a simple [whereami]
-(GoogleCloudPlatform/kubernetes-engine-samples/quickstarts/whereami/README.md)
-application consisting of a frontend and a backend to both GKE clusters.
-
-1.  Rename contexts for easy access
+1.  Deploy the necessary infrastructure
 
     ```sh
-    gcloud container clusters get-credentials zonal-cluster-1 \
-    --region us-central1-a --project $PROJECT_ID
-    kubectl config rename-context "$(kubectl config current-context)" zone-a
-
-    gcloud container clusters get-credentials zonal-cluster-2 \
-    --region us-central1-b --project $PROJECT_ID
-    kubectl config rename-context "$(kubectl config current-context)" zone-b
-    ```
-
-2.  Deploy the sample application to each cluster
-
-    ```sh
+    cd terraform
+    terraform init
+    terraform apply -var project_id=$PROJECT_ID
     cd ../
-    kubectl delete -f manifests/ --context zone-a
-    kubectl delete -f manifests/ --context zone-b
     ```
 
-3.  Verify the service is up and running in `zone-a`
+2.  Confirm that the clusters have been successfully registered to the fleet
 
     ```sh
-    kubectl run temp-curl-client --context zone-b --rm -it \
-    --image=curlimages/curl -- /bin/sh
+    gcloud container fleet memberships list --project=$PROJECT_ID
     ```
 
-4.  Execute the curl to see the frontend service running in`zone-a`
+    The output will be similar to the following:
 
     ```sh
-    curl http://whereami-frontend.my-app.svc.cluster.local:80
+    TODO
     ```
 
-    This command creates a temporary pod client to access the frontend service
-    from inside of the the cluster
-
-    Output should similar to:
-
-    ```json
-    {
-      "backend_result": {
-        "cluster_name": "zonal-cluster-2",
-        "gce_instance_id": "5927732544413042383",
-        "gce_service_account": "pemulti1.svc.id.goog",
-        "host_header": "whereami-backend",
-        "metadata": "backend",
-        "node_name": "gke-zonal-cluster-2-default-pool-69474490-5t14",
-        "pod_ip": "10.68.0.6",
-        "pod_name": "whereami-backend-76ff54c56d-xdfr5",
-        "pod_name_emoji": "🫙",
-        "pod_namespace": "my-app",
-        "pod_service_account": "whereami-backend",
-        "project_id": "pemulti1",
-        "timestamp": "2025-04-04T14:49:26",
-        "zone": "us-central1-b"
-      },
-      "cluster_name": "zonal-cluster-2",
-      "gce_instance_id": "5927732544413042383",
-      "gce_service_account": "pemulti1.svc.id.goog",
-      "host_header": "whereami-frontend.my-app.svc.cluster.local",
-      "metadata": "frontend",
-      "node_name": "gke-zonal-cluster-2-default-pool-69474490-5t14",
-      "pod_ip": "10.68.0.7",
-      "pod_name": "whereami-frontend-7f984d8f64-j856n",
-      "pod_name_emoji": "🚶🏽‍♀‍➡",
-      "pod_namespace": "my-app",
-      "pod_service_account": "whereami-frontend",
-      "project_id": "pemulti1",
-      "timestamp": "2025-04-04T14:49:26",
-      "zone": "us-central1-b"
-    }
-    ```
-
-5.  Attempt accessing the `zone-b` backend from the frontend the `zone-a`
-    cluster
-
-    ```sh
-    ZONE_B_BACKEND_IP="$(kubectl get po -l app=whereami-backend \
-    -n my-app --context zone-b -ojsonpath='{.items[*].status.podIP}')"
-    echo ${ZONE_B_BACKEND_IP}
-
-    kubectl run temp-curl-client \
-    --image=curlimages/curl -it --rm --pod-running-timeout=4m \
-    --context zone-a -- curl -v http://$ZONE_B_BACKEND_IP:80
-    ```
-
-Notice you're unable to get the same response as there no connection setup
-between the clusters
-
-## Configure multi-cluster Service
-
-[Multi-cluster Services (MCS)]
-<https://cloud.google.com/kubernetes-engine/docs/concepts/multi-cluster-services>
-enables GKE services to be discovered and accessed across a fleet of VPC-native
-clusters using virtual IPs and FQDNs. It configures DNS, firewalls, and health
-checks without requiring Anthos licensing or Istio. To use MCS, enable the
-feature, register clusters to a fleet, and export services (excluding default
-and kube-system namespaces). Clients connect using
-SERVICE_EXPORT_NAME.NAMESPACE.svc.clusterset.local.
-
-MultiClusterService (MCS) is a custom resource for multi-cluster Gateways,
-representing a service across clusters. It creates derived, headless Services
-with NEGs in member clusters based on pod selectors, acting as endpoint groups.
-While defaulting to all member clusters, MCS can target specific clusters for
-advanced routing scenarios.
-
-1.  Enable multi-cluster-Services in the fleet
-
-    ```sh
-    gcloud container fleet multi-cluster-services enable \
-        --project $PROJECT_ID
-    ```
-
-2.  Grant Identity and Access Management (IAM) permissions required by the MCS
-    controller:
+3.  Grant Identity and Access Management (IAM) permissions required by
+    the MCS controller and multi-cluster Gatewaycontroller
 
     ```sh
     gcloud projects add-iam-policy-binding $PROJECT_ID \
@@ -219,226 +135,520 @@ advanced routing scenarios.
     --project=$PROJECT_ID
     ```
 
-3.  Confirm that MCS is enabled for the registered clusters. You will see the
-    memberships for the three registered clusters. It may take several minutes
-    for all of the clusters to show.
+4.  Get Cluster Credentials and Set Contexts:
+    Fetch credentials for each cluster and rename the contexts for clarity.
+    Name them green and blue corresponding to our deployment strategy phases.
 
     ```sh
-    gcloud container fleet multi-cluster-services describe --project=$PROJECT_ID
+    gcloud container clusters get-credentials gke-1 \
+    --zone us-central1-a --project "${PROJECT_ID}"
+    kubectl config rename-context "gke_${PROJECT_ID}_us-${REGION}-a_gke-1" green
+
+
+    gcloud container clusters get-credentials gke-2 \
+    --zone us-${REGION}-b --project "${PROJECT_ID}"
+    kubectl config rename-context "gke_${PROJECT_ID}_us-${REGION}-b_gke-2" blue
     ```
 
-    Output should be similar to the follow:
+## Deploy the sample application
+
+Build the sample whereami application's Docker image and push it to the
+Artifact Registry repository created by Terraform.
+
+1.  Configure Docker Authentication:
+    Allow Docker to authenticate with Artifact Registry using gcloud credentials.
 
     ```sh
-    createTime: '2025-04-02T23:48:38.171804547Z'
-    membershipStates:
-      projects/807562725141/locations/us-central1/memberships/zonal-cluster-1:
-        state:
-          code: OK
-          description: Firewall successfully updated
-          updateTime: '2025-04-02T23:52:35.843646177Z'
-      projects/807562725141/locations/us-central1/memberships/zonal-cluster-2:
-        state:
-          code: OK
-          description: Firewall successfully updated
-          updateTime: '2025-04-02T23:52:30.629358192Z'
-    name: projects/[]/locations/global/features/multiclusterservicediscovery
-    resourceState:
-      state: ACTIVE
-    spec: {}
-    updateTime: '2025-04-02T23:48:41.391830411Z'
+    gcloud auth configure-docker "${REGION}-docker.pkg.dev"
     ```
 
-4.  Create a [ServiceExport](manifests/mcs/serviceexport.yaml) for both the
-    frontend and backend service
+2.  Build and Push Image:
+    Navigate to the application directory, build the image, tag it, and push it.
 
     ```sh
-    kubectl apply -f manifests/mcs/serviceexport.yaml --context zone-a
-    kubectl apply -f manifests/mcs/serviceexport.yaml --context zone-b
+    docker build -t us-docker.pkg.dev/$PROJECT_ID/my-repo/app ./app
+    docker push us-docker.pkg.dev/$PROJECT_ID/my-repo/app:latest 
     ```
 
-When the ServiceExport resource is created, MCS will automatically perform the
-following actions:
-
-- Configure Cloud DNS zones and records for the exported service. This allows
-  clients in other clusters to resolve the service's FQDN to a virtual IP.
-- Configure firewall rules to allow pods on each cluster to communicate with
-  each other.
-
-- Configure Traffic Director resources to enable health checks and endpoint
-  information to each cluster.
-
-- Generate a ServiceImport resource on the other clusters in the fleet
-
-## Test cross cluster access
-
-Now you will attempt to connect from the cluster in `zone-b` from the `zone-a`
-cluster
-
-1.  Get the `zone-b` endpoint
+3.  Apply Deployment to both cluster
 
     ```sh
-    export ZONE_B_BACKEND=$(kubectl get Endpoints whereami-backend -n my-app \
-    --context zone-b \
-    -o jsonpath='{.subsets[0].addresses[0].ip}:{.subsets[0].ports[0].port}')
-    echo $ZONE_B_BACKEND
+    cat << EOF | kubectl apply --context green -f -
+    apiVersion: v1
+    kind: Namespace
+    metadata:
+    name: app
+    ---
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+    name: myapp
+    labels:
+        app: myapp
+        color: green
+    namespace: app
+    spec:
+    replicas: 1
+    selector:
+        matchLabels:
+        app: myapp
+    template:
+        metadata:
+        labels:
+            app: myapp
+        spec:
+        containers:
+        - name: myapp
+            image: us-docker.pkg.dev/${PROJECT_ID}/my-repo/app:latest
+            ports:
+            - containerPort: 8080
+            resources:
+            limits:
+                cpu: 250m
+                memory: 512Mi
+            requests:
+                cpu: 250m
+                memory: 512Mi
+    ---
+    kind: Service
+    apiVersion: v1
+    metadata:
+    name: myapp
+    namespace: app
+    labels:
+        color: green
+    spec:
+    selector:
+        app: myapp
+    ports:
+    - port: 8080
+        targetPort: 8080
     ```
 
-2.  Log back into the client pod running in the `zone-a` cluster run the curl
-    command on the `zone-b` cluster
+    Now deploy the same manifest with minor updates for labels to the second
+    cluster
 
     ```sh
-    kubectl run temp-curl-client  --context zone-a --rm -it \
-    --image=curlimages/curl -- curl http://$ZONE_B_BACKEND
-    ```
+    cat << EOF | kubectl apply --context green -f -
+    apiVersion: v1
+    kind: Namespace
+    metadata:
+    name: app
+    ---
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+    name: myapp
+    labels:
+        app: myapp
+        color: blue #update label color
+    namespace: app
+    spec:
+    replicas: 1
+    selector:
+        matchLabels:
+        app: myapp
+    template:
+        metadata:
+        labels:
+            app: myapp
+        spec:
+        containers:
+        - name: myapp
+            image: us-docker.pkg.dev/${PROJECT_ID}/my-repo/app:latest
+            ports:
+            - containerPort: 8080
+            resources:
+            limits:
+                cpu: 250m
+                memory: 512Mi
+            requests:
+                cpu: 250m
+                memory: 512Mi
+    ---
+    kind: Service
+    apiVersion: v1
+    metadata:
+    name: myapp
+    namespace: app
+    labels:
+        color: blue # Update label colors
+    spec:
+    selector:
+        app: myapp
+    ports:
+    - port: 8080
+        targetPort: 8080
+    ---
 
-    Output should be similar to:
-
-    ```json
-    {
-      "cluster_name": "zonal-cluster-2", # Backend service in(us-central1-b)
-      "gce_instance_id": "5927732544413042383",
-      "gce_service_account": "pemulti1.svc.id.goog",
-      "host_header": "10.68.0.6:8080",
-      "metadata": "backend",
-      "node_name": "gke-zonal-cluster-2-default-pool-69474490-5t14",
-      "pod_ip": "10.68.0.6",
-      "pod_name": "whereami-backend-76ff54c56d-xdfr5",
-      "pod_name_emoji": "🫙",
-      "pod_namespace": "my-app",
-      "pod_service_account": "whereami-backend",
-      "project_id": "pemulti1",
-      "timestamp": "2025-04-03T18:28:17",
-      "zone": "us-central1-b" # zone-b
-    }
-    ```
-
-    The frontend service in `zone-a` cluster can then access the exported
-    backend service in the `zone-b` cluster using its Fully Qualified Domain
-    Name (FQDN). The format of this FQDN is:
-    `[SERVICE_EXPORT_NAME].[NAMESPACE].svc.clusterset.local`
-
-## Testing Failover
-
-Now that we have Multi-Cluster Services (MCS) configured and our `whereami`
-application deployed across both clusters, let's simulate a failure scenario.
-This will help us observe the automatic failover capabilities.
-
-The goal is to make the backend service in `zone-a` unavailable. We will then
-verify that the `zone-a` frontend can still reach a healthy backend instance.
-This failover to the `zone-b` backend happens automatically thanks to MCS. We
-will achieve this by scaling the backend deployment in `zone-a` down to zero
-replicas.
-
-1.  Run a temporary client pod in zone-a within the 'my-app' namespace
-
-    ```sh
-    kubectl run temp-curl-client --context zone-a --rm -it \
-        --image=curlimages/curl -n my-app -- \
-        curl http://whereami-frontend.my-app.svc.cluster.local:80
-    ```
-
-2.  Scale down the `whereami-backend` deployment in the `zone-a` cluster to zero
-    replicas. This effectively takes the backend service offline.
-
-    ```sh
-    kubectl scale deployment whereami-backend --replicas=0 \
-    --context zone-a -n my-app
-    ```
-
-    Note: Observe the `"cluster_name"` and `"zone"` fields in the JSON output.
-    You should see a mix of `zonal-cluster-1`/`us-central1-a` and
-    `zonal-cluster-2`/`us-central1-b` responses. This demonstrates load
-    balancing.
-
-3.  Confirm that no backend pods are running in `zone-a`.
+4.  Verify rollout stat
 
     ```sh
-    kubectl get pods -l app=whereami-backend --context zone-a -n my-app
+    kubectl rollout status deployment/myapp -n app --context green --timeout=120s
+    kubectl rollout status deployment/myapp -n app --context blue --timeout=120s
     ```
 
-    Expected output: `No resources found in my-app namespace.`\*
+    wait for the deployment to become `Ready`
 
-    Now, run the temporary client pod in `zone-a` again. Attempt to reach the
-    backend using the same multi-cluster service address:
-    `whereami-backend.my-app.svc.clusterset.local`.
-
-4.  Test Failover from `zone-a` Frontend:
+5.  Retrieve the internal ClusterIP addresses of the myapp service for each
+    cluster.
 
     ```sh
-    kubectl run temp-curl-client --context zone-a --rm -it \
-    --image=curlimages/curl -n my-app \
-    -- curl http://whereami-frontend.my-app.svc.cluster.local:80
+    BLUE_SVC_IP=$(kubectl get service myapp -n app \
+    --context=blue -o jsonpath='{.spec.clusterIP}')
+    GREEN_SVC_IP=$(kubectl get service myapp -n app 
+    --context=green -o jsonpath='{.spec.clusterIP}')
+
+    kubectl run curl-client \
+        --image=curlimages/curl:latest -n app --context=green \
+        --restart=Never -it --rm -- curl -v -m 10 http://${GREEN_SVC_IP}:8080
     ```
 
-    Observe the Results: Examine the JSON output from the `curl` commands.
-
-    ```json
-    {
-      "backend_result": {
-        "cluster_name": "zonal-cluster-2",
-        "gce_instance_id": "5927732544413042383",
-        "gce_service_account": "pemulti1.svc.id.goog",
-        "host_header": "whereami-backend",
-        "metadata": "backend",
-        "node_name": "gke-zonal-cluster-2-default-pool-69474490-5t14",
-        "pod_ip": "10.68.0.6",
-        "pod_name": "whereami-backend-76ff54c56d-xdfr5",
-        "pod_name_emoji": "🫙",
-        "pod_namespace": "my-app",
-        "pod_service_account": "whereami-backend",
-        "project_id": "pemulti1",
-        "timestamp": "2025-04-04T14:49:26",
-        "zone": "us-central1-b"
-      },
-      "cluster_name": "zonal-cluster-1",
-      "gce_instance_id": "3363897077431012570",
-      "gce_service_account": "[]-compute@developer.gserviceaccount.com",
-      "host_header": "34.58.94.74",
-      "metadata": "frontend",
-      "node_name": "gke-zonal-cluster-1-default-pool-08f46fa6-t894",
-      "pod_ip": "10.68.2.4",
-      "pod_name": "whereami-frontend-7f984d8f64-djnh4",
-      "pod_name_emoji": "🇫🇮",
-      "pod_namespace": "default",
-      "pod_service_account": "whereami-frontend",
-      "project_id": "test-mcs1",
-      "timestamp": "2025-04-02T22:20:36",
-      "zone": "us-central1-b"
-    }
-    ```
-
-    You should consistently see responses only from the backend running in
-    `zonal-cluster-2` (`zone-b`). This shows MCS detected the absence of healthy
-    backend pods in `zone-a`. It automatically redirected all traffic for
-    `whereami-backend.my-app.svc.clusterset.local` to the available instances in
-    `zone-b`. The frontend in `zone-a` remains functional by using the backend
-    in the other cluster.
-
-5.  Restore Backend in `zone-a`
-
-    To return the system to its original state, scale the backend deployment in
-    `zone-a` back up. Let's assume the original replica count was 1 (adjust if
-    different).
+    Example output:
 
     ```sh
-    kubectl scale deployment whereami-backend --replicas=1 \
-    --context zone-a -n my-app
     ```
 
-6.  Verify pods are running again
+6.  Test connecting to the blue cluster from within the green cluster
 
     ```sh
-    kubectl get pods -l app=whereami-backend --context zone-a -n my-app -w
+    kubectl run curl-client \
+    --image=curlimages/curl:latest -n app --context=green \
+    --restart=Never -it --rm -- curl -v -m 10 http://${BLUE_SVC_IP}:8080
     ```
 
-    Wait for a pod to reach Running state, then press Ctrl+C
+    Example output:
 
-After the pod is running and registered as healthy (this may take a minute),
-requests to `whereami-backend.my-app.svc.clusterset.local` should start being
-load-balanced across\* both clusters again.\*
+    ```sh
+    ```
 
-This test successfully demonstrates the resilience provided by GKE Multi-Cluster
-Services. By exporting services, you create a unified service endpoint. This
-endpoint automatically routes traffic away from unavailable instances, ensuring
-higher availability for your applications spanning multiple clusters.
+    In the examples you will see the response from the green cluster, to the
+    blue cluster times out.
+
+## Configure multi-cluster Service
+
+In this section we will deploy
+[Multi-cluster Services (MCS)][multi-cluster-services] CRD `Service Exports`
+to each of the clusters. MCS enable GKE services to be discovered and accessed
+across a fleet of VPC-native clusters using virtual IPs and FQDNs without
+requiring Anthos licensing or Istio.
+
+To use MCS enable the feature:
+
+-  Ensure the clusters are part of a fleet. Note: This was enabled in the
+    terraform setup.
+-  Create a ServiceExport custom resource using the same namespace and name as
+    the Service (excluding default and kube-system namespaces).
+-  Connect to services using
+    `SERVICE_EXPORT_NAME.NAMESPACE.svc.**clusterset**.local.`
+
+1.  Confirm that the clusters have been successfully registered to the fleet:
+
+    ```sh
+    gcloud container fleet memberships list --project=$PROJECT_ID
+    ```
+
+    The output will be similar to the following:
+
+    ```sh
+
+    ```
+
+2.  Grant Identity and Access Management (IAM) permissions required by
+    the MCS controller and multi-cluster Gatewaycontroller:
+
+    ```sh
+    gcloud projects add-iam-policy-binding $PROJECT_ID \
+    --member "serviceAccount:$PROJECT_ID.svc.id.goog[gke-mcs/gke-mcs-importer]" \
+    --role "roles/compute.networkViewer" \
+    --project=$PROJECT_ID
+    ```
+
+    > Note the multicluster serivce was enabled in the terraform setup. To
+    enable the multicluster service on a fleet, use the following command
+
+    ```sh
+    gcloud container fleet multi-cluster-services enable \
+    --project $PROJECT_ID
+    ```
+
+3.  Create a `ServiceExport` for both the frontend and backend service
+
+    ```sh
+    kubectl apply -f k8s/serviceexport.yaml --context green
+    kubectl apply -f k8s/serviceexport.yaml --context blue
+    ```
+
+4.  After applying the `ServiceExport`, let's verify that the MCS components are
+    running and reacting as expected.
+
+    ```sh
+    kubectl get deployments --all-namespaces \
+    --context=blue | grep -v "kube-system" | grep -v "gmp-system"
+    ```
+
+    The output will be similar to the following:
+
+    ```sh
+
+    ```
+
+## Exploring Multi-Cluster Services (MCS) Resources and Connectivity
+
+1.  Examine the MCS logs
+    The gke-mcs-importer (or a similarly named component in other MCS
+    implementations) is responsible for watching ServiceExport resources.
+    Checking its logs can confirm it has recognized the export and is managing
+    discovery zones. Look for messages indicating updates to watched zones.
+
+    ```sh
+    kubectl logs -n gke-mcs -l k8s-app=gke-mcs-importer \
+    --context=blue | grep "Updating watched zones:"
+    ```
+
+    Output: 
+
+    ```sh
+
+    ```
+
+     [EXPLANATION TODO]
+
+2.  Examine the `ServiceImport`
+
+    ```sh
+    kubectl get ServiceImport myapp -n app -o yaml --context=blue
+    ```
+
+    Output:
+
+    ```sh
+    apiVersion: v1
+    items:
+    - apiVersion: net.gke.io/v1
+    kind: ServiceImport
+    metadata:
+        annotations:
+        net.gke.io/derived-service: gke-mcs-1a8qqpah56
+        creationTimestamp: "2025-04-01T18:03:06Z"
+        generation: 3
+        labels:
+        app.kubernetes.io/managed-by: gke-mcs-controller.gke.io
+        net.gke.io/backend-service-name: gkemcs-app-myapp
+        net.gke.io/export-network: gke-vpc
+        net.gke.io/export-project: "680206487583"
+        name: myapp
+        namespace: app
+        resourceVersion: "46486"
+        uid: 7fa935e7-8d6a-44b3-a624-a0927324feef
+    spec:
+        ips:
+        - 34.118.229.70
+        ports:
+        - port: 8080
+        protocol: TCP
+        sessionAffinity: None
+        type: ClusterSetIP
+    status:
+        clusters:
+        - cluster: projects/680206487583/locations/us-central1/memberships/gke-1
+        - cluster: projects/680206487583/locations/us-central1/memberships/gke-2
+    ```
+
+    The ServiceImport provides a stable abstraction. Applications within any
+    cluster can discover and interact with this ServiceImport without needing
+    to know which specific cluster(s) are currently hosting the backend pods.
+    This simplifies client configuration compared to alternatives where
+    clients might need different endpoints depending on which cluster they
+     target or manually handle failover.
+
+3.  Get the MCS Service's `Endpoints` created
+
+    ```sh
+    # Check Endpoints on the blue cluster
+    kubectl get Endpoints -n app --context=blue
+
+    # Check Endpoints on the green cluster
+    kubectl get Endpoints -n app --context=green
+    ```
+
+    Example output
+
+    ```sh
+    NAME                 ENDPOINTS                           AGE
+    gke-mcs-1a8qqpah56   10.188.0.16:8080,10.196.1.13:8080   138m
+    myapp                10.196.1.13:8080                    145m
+
+    ```
+
+    Interpreting the Output:
+
+    Notice two Endpoints objects related to myapp:
+    *  **myapp**: This is the standard one, showing only local pod IPs for that
+    cluster (e.g., 10.188.0.16:8080 on blue, 10.196.1.13:8080 on green).
+    *  **gke-mcs-xxxx**: This is the MCS-managed one. It lists the pod IPs from
+    both clusters (10.188.0.16:8080,10.196.1.13:8080). You'll see this same
+    aggregated list on both the blue and green clusters. This consistent,
+    fleet-wide view of endpoints enables seamless cross-cluster communication.
+
+4.  Test Connectivity via MCS DNS
+
+    ```sh
+    kubectl run curl-client --image=curlimages/curl:latest -n app \
+    --context=green --restart=Never -it --rm \
+    -- curl -v -m 10 myapp.app.svc.clusterset.local:8080
+    ```
+
+    MCS enables service discovery is through DNS. It automatically creates DNS
+    records. A client pod running in any cluster within the fleet can use this
+    exact same DNS name `service-name.namespace.svc.clusterset.local`.
+
+## Building and pushing application updates using Cloud Build
+
+Building container images and deploying applications involves several steps.
+To ensure consistency and reliability when building your application container
+after code changes, you can automate the process using
+[Cloud Build][cloud-build].
+
+1.  Make an update the the application. Open the [main.py](app/main.py) file and
+    make an update to `hello_world()`
+
+2.  Understand the Cloud Build Configuration (cloudbuild.yaml).
+
+    ```sh
+    cat cloudbuild.yaml
+    gcloud build .
+    ```
+
+    The cloudbuild.yaml file contains insturctions to build the container using
+    Docker and store the updated image in Artifact Registry.
+
+## Cloud Deploy blue/Green deployment strategy
+
+To push the updates to GKE and update the change across the clusters, we will
+use[Cloud Deploy][cloud-deploy]. Cloud Deploy automates and standardizes this
+process. Configuring pipelines and target environments (clusters) declaratively,
+allows Cloud Deploy to orchestrate rollout, approval steps and rollbacks.
+
+In this section, you will configure Cloud Deploy and use it to perform a
+blue/green update of the multi-cluster myapp service.
+
+1.  Enable the Cloud Deploy API for your project.
+
+    ```sh
+    gcloud services enable clouddeploy.googleapis.com --project=$PROJECT_ID
+    ```
+
+2.  Grant the Cloud Deploy service agent the necessary permissions
+
+    ```sh
+    gcloud projects add-iam-policy-binding $PROJECT_ID \
+        --member=serviceAccount:$(gcloud projects describe $PROJECT_ID \
+        --format="value(projectNumber)")-compute@developer.gserviceaccount.com \
+        --role="roles/clouddeploy.jobRunner" &&
+    gcloud iam service-accounts add-iam-policy-binding \
+    $(PROJECT_NUMBER)-compute@developer.gserviceaccount.com \
+    --member=serviceAccount:$(gcloud projects describe $PROJECT_ID \
+    --format="value(projectNumber)")-compute@developer.gserviceaccount.com \
+    --role="roles/iam.serviceAccountUser" \
+    --project=$PROJECT_ID
+    ```
+
+3.  Apply the Cloud Deploy delivery pipeline configuration
+
+    ```sh
+    gcloud deploy apply --file=deploy/pipeline.yaml --region=$REGION
+    ````
+
+    This YAML file defines the workflow for deploying your application:
+
+    ```sh
+    apiVersion: deploy.cloud.google.com/v1
+    kind: DeliveryPipeline
+    metadata:
+    name: bluegreen-pipeline
+    description: main application pipeline
+    serialPipeline:
+    stages:
+    - targetId: blue-target
+    profiles:
+    - blue
+    deployParameters:
+    - values: 
+        replicaCount: "1"
+        color: "blue"
+    - targetId: green-target
+    profiles:
+    - green
+    deployParameters:
+    - values:
+        replicaCount: "1"
+    ```
+
+    *  serialPipeline: This specifies that the stages defined within it will
+        execute sequentially, one after the other. When one stage completes
+        successfully, the next one begins (or waits for promotion/approval
+        if configured).
+    *  stages: This array defines the sequence of deployment steps.
+       *  Stage 1:
+            *  targetId: blue-target: This stage deploys to the target named
+            blue-target (which should be defined in your targets.yaml file and
+             point to your blue GKE cluster).
+            *  profiles: [blue]: Specifies that the Skaffold profile named blue
+            should be activated for this stage. Skaffold profiles allow you to
+            define variations in your build and deploy configuration
+            (e.g., using different Kubernetes manifest customizations
+             via Kustomize or Helm).
+            *  deployParameters: These key-value pairs (replicaCount, color)
+            are passed to the Skaffold rendering process. You can use these
+             parameters within your Kubernetes manifests (e.g., with Helm
+              templating ${values.color} or Kustomize) to customize the
+              deployment for the blue stage specifically. Note: Deploy
+               parameter values are typically expected as strings.
+       *  Stage 2:
+            *  targetId: green-target: This stage deploys to the green-target
+            (your green GKE cluster).
+            *  profiles: [green]: Activates the green Skaffold profile.
+            *  deployParameters: Provides parameters (replicaCount, color)
+
+4.  Create the first Cloud Deploy release for the Kubernetes Deployment
+    manifest.
+
+    ```sh
+    RELEASE_1=$RANDOM
+    gcloud deploy releases create app-release-$RELEASE_1 \
+        --project=$PROJECT_ID \
+        --region=$REGION \
+        --delivery-pipeline=bluegreen-pipeline \
+        --from-k8s-manifest=./k8s/deployment.yaml
+    ```
+
+    This command initiates a new deployment process. A release in Cloud Deploy
+     is an immutable snapshot of your application's configuration
+      (in this case, the k8s/deployment.yaml manifest).
+
+5.  Review the changes to the application
+
+    ```sh
+    kubectl run curl-client --image=curlimages/curl:latest -n app \
+    --context=green --restart=Never -it --rm \
+    -- curl -v -m 10 myapp.app.svc.clusterset.local:8080
+    ```
+
+## Clean up
+
+```sh
+  terraform init
+  terraform plan -var "project_id=$PROJECT_ID"
+  terraform destroy -var "project_id=$PROJECT_ID" --auto-approve
+```
+
+## Conclusion
+
+This tutorial demonstrated  Multi-Cluster Services to deploy an application
+across GKE clusters. Integrating Cloud Build for automated container builds and
+Google Cloud Deploy for orchestrating blue/green updates, you implemented a
+repeatable process for managing application rollouts.
+Combining these Google Cloud services for building highly resilient applications
+that can handle updates and potential failures gracefully across
+multiple clusters.

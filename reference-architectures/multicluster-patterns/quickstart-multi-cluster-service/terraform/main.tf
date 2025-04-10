@@ -15,7 +15,7 @@
  */
 data "google_project" "project" {}
 
-# Create a VPC
+# VPC
 resource "google_compute_network" "vpc" {
   name                    = var.vpc_name
   auto_create_subnetworks = false
@@ -35,30 +35,25 @@ resource "google_compute_subnetwork" "subnet_2" {
   network       = google_compute_network.vpc.id
 }
 
-resource "google_container_cluster" "cluster_1" {
-  name               = "zonal-cluster-1"
-  location           = var.zone_1
-  network            = google_compute_network.vpc.id
-  subnetwork         = google_compute_subnetwork.subnet_1.name
-  initial_node_count = 3
-  gateway_api_config {
-    channel = "CHANNEL_STANDARD"
-  }
-  workload_identity_config {
-    workload_pool = "${data.google_project.project.project_id}.svc.id.goog"
-  }
-  fleet {
-    project = var.project_id
-  }
-  deletion_protection = false
+resource "google_compute_subnetwork" "proxy_only" {
+  name          = "proxy-only-subnet"
+  ip_cidr_range = "10.128.0.0/23"
+  region        = var.region
+  network       = google_compute_network.vpc.id
+  purpose       = "REGIONAL_MANAGED_PROXY"
+  role          = "ACTIVE"
+  project       = var.project_id
 }
 
-resource "google_container_cluster" "cluster_2" {
-  name               = "zonal-cluster-2"
-  location           = var.zone_2
-  network            = google_compute_network.vpc.id
-  subnetwork         = google_compute_subnetwork.subnet_2.name
-  initial_node_count = 3
+# Cluster 1
+data "google_compute_default_service_account" "default" {}
+resource "google_container_cluster" "gke_1" {
+  name                = "gke-1"
+  location            = var.zone_1
+  network             = google_compute_network.vpc.id
+  subnetwork          = google_compute_subnetwork.subnet_1.name
+  initial_node_count  = 1
+  deletion_protection = false
   gateway_api_config {
     channel = "CHANNEL_STANDARD"
   }
@@ -68,5 +63,84 @@ resource "google_container_cluster" "cluster_2" {
   fleet {
     project = var.project_id
   }
-  deletion_protection = false
+  dns_config {
+    cluster_dns = "CLOUD_DNS"
+  }
+  depends_on = [google_compute_network.vpc]
+}
+resource "google_container_node_pool" "gke_1_nodes" {
+  name       = "gke-1-node-pool"
+  location   = var.zone_1
+  cluster    = google_container_cluster.gke_1.name
+  node_count = 1
+
+  node_config {
+    preemptible  = true
+    machine_type = "e2-standard-4"
+
+
+    service_account = data.google_compute_default_service_account.default.email
+    oauth_scopes = [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ]
+  }
+}
+
+# Cluster 2
+resource "google_container_cluster" "gke_2" {
+  name                     = "gke-2"
+  location                 = var.zone_2
+  network                  = google_compute_network.vpc.id
+  subnetwork               = google_compute_subnetwork.subnet_2.name
+  remove_default_node_pool = true
+  initial_node_count       = 1
+  deletion_protection      = false
+  gateway_api_config {
+    channel = "CHANNEL_STANDARD"
+  }
+  workload_identity_config {
+    workload_pool = "${data.google_project.project.project_id}.svc.id.goog"
+  }
+  fleet {
+    project = var.project_id
+  }
+  dns_config {
+    cluster_dns = "CLOUD_DNS"
+  }
+  depends_on = [google_compute_network.vpc]
+}
+resource "google_container_node_pool" "gke_2_nodes" {
+  name       = "gke-2-node-pool"
+  location   = var.zone_2
+  cluster    = google_container_cluster.gke_2.name
+  node_count = 1
+
+  node_config {
+    preemptible  = true
+    machine_type = "e2-standard-4"
+
+
+    service_account = data.google_compute_default_service_account.default.email
+    oauth_scopes = [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ]
+  }
+}
+# GKE Hub Feature: Enable multicluster service discovery.
+resource "google_gke_hub_feature" "multiclusterservice" {
+  name     = "multiclusterservicediscovery"
+  location = "global"
+  project  = var.project_id
+  depends_on = [
+    google_container_cluster.gke_1,
+    google_container_cluster.gke_2
+  ]
+}
+
+# Artifact registry
+resource "google_artifact_registry_repository" "my-repo" {
+  location      = "us"
+  repository_id = "my-repo"
+  description   = "Docker repository"
+  format        = "DOCKER"
 }
