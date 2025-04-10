@@ -10,42 +10,42 @@ during updates.
 
 This setup demonstrates:
 
--   Provisioning zonal GKE clusters using Terraform.
--   Deploying a sample application to multiple GKE clusters.
--   Configuring and utilizing Multi-Cluster Services (MCS) to enable
-    cross-cluster service discovery and load balancing.
--   Performing a blue/green deployment using Google Cloud Deploy to manage the
-    rollout process.
--   Simulating pod failure (implicitly addressed by MCS load balancing) to
-    showcase automatic failover capabilities.
--   Understanding how MCS enhances application resilience, especially within a
-    blue/green deployment scenario.
+- Provisioning zonal GKE clusters using Terraform.
+- Deploying a sample application to multiple GKE clusters.
+- Configuring and utilizing Multi-Cluster Services (MCS) to enable cross-cluster
+  service discovery and load balancing.
+- Performing a blue/green deployment using Google Cloud Deploy to manage the
+  rollout process.
+- Simulating pod failure (implicitly addressed by MCS load balancing) to
+  showcase automatic failover capabilities.
+- Understanding how MCS enhances application resilience, especially within a
+  blue/green deployment scenario.
 
 ## Key Concepts
 
--   **GKE Cluster Creation**: Using Terraform to automate the provisioning of
-    zonal GKE clusters ensures reproducible infrastructure.
--   **Application Deployment**: Deploying a simple frontend/backend application
-    to multiple GKE clusters serves as the workload for verifying cross-cluster
-    connectivity and deployment strategies.
--   **Multi-Cluster Services (MCS)**: Configuring and utilizing MCS enables
-    seamless service discovery and access across registered GKE clusters within
-    a Fleet. MCS abstracts networking complexities, allowing services in one
-    cluster to be discovered and consumed by applications in others using a
-    common DNS name (`<service>.<namespace>.svc.clusterset.local`).
--   **Failover Demonstration**: MCS inherently provides load balancing across
-    healthy endpoints in participating clusters. If pods in one cluster fail,
-    MCS automatically directs traffic to healthy pods in other clusters,
-    demonstrating improved resilience.
--   **Blue/Green Deployment**: A deployment strategy that minimizes downtime and
-    risk during application updates. A new version ("blue") is deployed
-    alongside the existing version ("green"). Traffic is gradually shifted (or
-    switched) to the blue environment once it's verified. Cloud Deploy
-    orchestrates this process across clusters.
--   **Resilience**: Understanding how the combination of multiple clusters, MCS
-    for cross-cluster load balancing/failover, and controlled blue/green
-    rollouts significantly enhances an application's ability to withstand
-    failures and remain available.
+- **GKE Cluster Creation**: Using Terraform to automate the provisioning of
+  zonal GKE clusters ensures reproducible infrastructure.
+- **Application Deployment**: Deploying a simple frontend/backend application to
+  multiple GKE clusters serves as the workload for verifying cross-cluster
+  connectivity and deployment strategies.
+- **Multi-Cluster Services (MCS)**: Configuring and utilizing MCS enables
+  seamless service discovery and access across registered GKE clusters within a
+  Fleet. MCS abstracts networking complexities, allowing services in one cluster
+  to be discovered and consumed by applications in others using a common DNS
+  name (`<service>.<namespace>.svc.clusterset.local`).
+- **Failover Demonstration**: MCS inherently provides load balancing across
+  healthy endpoints in participating clusters. If pods in one cluster fail, MCS
+  automatically directs traffic to healthy pods in other clusters, demonstrating
+  improved resilience.
+- **Blue/Green Deployment**: A deployment strategy that minimizes downtime and
+  risk during application updates. A new version ("blue") is deployed alongside
+  the existing version ("green"). Traffic is gradually shifted (or switched) to
+  the blue environment once it's verified. Cloud Deploy orchestrates this
+  process across clusters.
+- **Resilience**: Understanding how the combination of multiple clusters, MCS
+  for cross-cluster load balancing/failover, and controlled blue/green rollouts
+  significantly enhances an application's ability to withstand failures and
+  remain available.
 
 ### Terminology
 
@@ -62,13 +62,13 @@ This setup demonstrates:
 
 ## Prerequisites
 
--   A Google Cloud Project with billing enabled.
--   Familiarity with Kubernetes, GKE, and basic networking concepts.
--   Google Cloud SDK (`gcloud` command-line tool) installed and configured.
--   `kubectl` command-line tool installed.
--   Terraform installed.
--   Git installed.
--   Docker installed and running (or another container build tool).
+- A Google Cloud Project with billing enabled.
+- Familiarity with Kubernetes, GKE, and basic networking concepts.
+- Google Cloud SDK (`gcloud` command-line tool) installed and configured.
+- `kubectl` command-line tool installed.
+- Terraform installed.
+- Git installed.
+- Docker installed and running (or another container build tool).
 
 ## Setting up the Google Cloud Environment
 
@@ -96,13 +96,13 @@ environment variables and authentication.
 
 3.  Enable the necessary APIs for:
 
-    -   GKE
-    -   GKE Hub (Fleet management)
-    -   Multi-cluster Service
-    -   Compute Engine
-    -   Cloud Build
-    -   Artifact Registry,
-    -   Cloud Deploy.
+    - GKE
+    - GKE Hub (Fleet management)
+    - Multi-cluster Service
+    - Compute Engine
+    - Cloud Build
+    - Artifact Registry,
+    - Cloud Deploy.
 
     ```sh
     gcloud services enable \
@@ -123,20 +123,20 @@ environment variables and authentication.
 
 You will use Terraform to create:
 
--   Networking Setup
+- Networking Setup
 
-    -   Creates a custom Google Cloud VPC with auto-subnets.
+    - Creates a custom Google Cloud VPC with auto-subnets.
 
--   GKE
+- GKE
 
-    -   Create clusters:
-    -   `gke-1` in zone `us-west1-a`
-    -   `gke-2` in zone `us-west1-b`
-    -   [Cloud DNS](cloud-dns) enabled on all clusters
-    -   Enable the GKE API on all clusters
-    -   Enable [Workload Identity](workload-identity) on all cluster
-    -   Create a Fleet and register all clusters to the fleet
-    -   Enables a `Multicluster Service Discovery` and `Multicluster Ingress`
+    - Create clusters:
+    - `gke-1` in zone `us-west1-a`
+    - `gke-2` in zone `us-west1-b`
+    - [Cloud DNS](cloud-dns) enabled on all clusters
+    - Enable the GKE API on all clusters
+    - Enable [Workload Identity](workload-identity) on all cluster
+    - Create a Fleet and register all clusters to the fleet
+    - Enables a `Multicluster Service Discovery` and `Multicluster Ingress`
 
 Use Terraform to provision the GKE clusters, configure GKE Hub Fleet membership,
 and set up other required resources like Artifact Registry.
@@ -276,12 +276,12 @@ requiring Anthos licensing or Istio.
 
 To use MCS enable the feature:
 
--   Ensure the clusters are part of a fleet. Note: This was enabled in the
-    terraform setup.
--   Create a ServiceExport custom resource using the same namespace and name as
-    the Service (excluding default and kube-system namespaces).
--   Connect to services using
-    `SERVICE_EXPORT_NAME.NAMESPACE.svc.**clusterset**.local.`
+- Ensure the clusters are part of a fleet. Note: This was enabled in the
+  terraform setup.
+- Create a ServiceExport custom resource using the same namespace and name as
+  the Service (excluding default and kube-system namespaces).
+- Connect to services using
+  `SERVICE_EXPORT_NAME.NAMESPACE.svc.**clusterset**.local.`
 
 1.  Confirm that the clusters have been successfully registered to the fleet:
 
@@ -446,13 +446,12 @@ To use MCS enable the feature:
 
     Notice two Endpoints objects related to myapp:
 
-    -   **myapp**: This is the standard one, showing only local pod IPs for that
-        cluster (e.g., 10.188.0.16:8080 on blue, 10.196.1.13:8080 on green).
-    -   **gke-mcs-xxxx**: This is the MCS-managed one. It lists the pod IPs from
-        both clusters (10.188.0.16:8080,10.196.1.13:8080). You'll see this same
-        aggregated list on both the blue and green clusters. This consistent,
-        fleet-wide view of endpoints enables seamless cross-cluster
-        communication.
+    - **myapp**: This is the standard one, showing only local pod IPs for that
+      cluster (e.g., 10.188.0.16:8080 on blue, 10.196.1.13:8080 on green).
+    - **gke-mcs-xxxx**: This is the MCS-managed one. It lists the pod IPs from
+      both clusters (10.188.0.16:8080,10.196.1.13:8080). You'll see this same
+      aggregated list on both the blue and green clusters. This consistent,
+      fleet-wide view of endpoints enables seamless cross-cluster communication.
 
 4.  Test Connectivity via MCS DNS
 
@@ -555,31 +554,31 @@ blue/green update of the multi-cluster myapp service.
         replicaCount: "1"
     ```
 
-    -   serialPipeline: This specifies that the stages defined within it will
-        execute sequentially, one after the other. When one stage completes
-        successfully, the next one begins (or waits for promotion/approval if
-        configured).
-    -   stages: This array defines the sequence of deployment steps.
-        -   Stage 1:
-            -   targetId: blue-target: This stage deploys to the target named
-                blue-target (which should be defined in your targets.yaml file
-                and point to your blue GKE cluster).
-            -   profiles: [blue]: Specifies that the Skaffold profile named blue
-                should be activated for this stage. Skaffold profiles allow you
-                to define variations in your build and deploy configuration
-                (e.g., using different Kubernetes manifest customizations via
-                Kustomize or Helm).
-            -   deployParameters: These key-value pairs (replicaCount, color)
-                are passed to the Skaffold rendering process. You can use these
-                parameters within your Kubernetes manifests (e.g., with Helm
-                templating ${values.color} or Kustomize) to customize the
-                deployment for the blue stage specifically. Note: Deploy
-                parameter values are typically expected as strings.
-        -   Stage 2:
-            -   targetId: green-target: This stage deploys to the green-target
-                (your green GKE cluster).
-            -   profiles: [green]: Activates the green Skaffold profile.
-            -   deployParameters: Provides parameters (replicaCount, color)
+    - serialPipeline: This specifies that the stages defined within it will
+      execute sequentially, one after the other. When one stage completes
+      successfully, the next one begins (or waits for promotion/approval if
+      configured).
+    - stages: This array defines the sequence of deployment steps.
+        - Stage 1:
+            - targetId: blue-target: This stage deploys to the target named
+              blue-target (which should be defined in your targets.yaml file and
+              point to your blue GKE cluster).
+            - profiles: [blue]: Specifies that the Skaffold profile named blue
+              should be activated for this stage. Skaffold profiles allow you to
+              define variations in your build and deploy configuration (e.g.,
+              using different Kubernetes manifest customizations via Kustomize
+              or Helm).
+            - deployParameters: These key-value pairs (replicaCount, color) are
+              passed to the Skaffold rendering process. You can use these
+              parameters within your Kubernetes manifests (e.g., with Helm
+              templating ${values.color} or Kustomize) to customize the
+              deployment for the blue stage specifically. Note: Deploy parameter
+              values are typically expected as strings.
+        - Stage 2:
+            - targetId: green-target: This stage deploys to the green-target
+              (your green GKE cluster).
+            - profiles: [green]: Activates the green Skaffold profile.
+            - deployParameters: Provides parameters (replicaCount, color)
 
 4.  Replace variables in [deployment.yaml.tpl](k8s/deployment.yaml.tpl) with
     deploy parameters that work with Cloud Deploy as substituation variables.
