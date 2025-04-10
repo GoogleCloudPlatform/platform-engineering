@@ -134,7 +134,7 @@ You will use Terraform to create:
     -   `gke-2` in zone `us-west1-b`
     -   [Cloud DNS][cloud-dns] enabled on all clusters
     -   Enable the GKE API on all clusters
-    -   Enable [Workload Identity][workload-identity] on all cluster
+    -   Enable [Workload Identity](workload-identity) on all cluster
     -   Create a Fleet and register all clusters to the fleet
     -   Enables a `Multicluster Service Discovery` and `Multicluster Ingress`
 
@@ -269,7 +269,7 @@ Registry repository created by Terraform.
 ## Configure multi-cluster Service
 
 In this section we will deploy [Multi-cluster Services
-(MCS)][multi-cluster-services] CRD `Service Exports` to each of the clusters.
+(MCS)](multi-cluster-services) CRD `Service Exports` to each of the clusters.
 MCS enable GKE services to be discovered and accessed across a fleet of
 VPC-native clusters using virtual IPs and FQDNs without requiring Anthos
 licensing or Istio.
@@ -477,7 +477,7 @@ To use MCS enable the feature:
 Building container images and deploying applications involves several steps. To
 ensure consistency and reliability when building your application container
 after code changes, you can automate the process using [Cloud
-Build][cloud-build].
+Build](cloud-build).
 
 1.  Make an update the the application. Open the [main.py](app/main.py) file and
     make an update to `hello_world()`
@@ -496,7 +496,7 @@ Build][cloud-build].
 ## Cloud Deploy blue/Green deployment strategy
 
 To push the updates to GKE and update the change across the clusters, we will
-use[Cloud Deploy][cloud-deploy]. Cloud Deploy automates and standardizes this
+use[Cloud Deploy](cloud-deploy). Cloud Deploy automates and standardizes this
 process. Configuring pipelines and target environments (clusters) declaratively,
 allows Cloud Deploy to orchestrate rollout, approval steps and rollbacks.
 
@@ -599,7 +599,7 @@ blue/green update of the multi-cluster myapp service.
 
     > Note: You can also pass parameters as part of the
 
-        [pipeline configurations](deploy/pipeline.yaml) using deployparameters
+    [pipeline configurations](deploy/pipeline.yaml) using deployparameters
         `replicas: 1 #from-param: ${replicaCount}` - will update the number of
         replicas with the value set in the pipeline configurations
 
