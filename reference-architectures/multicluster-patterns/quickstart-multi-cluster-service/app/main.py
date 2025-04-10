@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+"""simple hello world function"""
 import os
 
 from flask import Flask
@@ -21,9 +21,6 @@ app = Flask(__name__)
 
 @app.route("/")
 def hello_world():
-    """
-    simple hello world function
-    """
     target = os.environ.get("TARGET", "World")
     return "Hello Google {}!\n".format(target)
 
