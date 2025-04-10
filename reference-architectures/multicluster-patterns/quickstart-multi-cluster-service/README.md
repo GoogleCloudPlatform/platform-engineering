@@ -202,7 +202,7 @@ Artifact Registry repository created by Terraform.
 
     ```sh
     docker build -t us-docker.pkg.dev/$PROJECT_ID/my-repo/app ./app
-    docker push us-docker.pkg.dev/$PROJECT_ID/my-repo/app:latest 
+    docker push us-docker.pkg.dev/$PROJECT_ID/my-repo/app:latest
     ```
 
 3.  Apply Deployment to both cluster
@@ -331,8 +331,8 @@ To use MCS enable the feature:
 
     ```sh
     NAMESPACE     NAME                            READY   UP-TO-DATE   AVAILABLE
-    app           myapp                           1/1     1            1        
-    gke-mcs       gke-mcs-importer                1/1     1            1        
+    app           myapp                           1/1     1            1
+    gke-mcs       gke-mcs-importer                1/1     1            1
 
     ```
 
@@ -361,7 +361,7 @@ To use MCS enable the feature:
     --context=blue
     ```
 
-    Output: 
+    Output:
 
     ```sh
     Update from us-central1-a with 2 negs
@@ -537,7 +537,7 @@ blue/green update of the multi-cluster myapp service.
     profiles:
     - blue
     deployParameters:
-    - values: 
+    - values:
         replicaCount: "1"
         color: "blue"
     - targetId: green-target
