@@ -79,4 +79,4 @@ async function testDeployCall() {
 }
 
 // Run the test
-testDeployCall().catch(console.error); 
+testDeployCall().catch(console.error);

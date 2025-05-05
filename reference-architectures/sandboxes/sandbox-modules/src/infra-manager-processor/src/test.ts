@@ -24,23 +24,23 @@ import { TemplateType } from './types';
 /*
 async function test() {
   console.log('Running test...');
-  
+
   try {
     const firestore = new Firestore();
     const docRef = firestore.collection('test').doc('test-doc');
-    
+
     await docRef.set({
       message: 'Hello from test script',
       timestamp: new Date()
     });
-    
+
     console.log('Test document created successfully');
   } catch (error) {
     console.error('Test failed:', error);
   }
 }
 
-test(); 
+test();
 */
 
 // Define interfaces for API responses
@@ -93,7 +93,7 @@ async function testInfraManagerDeploy() {
     // Prepare the deployment request following Infrastructure Manager API spec
     const deploymentName = `projects/${config.project.id}/locations/${config.project.region}/deployments/${deploymentId}`;
     const serviceAccount = `projects/${config.project.id}/serviceAccounts/${config.serviceAccount.email}`;
-    
+
     const payload = {
       name: deploymentName,
       terraformBlueprint: {
@@ -120,7 +120,7 @@ async function testInfraManagerDeploy() {
     console.log('\n🚀 Creating deployment using Infrastructure Manager API...');
     console.log('📝 API URL:', apiUrl);
     console.log('📦 Payload:', JSON.stringify(payload, null, 2));
-    
+
     const response = await client.request<DeploymentResponse>({
       url: apiUrl,
       method: 'POST',
@@ -131,7 +131,7 @@ async function testInfraManagerDeploy() {
       }
     });
 
-    console.log('\n✅ Deployment request accepted:', { 
+    console.log('\n✅ Deployment request accepted:', {
       status: response.status,
       operation: response.data.name
     });
@@ -146,7 +146,7 @@ async function testInfraManagerDeploy() {
       }
     });
 
-    console.log('📊 Operation status:', { 
+    console.log('📊 Operation status:', {
       name: operationResponse.data.name,
       done: operationResponse.data.done,
       error: operationResponse.data.error || 'none'
@@ -178,4 +178,4 @@ async function testInfraManagerDeploy() {
 }
 
 // Run the focused test
-testInfraManagerDeploy(); 
+testInfraManagerDeploy();

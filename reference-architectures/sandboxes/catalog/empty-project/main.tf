@@ -16,7 +16,7 @@
 
 /*
  * The files in the sandbox module will get moved to the root of the bucket.
- * Prior to uploading to the bucket "TERRAFORM_GCS_BUCKET" needs to be updated 
+ * Prior to uploading to the bucket "TERRAFORM_GCS_BUCKET" needs to be updated
  * to point to the actual bucket, which is hosting the Terraform for the system
  * project.
  */

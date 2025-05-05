@@ -32,7 +32,7 @@ export interface DeploymentState {
   budgetLimit: number;
   currentSpend: number;
   expiresAt: FirebaseFirestore.Timestamp;
-}  
+}
 
 export interface DeploymentVariables {
   billing_account: string;

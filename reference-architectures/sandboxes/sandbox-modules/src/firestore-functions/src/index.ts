@@ -64,9 +64,9 @@ exports.deploymentCreated = onDocumentCreated("deployments/{deploymentId}", asyn
       console.error('[FirestoreTrigger] 🚫 Cloud Run URL is not configured. Please set CLOUD_RUN_URL environment variable', { deploymentId });
       throw new Error('Cloud Run URL is not configured');
     }
-    
+
     console.log('[FirestoreTrigger] 🚀 Calling Cloud Run service:', cloudRunUrl, { deploymentId });
-    
+
     const response = await fetch(cloudRunUrl, {
       method: 'POST',
       headers: {
@@ -118,7 +118,7 @@ exports.deploymentUpdated = onDocumentUpdated("deployments/{deploymentId}", asyn
     console.error('Missing before or after data');
     return;
   }
- 
+
   try {
   // If the status field wasn't not delete and it now is, a new delete request
   // has been made. We need to call infra-manager-processor to have the
@@ -127,16 +127,16 @@ exports.deploymentUpdated = onDocumentUpdated("deployments/{deploymentId}", asyn
       // Get auth token for Cloud Run
       console.log('[FirestoreTrigger] 🔑 Getting auth token...', { deploymentId });
       const token = await getAuthToken();
-  
+
       // Get Cloud Run URL from environment variable
       const cloudRunUrl = process.env.CLOUD_RUN_URL + "/delete";
       if (!cloudRunUrl) {
         console.error('[FirestoreTrigger] 🚫 Cloud Run URL is not configured. Please set CLOUD_RUN_URL environment variable', { deploymentId });
         throw new Error('Cloud Run URL is not configured');
       }
-      
+
       console.log('[FirestoreTrigger] 🚀 Calling Cloud Run service:', cloudRunUrl, { deploymentId });
-      
+  
       const response = await fetch(cloudRunUrl, {
         method: 'POST',
         headers: {
@@ -151,17 +151,17 @@ exports.deploymentUpdated = onDocumentUpdated("deployments/{deploymentId}", asyn
           }
         })
       });
-  
+
       if (!response.ok) {
         throw new Error(`Cloud Run service error: ${response.statusText}`);
       }
-  
+
       const result = await response.json();
       console.log('[FirestoreTrigger] ✅ Delete initiated successfully:', {
         deploymentId,
         result
       });
-  
+
       return result;
   }
   } catch (error) {

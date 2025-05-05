@@ -28,4 +28,4 @@ RUN npm install && npm run build && npm prune --production
 EXPOSE 8080
 
 # Start the server
-CMD [ "npm", "start" ] 
+CMD [ "npm", "start" ]

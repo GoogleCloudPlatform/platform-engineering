@@ -88,17 +88,17 @@ app.use(express.json());
 app.use((req, res, next) => {
   const requestId = `req-${Date.now()}-${Math.random().toString(36).substring(2, 10)}`;
   req.headers['x-request-id'] = requestId;
-  
+
   // Extract documentId from request body for logging
   const documentId = req.body?.documentId || 'unknown';
-  
+
   console.log(`[CloudRun][${requestId}] 📥 Received ${req.method} request to ${req.path}`, {
     deploymentId: documentId,
     headers: req.headers,
     query: req.query,
     body: req.body
   });
-  
+
   // Capture response
   const originalSend = res.send;
   res.send = function(body) {
@@ -108,7 +108,7 @@ app.use((req, res, next) => {
     });
     return originalSend.call(this, body);
   };
-  
+
   next();
 });
 
@@ -131,26 +131,26 @@ app.post('/create', async (req, res) => {
   
   try {
     console.log(`[CloudRun][${requestId}] 🔍 Processing deployment request`, { documentId });
-    
+
     if (!documentId) {
       console.error(`[CloudRun][${requestId}] ❌ Missing documentId in request`, { documentId: 'unknown' });
       return res.status(400).json({ error: 'Missing documentId in request' });
     }
-    
+
     if (!data || !data.type || !data.region) {
       console.error(`[CloudRun][${requestId}] ❌ Missing required data fields`, { documentId, data });
       return res.status(400).json({ error: 'Missing required data fields' });
     }
-    
+
     // Get the document reference
     const docRef = firestore.collection('deployments').doc(documentId);
     const docSnapshot = await docRef.get();
-    
+
     if (!docSnapshot.exists) {
       console.error(`[CloudRun][${requestId}] ❌ Document does not exist: ${documentId}`);
       return res.status(404).json({ error: 'Deployment document not found' });
     }
-    
+
     const currentData = docSnapshot.data();
     if (currentData?.status !== 'provision_requested') {
       console.error(`[CloudRun][${requestId}] ❌ Invalid deployment status: ${currentData?.status}`, { documentId });
@@ -159,16 +159,16 @@ app.post('/create', async (req, res) => {
         message: 'Deployment must be in "requested" status to proceed'
       });
     }
-    
+
     // Update document to pending status
     await docRef.update({
       status: 'provision_pending',
       updatedAt: new Date(),
       _updateSource: 'cloudrun',
     });
-    
+
     console.log(`[CloudRun][${requestId}] 📋 Document updated with pending status`, { documentId });
-    
+
     // Start deployment process in background
     deployInfrastructure(documentId, data.type, data.region)
       .catch(error => {
@@ -182,7 +182,7 @@ app.post('/create', async (req, res) => {
           console.error(`[CloudRun][${requestId}] 🚫 Failed to update document with error status:`, updateError, { documentId });
         });
       });
-    
+
     // Respond immediately
     console.log(`[CloudRun][${requestId}] ✅ Sending success response`, { documentId });
     res.json({
@@ -202,15 +202,15 @@ app.post('/create', async (req, res) => {
 app.post('/delete', async (req, res) => {
   const requestId = req.headers['x-request-id'] as string;
   const { documentId, data } = req.body as DeleteRequest;
-  
+
   try {
     console.log(`[CloudRun][${requestId}] 🔍 Processing deletion request`, { documentId });
-    
+
     if (!documentId) {
       console.error(`[CloudRun][${requestId}] ❌ Missing documentId in request`, { documentId: 'unknown' });
       return res.status(400).json({ error: 'Missing documentId in request' });
     }
-    
+
     if (!data || !data.infraManagerDeploymentId || !data.region) {
       console.error(`[CloudRun][${requestId}] ❌ Missing required data fields`, { documentId, data });
       return res.status(400).json({ error: 'Missing required data fields' });
@@ -223,7 +223,7 @@ app.post('/delete', async (req, res) => {
     // Get the document reference
     const docRef = firestore.collection('deployments').doc(documentId);
     const docSnapshot = await docRef.get();
-    
+
     if (!docSnapshot.exists) {
       console.error(`[CloudRun][${requestId}] ❌ Document does not exist: ${documentId}`);
       return res.status(404).json({ error: 'Deployment document not found' });
@@ -237,7 +237,7 @@ app.post('/delete', async (req, res) => {
 
     // Make the API request to Infrastructure Manager
     const apiUrl = `https://config.googleapis.com/v1/projects/${config.project.id}/locations/${data.region}/deployments/${data.infraManagerDeploymentId}?force=true`;
-    
+
     console.log(`[CloudRun][${requestId}] 🚀 Sending delete request to Infrastructure Manager API:`, {
       documentId,
       infraManagerDeploymentId: data.infraManagerDeploymentId,
@@ -295,7 +295,7 @@ app.post('/delete', async (req, res) => {
       });
   } catch (error) {
     console.error(`[CloudRun][${requestId}] 🔥 Error processing request:`, error, { documentId });
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to process request',
       message: error instanceof Error ? error.message : 'Unknown error'
     });

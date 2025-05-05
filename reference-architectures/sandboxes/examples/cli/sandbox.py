@@ -39,11 +39,14 @@ def create(project_id, system_project):
         "variables": {
             "billing_account": "<your_billing_id>",
             "name": project_id,
-            "parent_folder": "folders/87523515960" 
+            "parent_folder": "folders/87523515960"
         },
         "auditLog": ["python_cli - Sandbox initial provision_request"]
     }
     deployment_ref = db.collection(u'deployments').document(project_id).set(deployment)
+
+    print("Your new sandbox is being created and will be available at:")
+    print(f"https://console.cloud.google.com/welcome?project={project_id}")
 
 def delete(project_id, system_project):
     # The `project` parameter is optional and represents which project the client
@@ -53,7 +56,7 @@ def delete(project_id, system_project):
 
     deployment_ref = db.collection(u'deployments').document(project_id)
     deployment_ref.update({
-        "status": "delete_requested", 
+        "status": "delete_requested",
         "auditLog": firestore.ArrayUnion(["python_cli - User requested delete of the sandbox."])
     })
 
@@ -64,7 +67,7 @@ def main():
     parser = argparse.ArgumentParser(description="Simple cli tool to interact with the sanboxes reference architecture.")
     parser.add_argument("action", help="supported actions are: create, delete, list")
     parser.add_argument("--project_id", "-p", help="project id to interact with")
-    parser.add_argument("--system", "-s", help="project id of the system project which has the state database") 
+    parser.add_argument("--system", "-s", help="project id of the system project which has the state database")
     args = parser.parse_args()
 
     match args.action:

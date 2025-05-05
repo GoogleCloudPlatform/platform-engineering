@@ -40,7 +40,7 @@ In this section you prepare a folder for deployment.
 In this section you prepare your enviroment for deployment of the system project.
 
 1.  Go to the [Manage Resources][manage-resources] page in the Cloud Console in the IAM & Admin menu.
-    
+
 2.  Select Create folder, then choose Folder.
 
 3.  Enter a name for your folder. This folder will be used to contain the system and sandbox projects.

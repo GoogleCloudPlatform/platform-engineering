@@ -28,16 +28,16 @@ export async function pollDeletionStatus(operationName: string, documentId: stri
     let retryCount = 0;
     const maxRetries = 10;
     const retryDelay = 5000;
-  
+
     // Get authenticated client
     const auth = new GoogleAuth({
       scopes: ['https://www.googleapis.com/auth/cloud-platform']
     });
     const client = await auth.getClient();
-  
+
     while (retryCount < maxRetries) {
       await new Promise(resolve => setTimeout(resolve, retryDelay));
-  
+
       try {
         const operationResponse = await client.request<OperationResponse>({
           url: `https://config.googleapis.com/v1/${operationName}`,
@@ -46,24 +46,24 @@ export async function pollDeletionStatus(operationName: string, documentId: stri
             'X-Goog-User-Project': config.project.id
           }
         });
-  
+
         if (operationResponse.data.done) {
           if (operationResponse.data.error) {
             console.error(`[CloudRun] ❌ Deletion failed:`, {
               documentId,
               error: operationResponse.data.error
             });
-  
+
             await docRef.update({
               status: 'delete_error',
               error: operationResponse.data.error,
               updatedAt: new Date(),
               _updateSource: 'cloudrun'
             });
-  
+
             return;
           }
-  
+
           console.log(`[CloudRun] ✅ Deletion completed successfully:`, {
             documentId,
             result: operationResponse.data.response
@@ -71,14 +71,14 @@ export async function pollDeletionStatus(operationName: string, documentId: stri
 
           return;
         }
-  
+
         // Update status to show progress
         await docRef.update({
           status: 'delete_inprogress',
           updatedAt: new Date(),
           _updateSource: 'cloudrun'
         });
-  
+
       } catch (error) {
         console.warn(`[CloudRun] ⚠️ Error checking operation status (will retry):`, {
           documentId,
@@ -86,10 +86,10 @@ export async function pollDeletionStatus(operationName: string, documentId: stri
           retry: retryCount + 1
         });
       }
-  
+
       retryCount++;
     }
-  
+
     // If we get here, polling timed out
     await docRef.update({
       status: 'delete_error',

@@ -15,15 +15,8 @@
  */
 
 #
-# Folder and Project
+# System Project
 #
-
-# module "sandboxes_folder" {
-#   source = "../../../fabric-modules/folder"
-
-#   name = var.sandboxes_folder
-#   parent = var.sandboxes_folder_parent
-# }
 
 module "system_project" {
   source = "../../../fabric-modules/project"
@@ -183,7 +176,7 @@ module "cloud_run" {
 resource "google_firebase_project" "default" {
   provider = google-beta
   project  = module.system_project.id
-  
+
   depends_on = [
     module.system_project
   ]
