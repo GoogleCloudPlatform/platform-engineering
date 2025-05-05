@@ -8,8 +8,13 @@ The following diagram is the high-level architecture for the enabling self-servi
 
 ![architecture](resources/high-level-arch.png)
 
-1. 
-2. 
+1. The system project is contains the state database and infrastructure required to create, delete and manage they lifecycle of the sandboxes.
+2. User interface that engineers use to request and manage the sandboxes they own.
+3. Firestore is used to store the state of the overall environment. The documents in the database represent all the active and inactive sandboxes. The document model is detailed in the [sandbox-modules README](sandbox-modules/README.md).
+4. When documents are created and updated, those events are received by Cloud Run functions `onCreate` and `onModify`. The functions contain the logic required to decided if a sandbox should be created or deleted.
+5. `infraManagerProcessor` is a Cloud Run process with works with Infrastructure Manager to kick off and monitor the infrastructure management. This is handled in a Cloud Run process because the execution of Terraform is along running process.
+6. The Terraform templates and state used by Infrastructure manager are stored in Cloud Storage.
+7. Cloud Scheduler is used to trigger the execution of sandbox lifecycle management processes, for example a function that check for the expiration of sandboxes and marking them for deletion.
 
 # Structure of the Repository
 
