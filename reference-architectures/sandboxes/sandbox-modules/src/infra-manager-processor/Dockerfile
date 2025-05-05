@@ -18,20 +18,11 @@ FROM node:22-slim
 # Create app directory
 WORKDIR /usr/src/app
 
-# Copy package files
-COPY package*.json ./
-
-# Install dependencies
-RUN npm install
-
 # Copy source code
 COPY . .
 
-# Build TypeScript
-RUN npm run build
-
-# Remove dev dependencies
-RUN npm prune --production
+# Install dependencies, build and remove dev dependencies
+RUN npm install && npm run build && npm prune --production
 
 # Expose port
 EXPOSE 8080
