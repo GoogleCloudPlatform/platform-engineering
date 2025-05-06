@@ -24,7 +24,7 @@
 module "project" {
   source = "gcs::https://www.googleapis.com/storage/v1/TERRAFORM_GCS_BUCKET/fabric-modules/project"
 
-  name = var.name
+  name            = var.name
   billing_account = var.billing_account
-  parent = var.parent_folder
+  parent          = var.parent_folder
 }
