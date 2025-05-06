@@ -1,8 +1,8 @@
 # Sandbox Projects
 
-# Data Model
+## Data Model
 
-## Deployment
+### Deployment
 
 | Field | Type | Description
 | ----- | ---- | -----------
@@ -12,14 +12,14 @@
 | `templateName`                | string        | The name of the Terraform template from the catalog that the sandbox is based on.
 | `deploymentState`             | object<[DeploymentState](#deploymentstate)> | State object for the sandbox deployment. Contains data such as budget, current spend, expiration date, etc.The state object is updated by and used by the various lifecycle functions.
 | `infraManagerDeploymentId`    | string        | Id returned by [Infrastructure Manager][infra-manager] for the deployment.
-| `infraManagerResult`          | object<[DeploymentResponse][inframanager-deployment]> |
+| `infraManagerResult`          | object<[DeploymentResponse][inframanager-deployment]> | This is the response object returned from Infrastructure Manager deployment operation.
 | `userId`                      | string        | Unique identifier for the user which owns the sandbox deployment.
 | `createdAt`                   | string        | Timestamp that the sandbox record was created at.
 | `updatedAt`                   | string        | Timestamp that the sandbox record was last updated.
 | `variables`                   | object<[Variables](#variables)> | List of variable supplied by the user, which are in turned used by the template to create the sandbox.
 | `auditLog`                    | array[string] | List of messages that the system can add as an audit log.
 
-## DeploymentState
+### DeploymentState
 
 | Field | Type | Description
 | ----- | ---- | -----------
@@ -27,10 +27,15 @@
 | `currentSpend`    | number | Current spend for the sandbox.
 | `expiresAt`       | string | Time base expiration for the sandbox.
 
+### Variables
 
-## Key Statuses
+Collection of key value pairs that are used in the Infrastructure Manager
+request, for use as the Terraform variable values.
 
-The following table describes important statuses that are used during the lifecycle of a deployment.
+### Key Statuses
+
+The following table describes important statuses that are used during the
+lifecycle of a deployment.
 
 | Status | Set By | Handled By | Meaning
 | ------ | ------ | ---------- | -------

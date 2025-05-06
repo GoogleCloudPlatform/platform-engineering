@@ -46,7 +46,7 @@ def create(project_id, system_project):
         },
         "auditLog": ["python_cli - Sandbox initial provision_request"],
     }
-    deployment_ref = db.collection("deployments").document(project_id).set(deployment)
+    db.collection("deployments").document(project_id).set(deployment)
 
     print("Your new sandbox is being created and will be available at:")
     print(f"https://console.cloud.google.com/welcome?project={project_id}")
@@ -69,7 +69,7 @@ def delete(project_id, system_project):
     )
 
 
-def list(system_project):
+def list():
     print("list action not implemented")
 
 
@@ -78,15 +78,11 @@ def main():
         description="Simple cli tool to interact with the sanboxes reference architecture."
     )
     parser.add_argument("action", help="supported actions are: create, delete, list")
-    parser.add_argument(
-        "--project_id",
-        "-p",
-        help="project id to interact with"
-    )
+    parser.add_argument("--project_id", "-p", help="project id to interact with")
     parser.add_argument(
         "--system",
         "-s",
-        help="project id of the system project which has the state database"
+        help="project id of the system project which has the state database",
     )
     args = parser.parse_args()
 
@@ -96,7 +92,7 @@ def main():
         case "delete":
             delete(args.project_id, args.system)
         case "list":
-            list(args.system)
+            list()
         case _:
             print(f"Error: unknown action, {args.action}")
 

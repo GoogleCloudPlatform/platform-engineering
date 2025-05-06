@@ -1,13 +1,16 @@
-## Overview
+# Overview
 
 This directory contains Terraform configuration files to quickly set up the
-the sandboxes system project. This example is a good entry point for testing the reference architecture and learning how it can be incorportated into your own infrastructure as code processes.
+the sandboxes system project. This example is a good entry point for testing
+the reference architecture and learning how it can be incorportated into your
+own infrastructure as code processes.
 
 ## Architecture
 
 ![architecture-per-project](../../resources/high-level-arch.png)
 
-For an explanation of the components of the sandboxes reference architecture and the interaction flow, please read the [main Architecture section](../README.md#architecture).
+For an explanation of the components of the sandboxes reference architecture
+and the interaction flow, please read the [main Architecture section](../README.md#architecture).
 
 ## Before you begin
 
@@ -35,21 +38,24 @@ In this section you prepare a folder for deployment.
     export SANDBOXES_CLI="$(pwd)/reference-architectures/examples/cli"
     ```
 
-## Preparing the Sandboxes Folder
+### Preparing the Sandboxes Folder
 
 In this section you prepare your enviroment for deployment of the system project.
 
-1.  Go to the [Manage Resources][manage-resources] page in the Cloud Console in the IAM & Admin menu.
+1.  Go to the [Manage Resources][manage-resources] page in the Cloud Console in
+    the IAM & Admin menu.
 
 2.  Select Create folder, then choose Folder.
 
-3.  Enter a name for your folder. This folder will be used to contain the system and sandbox projects.
+3.  Enter a name for your folder. This folder will be used to contain the
+    system and sandbox projects.
 
 4.  Click Create
 
-5.  Copy the folder id from the Manage resources page you will need this value later for use as Terraform variable.
+5.  Copy the folder id from the Manage resources page you will need this value
+    later for use as Terraform variable.
 
-## Deploying the Autoscaler
+### Deploying the reference architecture
 
 1.  Set the project ID and region in the corresponding Terraform
     environment variables
@@ -67,16 +73,17 @@ In this section you prepare your enviroment for deployment of the system project
     terraform init
     ```
 
-6.  Create the Sanboxes system project and  infrastructure. Answer `yes` when prompted,
-    after reviewing the resources that Terraform intends to create.
+6.  Create the Sanboxes system project and  infrastructure. Answer `yes` when
+    prompted, after reviewing the resources that Terraform intends to create.
 
     ```sh
     terraform apply
     ```
 
-## Creating a sandbox
+### Creating a sandbox
 
-Now that the system project has been deployed. We can create a sandbox using the example cli.
+Now that the system project has been deployed. We can create a sandbox using
+the example cli.
 
 1.  Change directory into the example cli tool directory
 
@@ -100,7 +107,10 @@ Now that the system project has been deployed. We can create a sandbox using the
 
 ## Next steps
 
-Your sandboxes infrastructure is ready, you may continue to use the example cli to create and delete sandboxes. At this point it is recommended to review the detailed object and operating model you can create a more robust user experience.
+Your sandboxes infrastructure is ready, you may continue to use the example
+cli to create and delete sandboxes. At this point it is recommended to review
+the detailed object and operating model you can create a more robust user
+experience.
 
 <!-- LINKS: https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
