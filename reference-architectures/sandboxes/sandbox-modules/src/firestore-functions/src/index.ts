@@ -136,7 +136,7 @@ exports.deploymentUpdated = onDocumentUpdated("deployments/{deploymentId}", asyn
       }
 
       console.log('[FirestoreTrigger] 🚀 Calling Cloud Run service:', cloudRunUrl, { deploymentId });
-  
+
       const response = await fetch(cloudRunUrl, {
         method: 'POST',
         headers: {

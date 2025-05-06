@@ -128,7 +128,7 @@ app.use(async (req, res, next) => {
 app.post('/create', async (req, res) => {
   const requestId = req.headers['x-request-id'] as string;
   const { documentId, data } = req.body as DeploymentRequest;
-  
+
   try {
     console.log(`[CloudRun][${requestId}] 🔍 Processing deployment request`, { documentId });
 
@@ -154,7 +154,7 @@ app.post('/create', async (req, res) => {
     const currentData = docSnapshot.data();
     if (currentData?.status !== 'provision_requested') {
       console.error(`[CloudRun][${requestId}] ❌ Invalid deployment status: ${currentData?.status}`, { documentId });
-      return res.status(400).json({ 
+      return res.status(400).json({
         error: 'Invalid deployment status',
         message: 'Deployment must be in "requested" status to proceed'
       });
@@ -192,7 +192,7 @@ app.post('/create', async (req, res) => {
     });
   } catch (error) {
     console.error(`[CloudRun][${requestId}] 🔥 Error processing request:`, error, { documentId });
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to process request',
       message: error instanceof Error ? error.message : 'Unknown error'
     });

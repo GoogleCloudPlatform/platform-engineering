@@ -28,4 +28,3 @@
    description = "Project name for the system project."
    type        = string
  }
- 
