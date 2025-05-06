@@ -26,7 +26,7 @@ terraform {
       version = ">= 6.13.0, < 7.0.0" # tftest
     }
     null = {
-      source = "hashicorp/null"
+      source  = "hashicorp/null"
       version = "3.2.3"
     }
   }

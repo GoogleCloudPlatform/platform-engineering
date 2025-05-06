@@ -15,10 +15,10 @@
  */
 
 module "gcp_sandboxes" {
-   source = "../../sandbox-modules/tf/system-project"
+  source = "../../sandbox-modules/tf/system-project"
 
-   billing_account = var.billing_account
-   sandboxes_folder = var.sandboxes_folder
-   #sandboxes_folder_parent = var.sandboxes_folder_parent
-   system_project_name = var.system_project_name
+  billing_account  = var.billing_account
+  sandboxes_folder = var.sandboxes_folder
+  #sandboxes_folder_parent = var.sandboxes_folder_parent
+  system_project_name = var.system_project_name
 }

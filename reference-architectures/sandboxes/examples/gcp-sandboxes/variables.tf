@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
- variable billing_account {
-   description = "The billing account that will be attached to the system project. This billing account can be different from the billing acount used for the sandboxes, but is not shown in this example."
-   type        = string
- }
+variable "billing_account" {
+  description = "The billing account that will be attached to the system project. This billing account can be different from the billing acount used for the sandboxes, but is not shown in this example."
+  type        = string
+}
 
- variable sandboxes_folder {
-   description = "The folder the system project will be created in, needs to be in the format of folders/<folder_id>. This folder id can be different from the folder used for the sandboxes, but is not demonstrated in this example."
-   type        = string
- }
+variable "sandboxes_folder" {
+  description = "The folder the system project will be created in, needs to be in the format of folders/<folder_id>. This folder id can be different from the folder used for the sandboxes, but is not demonstrated in this example."
+  type        = string
+}
 
- variable system_project_name {
-   description = "Project name for the system project."
-   type        = string
- }
+variable "system_project_name" {
+  description = "Project name for the system project."
+  type        = string
+}

@@ -21,8 +21,8 @@
 module "system_project" {
   source = "../../../fabric-modules/project"
 
-  name = var.system_project_name
-  parent = var.sandboxes_folder
+  name            = var.system_project_name
+  parent          = var.sandboxes_folder
   billing_account = var.billing_account
 
   services = [
@@ -48,8 +48,8 @@ module "terraform_bucket" {
   source = "../../../fabric-modules/gcs"
 
   project_id = module.system_project.id
-  name = "${module.system_project.name}_terraform"
-  location = "US"
+  name       = "${module.system_project.name}_terraform"
+  location   = "US"
   versioning = true
 }
 
@@ -57,12 +57,12 @@ module "terraform_state_bucket" {
   source = "../../../fabric-modules/gcs"
 
   project_id = module.system_project.id
-  name = "${module.system_project.name}_terraform_state"
-  location = "US"
+  name       = "${module.system_project.name}_terraform_state"
+  location   = "US"
   versioning = true
 }
 
-resource "null_resource" "upload_tf"{
+resource "null_resource" "upload_tf" {
   provisioner "local-exec" {
     command = <<EOT
       find ${abspath("${path.module}/../../../catalog")} -type f -name '*.tf' -exec sed -i 's/TERRAFORM_GCS_BUCKET/${module.terraform_bucket.name}/g' {} +
@@ -80,7 +80,7 @@ module "sandbox_factory_sa" {
   source = "../../../fabric-modules/iam-service-account"
 
   project_id = module.system_project.id
-  name = "sandbox-factory-sa"
+  name       = "sandbox-factory-sa"
 
   iam_billing_roles = {
     "${var.billing_account}" = [
@@ -127,7 +127,7 @@ resource "google_artifact_registry_repository" "infra_manager_processor" {
   format        = "DOCKER"
 }
 
-resource "null_resource" "build_image"{
+resource "null_resource" "build_image" {
   provisioner "local-exec" {
     command = <<EOT
       cd ${abspath("${path.module}/../../src/infra-manager-processor")}
@@ -139,7 +139,7 @@ resource "null_resource" "build_image"{
     always_run = "${timestamp()}"
   }
 
-  depends_on = [ google_artifact_registry_repository.infra_manager_processor ]
+  depends_on = [google_artifact_registry_repository.infra_manager_processor]
 }
 
 module "cloud_run" {
@@ -151,13 +151,13 @@ module "cloud_run" {
     hello = {
       image = "us-central1-docker.pkg.dev/${module.system_project.id}/${google_artifact_registry_repository.infra_manager_processor.repository_id}/infra-manager-processor"
       env = {
-        PROJECT_ID = module.system_project.id
-        REGION = "us-central1"
-        ZONE = "us-central1a"
-        SERVICE_ACCOUNT_NAME = "sandbox-factory-sa"
-        TERRAFORM_BUCKET = module.terraform_bucket.name
+        PROJECT_ID             = module.system_project.id
+        REGION                 = "us-central1"
+        ZONE                   = "us-central1a"
+        SERVICE_ACCOUNT_NAME   = "sandbox-factory-sa"
+        TERRAFORM_BUCKET       = module.terraform_bucket.name
         TERRAFORM_CATALOG_PATH = "catalog"
-        TERAFORM_STATE_BUCKET = module.terraform_state_bucket.name
+        TERAFORM_STATE_BUCKET  = module.terraform_state_bucket.name
       }
     }
   }
@@ -166,7 +166,7 @@ module "cloud_run" {
   }
   deletion_protection = false
 
-  depends_on = [ null_resource.build_image ]
+  depends_on = [null_resource.build_image]
 }
 
 #
@@ -189,7 +189,7 @@ module "deploymentCreated" {
   name        = "deploymentCreated"
   bucket_name = "${module.system_project.name}_functions-deploymentcreated"
   bucket_config = {
-    location = "us-central1"
+    location      = "us-central1"
     force_destroy = true
   }
   bundle_config = {
@@ -197,30 +197,30 @@ module "deploymentCreated" {
   }
   environment_variables = {
     GCLOUD_PROJECT = module.system_project.id
-    CLOUD_RUN_URL = module.cloud_run.service_uri
+    CLOUD_RUN_URL  = module.cloud_run.service_uri
     FIREBASE_CONFIG = jsonencode({
       projectId     = module.system_project.id
       storageBucket = "${module.system_project.id}.firebasestorage.app"
     })
     EVENTARC_CLOUD_EVENT_SOURCE = "projects/${module.system_project.id}/locations/us-central1/services/deploymentcreated"
-    FUNCTION_SIGNATURE_TYPE = "cloudevent"
-    FUNCTION_TARGET = "deploymentCreated"
+    FUNCTION_SIGNATURE_TYPE     = "cloudevent"
+    FUNCTION_TARGET             = "deploymentCreated"
   }
   function_config = {
     entry_point = "deploymentCreated"
-    runtime = "nodejs22"
+    runtime     = "nodejs22"
   }
   trigger_config = {
-    event_type    = "google.cloud.firestore.document.v1.created"
+    event_type = "google.cloud.firestore.document.v1.created"
     event_filters = [
       {
         attribute = "database"
-        value = "(default)"
+        value     = "(default)"
       },
       {
         attribute = "document"
-        operator = "match-path-pattern"
-        value = "deployments/{deploymentId}"
+        operator  = "match-path-pattern"
+        value     = "deployments/{deploymentId}"
       }
     ]
     region = "nam5"
@@ -236,7 +236,7 @@ module "deploymentUpdated" {
   name        = "deploymentUpdated"
   bucket_name = "${module.system_project.name}_functions-deploymentupdated"
   bucket_config = {
-    location = "us-central1"
+    location      = "us-central1"
     force_destroy = true
   }
   bundle_config = {
@@ -244,30 +244,30 @@ module "deploymentUpdated" {
   }
   environment_variables = {
     GCLOUD_PROJECT = module.system_project.id
-    CLOUD_RUN_URL = module.cloud_run.service_uri
+    CLOUD_RUN_URL  = module.cloud_run.service_uri
     FIREBASE_CONFIG = jsonencode({
       projectId     = module.system_project.id
       storageBucket = "${module.system_project.id}.firebasestorage.app"
     })
     EVENTARC_CLOUD_EVENT_SOURCE = "projects/${module.system_project.id}/locations/us-central1/services/deploymentUpdated"
-    FUNCTION_SIGNATURE_TYPE = "cloudevent"
-    FUNCTION_TARGET = "deploymentUpdated"
+    FUNCTION_SIGNATURE_TYPE     = "cloudevent"
+    FUNCTION_TARGET             = "deploymentUpdated"
   }
   function_config = {
     entry_point = "deploymentUpdated"
-    runtime = "nodejs22"
+    runtime     = "nodejs22"
   }
   trigger_config = {
-    event_type    = "google.cloud.firestore.document.v1.updated"
+    event_type = "google.cloud.firestore.document.v1.updated"
     event_filters = [
       {
         attribute = "database"
-        value = "(default)"
+        value     = "(default)"
       },
       {
         attribute = "document"
-        operator = "match-path-pattern"
-        value = "deployments/{deploymentId}"
+        operator  = "match-path-pattern"
+        value     = "deployments/{deploymentId}"
       }
     ]
     region = "nam5"
@@ -284,7 +284,7 @@ module "budget-topic" {
   source = "../../../fabric-modules/pubsub"
 
   project_id = module.system_project.id
-  name = "${module.system_project.name}_billing_budget"
+  name       = "${module.system_project.name}_billing_budget"
 }
 
 # NOTE: Billing alerts need to be setup as a post sandbox creation process

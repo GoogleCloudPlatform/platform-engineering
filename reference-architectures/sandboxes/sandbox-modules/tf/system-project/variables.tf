@@ -16,12 +16,12 @@
 
 variable "billing_account" {
   description = "Billing account for the sandboxes"
-  type = string
+  type        = string
 }
 
 variable "sandboxes_folder" {
   description = "Name of the folder that the system project and sandboxes will be created in."
-  type = string
+  type        = string
 }
 
 # variable "sandboxes_folder_parent" {
@@ -31,7 +31,7 @@ variable "sandboxes_folder" {
 
 variable "system_project_name" {
   description = "Name of the system project for the sandboxes."
-  type = string
+  type        = string
 
   # validation = {
   #    condition     = length(var.system_project_name) >= 4 && length(var.system_project_name) <= 30
