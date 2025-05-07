@@ -69,13 +69,14 @@ def delete(project_id, system_project):
     )
 
 
-def list():
+def list_sandboxes():
     print("list action not implemented")
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Simple cli tool to interact with the sanboxes reference architecture."
+        description="Simple cli tool to interact with the sanboxes " \
+            "reference architecture."
     )
     parser.add_argument("action", help="supported actions are: create, delete, list")
     parser.add_argument("--project_id", "-p", help="project id to interact with")
@@ -92,7 +93,7 @@ def main():
         case "delete":
             delete(args.project_id, args.system)
         case "list":
-            list()
+            list_sandboxes()
         case _:
             print(f"Error: unknown action, {args.action}")
 
