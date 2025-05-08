@@ -99,14 +99,14 @@ curl http://127.0.0.1:8000<status_endpoint> | jq
 A sample Dockerfile is provided, modify to suit your needs
 You can build a container with :
 
-'''bash
+```bash
 docker build -t mesop-backend:latest .
-'''
+```
 
 You need to pass ENVARS to the container when it runs, you can use the .env file mentioned above :
 
-'''bash
+```bash
 docker run --env-file .env mesop-backend:latest
-'''
+```
 
 TODO: Give example to pass ADC into the container when running locally
