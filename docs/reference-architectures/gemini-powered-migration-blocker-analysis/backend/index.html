@@ -1263,6 +1263,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#build-and-run-a-container" class="md-nav__link">
+    <span class="md-ellipsis">
+      Build and run a container
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1576,6 +1585,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#build-and-run-a-container" class="md-nav__link">
+    <span class="md-ellipsis">
+      Build and run a container
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1652,6 +1670,17 @@
 <p>If you have it installed you can also pipe the output to <code>jq</code> for readability.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>curl<span class="w"> </span>http://127.0.0.1:8000&lt;status_endpoint&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq
 </span></code></pre></div>
+<h2 id="build-and-run-a-container">Build and run a container<a class="headerlink" href="#build-and-run-a-container" title="Permanent link">&para;</a></h2>
+<p>A sample Dockerfile is provided, modify to suit your needs
+You can build a container with :</p>
+<p>'''bash
+docker build -t mesop-backend:latest .
+'''</p>
+<p>You need to pass ENVARS to the container when it runs, you can use the .env file mentioned above :</p>
+<p>'''bash
+docker run --env-file .env mesop-backend:latest
+'''</p>
+<p>TODO: Give example to pass ADC into the container when running locally</p>
 
 
 
