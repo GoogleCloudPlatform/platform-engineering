@@ -6,7 +6,8 @@
 
 ### .env
 
-Create a .env file in the root of the project with the following contents, maksing sure to replace the placeholder text:
+Create a .env file in the root of the project with the following contents,
+making sure to replace the placeholder text:
 
 ```bash
 GOOGLE_CLOUD_PROJECT=your-gcp-project
@@ -24,22 +25,27 @@ Prereqs include:
 
 This project uses uv for python environment and dependency management.
 
-To get setup with ```uv``` after cloning the repo :
+To get setup with `uv` after cloning the repo :
 
 ```bash
 uv sync
 source .venv/bin/activate
 ```
 
- We provide a requirements.txt file for those that require ```pip``` , we generate it automatically with :
+We provide a requirements.txt file for those that require `pip` , we generate it
+automatically with :
 
 ```bash
- uv export --format requirements-txt --no-hashes > requirements.txt
+uv export --format requirements-txt --no-hashes > requirements.txt
 ```
 
-Environment management via ```pip``` is left to the user
+Environment management via `pip` is left to the user
 
-Google Cloud API access is handled via [ADC](https://cloud.google.com/docs/authentication/provide-credentials-adc) , so you can either use the gcloud CLI if running [locally](https://cloud.google.com/docs/authentication/set-up-adc-local-dev-environment) :
+Google Cloud API access is handled via
+[ADC](https://cloud.google.com/docs/authentication/provide-credentials-adc) , so
+you can either use the gcloud CLI if running
+[locally](https://cloud.google.com/docs/authentication/set-up-adc-local-dev-environment)
+:
 
 ```bash
 export GOOGLE_CLOUD_PROJECT=<your-gcp-project>
@@ -71,7 +77,7 @@ fastapi dev main.py
 The development server will also host OpenAPI docs for the service at :
 <http://127.0.0.1:8000/docs>
 
-Once running , you can either test from that page or test with curl as follows :
+Once running, you can either test from that page or test with curl as follows :
 
 Send a request to generate a new report using the sample documentation :
 
@@ -79,18 +85,19 @@ Send a request to generate a new report using the sample documentation :
 curl -X POST "http://127.0.0.1:8000/reports" \
      -H "accept: application/json" \
      -F "github_repo_url=https://github.com/dockersamples/example-voting-app/" \
-     -F "documentation_files=@plat-md.pdf"
+     -F "documentation_files=@reference-architectures/gemini-powered-migration-blocker-analysis/sample-platform/docs/platform-doc.pdf"
 ```
 
 Make a note of the reports staut_endpoint in the output
 
-Once completed you can view the report with, make sure to replace status_endpoint placeholder :
+Once completed you can view the report with, make sure to replace
+status_endpoint placeholder :
 
 ```bash
 curl http://127.0.0.1:8000<status_endpoint>
 ```
 
-If you have it installed you can also pipe the output to ```jq``` for readability.
+If you have it installed you can also pipe the output to `jq` for readability.
 
 ```bash
 curl http://127.0.0.1:8000<status_endpoint> | jq
@@ -98,32 +105,32 @@ curl http://127.0.0.1:8000<status_endpoint> | jq
 
 ## Build and run a container
 
-A sample Dockerfile is provided, modify to suit your needs
-You can build a container with :
+A sample Dockerfile is provided, modify to suit your needs You can build a
+container with :
 
 ```bash
 docker build -t mesop-backend:latest .
 ```
 
-You need to pass ENVARS to the container when it runs, you can use the .env file mentioned above,
-you also need to inject your local gcloud ADC credentials into the container, this example uses a bind mount
-and runs the container with your local UID/GID so that the bind mount works correctly.
+You need to pass ENVARS to the container when it runs, you can use the .env file
+mentioned above, you also need to inject your local gcloud ADC credentials into
+the container, this example uses a bind mount and runs the container with your
+local UID/GID so that the bind mount works correctly.
 
 First create some local ENVARS, ADC should point at your local ADC file :
 
 ```bash
 ADC=~/.config/gcloud/application_default_credentials.json \
 USER_ID=$(id -u) \
-GROUP_ID=$(id -g) 
+GROUP_ID=$(id -g)
 ```
 
 Then run the container with :
 
-'''bash
-docker run -p 8000:8000 \
+'''bash docker run -p 8000:8000 \
 --user $USER_ID:$GROUP_ID \
 --env-file .env \
--e GOOGLE_APPLICATION_CREDENTIALS=/home/backend/application_default_credentials.json \
+-e GOOGLE_APPLICATION_CREDENTIALS=/home/backend/application_default_credentials.json
+\
 -v $ADC:/home/backend/application_default_credentials.json:ro \
-mesop-backend:latest
-'''
+mesop-backend:latest '''
