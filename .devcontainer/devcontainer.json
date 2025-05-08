@@ -100,7 +100,7 @@
         "HashiCorp.terraform",
         "mads-hartmann.bash-ide-vscode",
         "mkhl.shfmt",
-        "ms-azuretools.vscode-docker",
+        "ms-azuretools.vscode-containers",
         "ms-python.black-formatter",
         "ms-python.pylint",
         "shengchen.vscode-checkstyle",
