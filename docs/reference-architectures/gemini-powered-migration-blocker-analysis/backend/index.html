@@ -1617,10 +1617,10 @@
 <h2 id="running-locally-in-development">Running Locally in development<a class="headerlink" href="#running-locally-in-development" title="Permanent link">&para;</a></h2>
 <h3 id="env">.env<a class="headerlink" href="#env" title="Permanent link">&para;</a></h3>
 <p>Create a .env file in the root of the project with the following contents, maksing sure to replace the placeholder text:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">GOOGLE_CLOUD_PROJECT</span><span class="o">=</span><span class="s2">&quot;&lt;your-gcp-project&gt;&quot;</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">GCS_BUCKET_NAME</span><span class="o">=</span><span class="s2">&quot;&lt;bucket-name-for-docs&gt;&quot;</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nv">GEMINI_MODEL_NAME</span><span class="o">=</span><span class="s2">&quot;gemini-2.0-flash&quot;</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nv">GCP_LOCATION</span><span class="o">=</span><span class="s2">&quot;&lt;region&gt;&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">GOOGLE_CLOUD_PROJECT</span><span class="o">=</span>your-gcp-project
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">GCS_BUCKET_NAME</span><span class="o">=</span>bucket-name-for-docs
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nv">GEMINI_MODEL_NAME</span><span class="o">=</span>gemini-2.0-flash
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nv">GCP_LOCATION</span><span class="o">=</span>region
 </span></code></pre></div>
 <h3 id="prereqs-dependencies">Prereqs / Dependencies<a class="headerlink" href="#prereqs-dependencies" title="Permanent link">&para;</a></h3>
 <p>Prereqs include:</p>
@@ -1675,10 +1675,23 @@
 You can build a container with :</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>mesop-backend:latest<span class="w"> </span>.
 </span></code></pre></div>
-<p>You need to pass ENVARS to the container when it runs, you can use the .env file mentioned above :</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>docker<span class="w"> </span>run<span class="w"> </span>--env-file<span class="w"> </span>.env<span class="w"> </span>mesop-backend:latest
+<p>You need to pass ENVARS to the container when it runs, you can use the .env file mentioned above,
+you also need to inject your local gcloud ADC credentials into the container, this example uses a bind mount
+and runs the container with your local UID/GID so that the bind mount works correctly.</p>
+<p>First create some local ENVARS, ADC should point at your local ADC file :</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nv">ADC</span><span class="o">=</span>~/.config/gcloud/application_default_credentials.json<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nv">USER_ID</span><span class="o">=</span><span class="k">$(</span>id<span class="w"> </span>-u<span class="k">)</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="nv">GROUP_ID</span><span class="o">=</span><span class="k">$(</span>id<span class="w"> </span>-g<span class="k">)</span><span class="w"> </span>
 </span></code></pre></div>
-<p>TODO: Give example to pass ADC into the container when running locally</p>
+<p>Then run the container with :</p>
+<p>'''bash
+docker run -p 8000:8000 \
+--user $USER_ID:$GROUP_ID \
+--env-file .env \
+-e GOOGLE_APPLICATION_CREDENTIALS=/home/backend/application_default_credentials.json \
+-v $ADC:/home/backend/application_default_credentials.json:ro \
+mesop-backend:latest
+'''</p>
 
 
 
