@@ -1,8 +1,8 @@
 __pycache__
 .dockerignore
-Dockerfile
-.venv
 .env
-plat-md.md
-plat-md.pdf
+.venv
+Dockerfile
+platform-doc.md
+platform-doc.pdf
 README.md

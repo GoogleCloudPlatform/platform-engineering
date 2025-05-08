@@ -47,13 +47,15 @@ gcloud config set project $GOOGLE_CLOUD_PROJECT
 gcloud auth application-default login
 ```
 
-or use a [service account](https://cloud.google.com/docs/authentication/set-up-adc-attached-service-account) if your environemnt supports it.
+or use a
+[service account](https://cloud.google.com/docs/authentication/set-up-adc-attached-service-account)
+if your environemnt supports it.
 
 Enable the required API's in Google Cloud :
 
 ```bash
 export GOOGLE_CLOUD_PROJECT=<your-gcp-project>
-gcloud config set project $GOOGLE_CLOUD_PROJEC
+gcloud config set project "${GOOGLE_CLOUD_PROJECT}"
 gcloud services enable firestore.googleapis.com
 gcloud services enable datastore.googleapis.com
 gcloud services enable aiplatform.googleapis.com
@@ -67,7 +69,7 @@ fastapi dev main.py
 ```
 
 The development server will also host OpenAPI docs for the service at :
-[http://127.0.0.1:8000/docs]
+<http://127.0.0.1:8000/docs>
 
 Once running , you can either test from that page or test with curl as follows :
 

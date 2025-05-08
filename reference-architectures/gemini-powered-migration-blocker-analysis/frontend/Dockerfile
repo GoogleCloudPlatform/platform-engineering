@@ -42,3 +42,6 @@ COPY --chown=mesop:mesop --from=report-templates . /srv/mesop-app/templates/
 EXPOSE 8080
 
 CMD ["gunicorn", "--bind", "0.0.0.0:8080", "--reload", "main:me"]
+
+HEALTHCHECK --interval=20s --timeout=3s \
+  CMD curl -f http://localhost:8080/health || exit 1

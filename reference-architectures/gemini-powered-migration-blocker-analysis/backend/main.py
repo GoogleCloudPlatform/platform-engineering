@@ -346,6 +346,12 @@ async def get_report(report_id: str):
 
     return ReportResponse(metadata=metadata, analysis_result=analysis_result)
 
+
+@app.get("/health")
+def health_check():
+    return {"status": "healthy"}
+
+
 # --- Running the App (for local development) ---
 if __name__ == "__main__":
     import uvicorn

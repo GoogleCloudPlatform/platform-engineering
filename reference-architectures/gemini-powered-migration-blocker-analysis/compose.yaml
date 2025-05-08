@@ -22,7 +22,20 @@ services:
         GID: "${GID}"
         UID: "${UID}"
     ports:
-      - "8080:8080"
+      - "8000:8000"
     volumes:
       - ./frontend:/srv/mesop-app
       - ./templates:/srv/mesop-app/templates
+  backend:
+    build:
+      context: backend
+      additional_contexts:
+        report-templates: templates
+      args:
+        GID: "${GID}"
+        UID: "${UID}"
+    ports:
+      - "8001:8080"
+    volumes:
+      - ./backend:/srv/mesop-backend
+      - ./templates:/srv/mesop-backend/templates
