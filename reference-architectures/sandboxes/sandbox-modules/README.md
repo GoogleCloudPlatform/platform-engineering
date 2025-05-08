@@ -11,7 +11,7 @@
 | `projectId`                   | string        | The project id of the sandbox.
 | `templateName`                | string        | The name of the Terraform template from the catalog that the sandbox is based on.
 | `deploymentState`             | object<[DeploymentState](#deploymentstate)> | State object for the sandbox deployment. Contains data such as budget, current spend, expiration date, etc.The state object is updated by and used by the various lifecycle functions.
-| `infraManagerDeploymentId`    | string        | Id returned by [Infrastructure Manager][infra-manager] for the deployment.
+| `infraManagerDeploymentId`    | string        | Id returned by [Infrastructure Manager][inframanager] for the deployment.
 | `infraManagerResult`          | object<[DeploymentResponse][inframanager-deployment]> | This is the response object returned from Infrastructure Manager deployment operation.
 | `userId`                      | string        | Unique identifier for the user which owns the sandbox deployment.
 | `createdAt`                   | string        | Timestamp that the sandbox record was created at.

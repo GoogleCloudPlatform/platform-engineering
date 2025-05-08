@@ -18,11 +18,10 @@ In this section you prepare a folder for deployment.
 
 1.  Open the [Cloud Console][cloud-console]
 2.  Activate [Cloud Shell][cloud-shell] \
-    At the bottom of the Cloud Console, a
-    <a href='https://cloud.google.com/shell/docs/features'>Cloud Shell</a>
+    At the bottom of the Cloud Console, a [Cloud Shell][cloud-shell-features]
     session starts and displays a command-line prompt. Cloud Shell is a shell
     environment with the Cloud SDK already installed, including the
-    <code>gcloud</code> command-line tool, and with values already set for your
+    `gcloud` command-line tool, and with values already set for your
     current project. It can take a few seconds for the session to initialize.
 
 3.  In Cloud Shell, clone this repository
@@ -66,14 +65,14 @@ In this section you prepare your enviroment for deployment of the system project
     export TF_VAR_system_project_name="<name for the system project>"
     ```
 
-4.  Change directory into the Terraform example directory and initialize it.
+2.  Change directory into the Terraform example directory and initialize it.
 
     ```sh
     cd "${SANDBOXES_DIR}"
     terraform init
     ```
 
-6.  Create the Sanboxes system project and  infrastructure. Answer `yes` when
+3.  Create the Sanboxes system project and  infrastructure. Answer `yes` when
     prompted, after reviewing the resources that Terraform intends to create.
 
     ```sh
@@ -116,4 +115,5 @@ experience.
 
 [cloud-console]: https://console.cloud.google.com
 [cloud-shell]: https://console.cloud.google.com/?cloudshell=true
+[cloud-shell-features]: https://cloud.google.com/shell/docs/features
 [manage-resources]: https://console.cloud.google.com/cloud-resource-manage

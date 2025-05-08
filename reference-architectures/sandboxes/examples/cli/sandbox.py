@@ -12,6 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""Simple command line interface (CLI) tool to demonstrate function of the
+sandboxes reference architecture.
+"""
+
 import argparse
 from datetime import datetime, timedelta
 from google.cloud import firestore
@@ -76,7 +80,7 @@ def list_sandboxes():
 def main():
     parser = argparse.ArgumentParser(
         description="Simple cli tool to interact with the sanboxes " \
-            "reference architecture."
+        "reference architecture."
     )
     parser.add_argument("action", help="supported actions are: create, delete, list")
     parser.add_argument("--project_id", "-p", help="project id to interact with")
