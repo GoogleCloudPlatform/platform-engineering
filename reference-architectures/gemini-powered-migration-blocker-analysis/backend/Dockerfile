@@ -33,8 +33,14 @@ RUN pip install --no-cache-dir -r requirements.txt
 ARG UID=10000
 ARG GID=10000
 
+
 RUN groupadd -g "${GID}" backend && useradd --no-log-init -u "${UID}" -s /bin/bash -g backend backend
+RUN mkdir -p /home/backend
+RUN chown backend:backend /home/backend
+
+
 USER backend
+
 
 COPY --chown=backend:backend . /srv/mesop-backend
 

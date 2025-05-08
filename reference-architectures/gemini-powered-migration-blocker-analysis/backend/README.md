@@ -9,10 +9,10 @@
 Create a .env file in the root of the project with the following contents, maksing sure to replace the placeholder text:
 
 ```bash
-GOOGLE_CLOUD_PROJECT="<your-gcp-project>"
-GCS_BUCKET_NAME="<bucket-name-for-docs>"
-GEMINI_MODEL_NAME="gemini-2.0-flash"
-GCP_LOCATION="<region>"
+GOOGLE_CLOUD_PROJECT=your-gcp-project
+GCS_BUCKET_NAME=bucket-name-for-docs
+GEMINI_MODEL_NAME=gemini-2.0-flash
+GCP_LOCATION=region
 ```
 
 ### Prereqs / Dependencies
@@ -103,10 +103,25 @@ You can build a container with :
 docker build -t mesop-backend:latest .
 ```
 
-You need to pass ENVARS to the container when it runs, you can use the .env file mentioned above :
+You need to pass ENVARS to the container when it runs, you can use the .env file mentioned above,
+you also need to inject your local gcloud ADC credentials into the container, this example uses a bind mount
+and runs the container with your local UID/GID so that the bind mount works correctly.
+
+First create some local ENVARS, ADC should point at your local ADC file :
 
 ```bash
-docker run --env-file .env mesop-backend:latest
+ADC=~/.config/gcloud/application_default_credentials.json \
+USER_ID=$(id -u) \
+GROUP_ID=$(id -g) 
 ```
 
-TODO: Give example to pass ADC into the container when running locally
+Then run the container with :
+
+'''bash
+docker run -p 8000:8000 \
+--user $USER_ID:$GROUP_ID \
+--env-file .env \
+-e GOOGLE_APPLICATION_CREDENTIALS=/home/backend/application_default_credentials.json \
+-v $ADC:/home/backend/application_default_credentials.json:ro \
+mesop-backend:latest
+'''
