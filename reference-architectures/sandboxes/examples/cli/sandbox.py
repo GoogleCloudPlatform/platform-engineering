@@ -18,6 +18,7 @@ sandboxes reference architecture.
 
 import argparse
 from datetime import datetime, timedelta
+
 from google.cloud import firestore
 
 
@@ -79,7 +80,7 @@ def list_sandboxes():
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Simple cli tool to interact with the sanboxes " \
+        description="Simple cli tool to interact with the sanboxes "
         "reference architecture."
     )
     parser.add_argument("action", help="supported actions are: create, delete, list")
