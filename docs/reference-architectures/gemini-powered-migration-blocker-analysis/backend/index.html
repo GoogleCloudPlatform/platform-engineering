@@ -14,7 +14,7 @@
         <link rel="prev" href="../">
       
       
-        <link rel="next" href="plat-md/">
+        <link rel="next" href="prompt_template/">
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
@@ -1288,27 +1288,6 @@
   
   
     <li class="md-nav__item">
-      <a href="plat-md/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Plat md
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="prompt_template/" class="md-nav__link">
         
   
@@ -1616,7 +1595,8 @@
 <h2 id="intro">Intro<a class="headerlink" href="#intro" title="Permanent link">&para;</a></h2>
 <h2 id="running-locally-in-development">Running Locally in development<a class="headerlink" href="#running-locally-in-development" title="Permanent link">&para;</a></h2>
 <h3 id="env">.env<a class="headerlink" href="#env" title="Permanent link">&para;</a></h3>
-<p>Create a .env file in the root of the project with the following contents, maksing sure to replace the placeholder text:</p>
+<p>Create a .env file in the root of the project with the following contents,
+making sure to replace the placeholder text:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">GOOGLE_CLOUD_PROJECT</span><span class="o">=</span>your-gcp-project
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">GCS_BUCKET_NAME</span><span class="o">=</span>bucket-name-for-docs
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nv">GEMINI_MODEL_NAME</span><span class="o">=</span>gemini-2.0-flash
@@ -1633,19 +1613,26 @@
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>uv<span class="w"> </span>sync
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
 </span></code></pre></div>
-<p>We provide a requirements.txt file for those that require <code>pip</code> , we generate it automatically with :</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="w"> </span>uv<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--format<span class="w"> </span>requirements-txt<span class="w"> </span>--no-hashes<span class="w"> </span>&gt;<span class="w"> </span>requirements.txt
+<p>We provide a requirements.txt file for those that require <code>pip</code> , we generate it
+automatically with :</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>uv<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--format<span class="w"> </span>requirements-txt<span class="w"> </span>--no-hashes<span class="w"> </span>&gt;<span class="w"> </span>requirements.txt
 </span></code></pre></div>
 <p>Environment management via <code>pip</code> is left to the user</p>
-<p>Google Cloud API access is handled via <a href="https://cloud.google.com/docs/authentication/provide-credentials-adc">ADC</a> , so you can either use the gcloud CLI if running <a href="https://cloud.google.com/docs/authentication/set-up-adc-local-dev-environment">locally</a> :</p>
+<p>Google Cloud API access is handled via
+<a href="https://cloud.google.com/docs/authentication/provide-credentials-adc">ADC</a> , so
+you can either use the gcloud CLI if running
+<a href="https://cloud.google.com/docs/authentication/set-up-adc-local-dev-environment">locally</a>
+:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">GOOGLE_CLOUD_PROJECT</span><span class="o">=</span>&lt;your-gcp-project&gt;
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>gcloud<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>project<span class="w"> </span><span class="nv">$GOOGLE_CLOUD_PROJECT</span>
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>gcloud<span class="w"> </span>auth<span class="w"> </span>application-default<span class="w"> </span>login
 </span></code></pre></div>
-<p>or use a <a href="https://cloud.google.com/docs/authentication/set-up-adc-attached-service-account">service account</a> if your environemnt supports it.</p>
+<p>or use a
+<a href="https://cloud.google.com/docs/authentication/set-up-adc-attached-service-account">service account</a>
+if your environemnt supports it.</p>
 <p>Enable the required API's in Google Cloud :</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">GOOGLE_CLOUD_PROJECT</span><span class="o">=</span>&lt;your-gcp-project&gt;
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>gcloud<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>project<span class="w"> </span><span class="nv">$GOOGLE_CLOUD_PROJEC</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>gcloud<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>project<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">GOOGLE_CLOUD_PROJECT</span><span class="si">}</span><span class="s2">&quot;</span>
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>gcloud<span class="w"> </span>services<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>firestore.googleapis.com
 </span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>gcloud<span class="w"> </span>services<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>datastore.googleapis.com
 </span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>gcloud<span class="w"> </span>services<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>aiplatform.googleapis.com
@@ -1655,43 +1642,44 @@
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>fastapi<span class="w"> </span>dev<span class="w"> </span>main.py
 </span></code></pre></div>
 <p>The development server will also host OpenAPI docs for the service at :
-[http://127.0.0.1:8000/docs]</p>
-<p>Once running , you can either test from that page or test with curl as follows :</p>
+<a href="http://127.0.0.1:8000/docs">http://127.0.0.1:8000/docs</a></p>
+<p>Once running, you can either test from that page or test with curl as follows :</p>
 <p>Send a request to generate a new report using the sample documentation :</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;http://127.0.0.1:8000/reports&quot;</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">     </span>-H<span class="w"> </span><span class="s2">&quot;accept: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">     </span>-F<span class="w"> </span><span class="s2">&quot;github_repo_url=https://github.com/dockersamples/example-voting-app/&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">     </span>-F<span class="w"> </span><span class="s2">&quot;documentation_files=@plat-md.pdf&quot;</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">     </span>-F<span class="w"> </span><span class="s2">&quot;documentation_files=@reference-architectures/gemini-powered-migration-blocker-analysis/sample-platform/docs/platform-doc.pdf&quot;</span>
 </span></code></pre></div>
 <p>Make a note of the reports staut_endpoint in the output</p>
-<p>Once completed you can view the report with, make sure to replace status_endpoint placeholder :</p>
+<p>Once completed you can view the report with, make sure to replace
+status_endpoint placeholder :</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>curl<span class="w"> </span>http://127.0.0.1:8000&lt;status_endpoint&gt;
 </span></code></pre></div>
 <p>If you have it installed you can also pipe the output to <code>jq</code> for readability.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>curl<span class="w"> </span>http://127.0.0.1:8000&lt;status_endpoint&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq
 </span></code></pre></div>
 <h2 id="build-and-run-a-container">Build and run a container<a class="headerlink" href="#build-and-run-a-container" title="Permanent link">&para;</a></h2>
-<p>A sample Dockerfile is provided, modify to suit your needs
-You can build a container with :</p>
+<p>A sample Dockerfile is provided, modify to suit your needs You can build a
+container with :</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>mesop-backend:latest<span class="w"> </span>.
 </span></code></pre></div>
-<p>You need to pass ENVARS to the container when it runs, you can use the .env file mentioned above,
-you also need to inject your local gcloud ADC credentials into the container, this example uses a bind mount
-and runs the container with your local UID/GID so that the bind mount works correctly.</p>
+<p>You need to pass ENVARS to the container when it runs, you can use the .env file
+mentioned above, you also need to inject your local gcloud ADC credentials into
+the container, this example uses a bind mount and runs the container with your
+local UID/GID so that the bind mount works correctly.</p>
 <p>First create some local ENVARS, ADC should point at your local ADC file :</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nv">ADC</span><span class="o">=</span>~/.config/gcloud/application_default_credentials.json<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nv">USER_ID</span><span class="o">=</span><span class="k">$(</span>id<span class="w"> </span>-u<span class="k">)</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="nv">GROUP_ID</span><span class="o">=</span><span class="k">$(</span>id<span class="w"> </span>-g<span class="k">)</span><span class="w"> </span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="nv">GROUP_ID</span><span class="o">=</span><span class="k">$(</span>id<span class="w"> </span>-g<span class="k">)</span>
 </span></code></pre></div>
 <p>Then run the container with :</p>
-<p>'''bash
-docker run -p 8000:8000 \
+<p>'''bash docker run -p 8000:8000 \
 --user $USER_ID:$GROUP_ID \
 --env-file .env \
--e GOOGLE_APPLICATION_CREDENTIALS=/home/backend/application_default_credentials.json \
+-e GOOGLE_APPLICATION_CREDENTIALS=/home/backend/application_default_credentials.json
+\
 -v $ADC:/home/backend/application_default_credentials.json:ro \
-mesop-backend:latest
-'''</p>
+mesop-backend:latest '''</p>
 
 
 
