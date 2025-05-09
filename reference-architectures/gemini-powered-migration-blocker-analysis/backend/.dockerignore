@@ -1,6 +1,7 @@
 __pycache__
 .dockerignore
 .env
+.python-version
 .venv
 Dockerfile
 platform-doc.md
