@@ -57,6 +57,16 @@ resource "local_file" "shared_config_platform_auto_tfvars" {
   filename        = "${local.shared_config_folder}/platform.auto.tfvars"
 }
 
+resource "local_file" "shared_config_storage_auto_tfvars" {
+  content = provider::terraform::encode_tfvars(
+    {
+      reports_bucket_location = var.reports_bucket_location
+    }
+  )
+  file_permission = "0644"
+  filename        = "${local.shared_config_folder}/storage.auto.tfvars"
+}
+
 resource "local_file" "shared_config_terraform_auto_tfvars" {
   content = provider::terraform::encode_tfvars(
     {

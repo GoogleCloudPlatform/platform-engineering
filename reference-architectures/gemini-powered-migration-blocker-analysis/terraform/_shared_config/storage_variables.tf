@@ -12,23 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#
-# Configuration dependencies
-# - shared_config/platform_variables.tf
-#
-
 locals {
-  unique_identifier_prefix = "${var.resource_name_prefix}-${var.platform_name}"
+  reports_bucket_name = "${var.terraform_project_id}-${local.unique_identifier_prefix}-reports"
 }
 
-variable "platform_name" {
-  default     = "dev"
-  description = "Name of the environment"
+variable "reports_bucket_location" {
+  description = "The location of the Cloud Storage bucket where to store reports"
   type        = string
-}
 
-variable "resource_name_prefix" {
-  default     = "pe"
-  description = "The prefix to add before each resource's name"
-  type        = string
+  validation {
+    condition     = var.reports_bucket_location != ""
+    error_message = "'reports_bucket_location' was not set."
+  }
 }

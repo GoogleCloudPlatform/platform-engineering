@@ -1,3 +1,4 @@
+
 # Copyright 2025 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,23 +13,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#
-# Configuration dependencies
-# - shared_config/platform_variables.tf
-#
+terraform {
+  required_version = ">= 1.5.7"
 
-locals {
-  unique_identifier_prefix = "${var.resource_name_prefix}-${var.platform_name}"
-}
+  required_providers {
+    google = {
+      source  = "hashicorp/google"
+      version = "6.29.0"
+    }
+  }
 
-variable "platform_name" {
-  default     = "dev"
-  description = "Name of the environment"
-  type        = string
-}
-
-variable "resource_name_prefix" {
-  default     = "pe"
-  description = "The prefix to add before each resource's name"
-  type        = string
+  provider_meta "google" {
+    module_name = "cloud-solutions/pe_gem_mig_storage_deploy-v1"
+  }
 }

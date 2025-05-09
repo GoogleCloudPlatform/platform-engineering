@@ -1,3 +1,4 @@
+
 # Copyright 2025 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,23 +13,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#
-# Configuration dependencies
-# - shared_config/platform_variables.tf
-#
+resource "google_storage_bucket" "reports" {
+  force_destroy               = false
+  location                    = var.terraform_backend_bucket_location
+  name                        = local.reports_bucket_name
+  project                     = google_project_service.default_project_storage_googleapis_com.project
+  uniform_bucket_level_access = true
 
-locals {
-  unique_identifier_prefix = "${var.resource_name_prefix}-${var.platform_name}"
+  versioning {
+    enabled = true
+  }
 }
 
-variable "platform_name" {
-  default     = "dev"
-  description = "Name of the environment"
-  type        = string
-}
+data "google_storage_bucket" "reports" {
+  depends_on = [google_storage_bucket.reports]
 
-variable "resource_name_prefix" {
-  default     = "pe"
-  description = "The prefix to add before each resource's name"
-  type        = string
+  name    = local.reports_bucket_name
+  project = data.google_project.default.project_id
 }

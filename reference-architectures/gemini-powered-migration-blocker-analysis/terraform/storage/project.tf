@@ -12,23 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#
-# Configuration dependencies
-# - shared_config/platform_variables.tf
-#
-
-locals {
-  unique_identifier_prefix = "${var.resource_name_prefix}-${var.platform_name}"
+data "google_project" "default" {
+  project_id = var.default_project_id
 }
 
-variable "platform_name" {
-  default     = "dev"
-  description = "Name of the environment"
-  type        = string
-}
-
-variable "resource_name_prefix" {
-  default     = "pe"
-  description = "The prefix to add before each resource's name"
-  type        = string
+resource "google_project_service" "default_project_storage_googleapis_com" {
+  disable_dependent_services = false
+  disable_on_destroy         = false
+  project                    = data.google_project.default.project_id
+  service                    = "storage.googleapis.com"
 }

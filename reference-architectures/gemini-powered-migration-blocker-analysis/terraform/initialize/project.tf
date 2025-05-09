@@ -22,3 +22,24 @@ resource "google_project_service" "default_project_storage_googleapis_com" {
   project                    = data.google_project.default.project_id
   service                    = "storage.googleapis.com"
 }
+
+resource "google_project_service" "default_project_aiplatform_googleapis_com" {
+  disable_dependent_services = false
+  disable_on_destroy         = false
+  project                    = data.google_project.default.project_id
+  service                    = "aiplatform.googleapis.com"
+}
+
+resource "google_project_service" "default_project_datastore_googleapis_com" {
+  disable_dependent_services = false
+  disable_on_destroy         = false
+  project                    = data.google_project.default.project_id
+  service                    = "datastore.googleapis.com"
+}
+
+resource "google_project_service" "default_project_firestore_googleapis_com" {
+  disable_dependent_services = false
+  disable_on_destroy         = false
+  project                    = data.google_project.default.project_id
+  service                    = "firestore.googleapis.com"
+}
