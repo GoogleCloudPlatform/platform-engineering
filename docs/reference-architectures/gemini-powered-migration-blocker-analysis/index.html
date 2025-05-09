@@ -1644,16 +1644,6 @@ reference architecture has the following directories and files:</p>
 <a href="#provision-google-cloud-resources">Google Cloud resources</a> to store data, and
 to interact with Gemini.</p>
 <h3 id="provision-google-cloud-resources">Provision Google Cloud resources<a class="headerlink" href="#provision-google-cloud-resources" title="Permanent link">&para;</a></h3>
-<h3 id="deploy-on-google-cloud">Deploy on Google Cloud<a class="headerlink" href="#deploy-on-google-cloud" title="Permanent link">&para;</a></h3>
-<p>TODO</p>
-<h3 id="run-locally-with-docker-compose">Run locally with Docker Compose<a class="headerlink" href="#run-locally-with-docker-compose" title="Permanent link">&para;</a></h3>
-<p>Pre-requisites:</p>
-<ul>
-<li>A Linux shell. Tested with Bash version <code>5.2.37</code></li>
-<li>Docker. Tested with version <code>28.0.4</code></li>
-<li>Docker Compose. Tested with version <code>v2.34.0</code></li>
-</ul>
-<p>To run this application using Docker Compose, you do the following:</p>
 <ol>
 <li>
 <p>Open your shell.</p>
@@ -1672,8 +1662,53 @@ to interact with Gemini.</p>
 </span></code></pre></div>
 </li>
 <li>
+<p>Run the deployment script:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nv">TF_VAR_default_project_id</span><span class="o">=</span><span class="s2">&quot;&lt;default_project_id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">TF_VAR_terraform_project_id</span><span class="o">=</span><span class="s2">&quot;&lt;terraform_project_id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nv">TF_VAR_terraform_backend_bucket_location</span><span class="o">=</span><span class="s2">&quot;&lt;terraform_backend_bucket_location&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>./deploy.sh
+</span></code></pre></div>
+<p>Where:</p>
+<ul>
+<li><code>&lt;default_project_id&gt;</code> is the id of the project where to create resources
+  to deploy this reference architecture.</li>
+<li><code>&lt;terraform_project_id&gt;</code> is the id of the project where to create
+  resources to run Terraform.</li>
+<li><code>&lt;terraform_backend_bucket_location&gt;</code> is the location where to create the
+  Cloud Storage bucket to configure the Terraform backend.</li>
+</ul>
+<p>After running the deployment script to completion, Terraform persists these
+configuration variables in the <code>_shared_config</code> directory, so you don't need
+to set them on future invocations of the deployment script.</p>
+</li>
+</ol>
+<h3 id="deploy-on-google-cloud">Deploy on Google Cloud<a class="headerlink" href="#deploy-on-google-cloud" title="Permanent link">&para;</a></h3>
+<p>TODO</p>
+<h3 id="run-locally-with-docker-compose">Run locally with Docker Compose<a class="headerlink" href="#run-locally-with-docker-compose" title="Permanent link">&para;</a></h3>
+<p>Pre-requisites:</p>
+<ul>
+<li>A Linux shell. Tested with Bash version <code>5.2.37</code></li>
+<li>Docker. Tested with version <code>28.0.4</code></li>
+<li>Docker Compose. Tested with version <code>v2.34.0</code></li>
+</ul>
+<p>To run this application using Docker Compose, you do the following:</p>
+<ol>
+<li>
+<p>Open your shell.</p>
+</li>
+<li>
+<p>Change the working directory to the directory where you cloned this
+   repository.</p>
+</li>
+<li>
+<p>Change the working directory to
+   <code>reference-architectures/gemini-powered-migration-blocker-analysis</code>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">cd</span><span class="w"> </span>reference-architectures/gemini-powered-migration-blocker-analysis
+</span></code></pre></div>
+</li>
+<li>
 <p>Run the application using Docker Compose</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nv">UID</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>id<span class="w"> </span>-u<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="nv">GID</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>id<span class="w"> </span>-g<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>--build<span class="w"> </span>--renew-anon-volumes
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nv">UID</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>id<span class="w"> </span>-u<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="nv">GID</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>id<span class="w"> </span>-g<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>--build<span class="w"> </span>--renew-anon-volumes
 </span></code></pre></div>
 </li>
 </ol>
