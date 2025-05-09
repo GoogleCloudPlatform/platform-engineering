@@ -1,5 +1,6 @@
 # Terraform temp files
 **/.terraform/
+tfplan
 
 ### JS Proto ###
 **/.protojs_generated/

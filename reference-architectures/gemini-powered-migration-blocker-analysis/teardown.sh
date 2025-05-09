@@ -32,15 +32,15 @@ TERRAFORM_DIRECTORY_PATH="${SCRIPT_DIRECTORY_PATH}/terraform"
 start_timestamp=$(date +%s)
 
 # shellcheck disable=SC2154
-echo "Terraservices to destroy: ${terraservices[*]}"
+echo "Core platform terraservices to destroy: ${terraservices[*]}"
 
 # shellcheck disable=SC1091
 . "${SCRIPT_DIRECTORY_PATH}/load-shared-config.sh" "${TERRAFORM_DIRECTORY_PATH}/_shared_config"
 
 # Iterate over the terraservices array so we destroy them in reverse order
 # shellcheck disable=SC2154 # variable defined in common.sh
-for ((i = ${#federated_learning_terraservices[@]} - 1; i >= 0; i--)); do
-  terraservice=${federated_learning_terraservices[i]}
+for ((i = ${#terraservices[@]} - 1; i >= 0; i--)); do
+  terraservice=${terraservices[i]}
   echo "Destroying ${terraservice}"
   if [[ "${terraservice}" != "initialize" ]]; then
     terraform -chdir="${TERRAFORM_DIRECTORY_PATH}/${terraservice}" init
@@ -48,22 +48,22 @@ for ((i = ${#federated_learning_terraservices[@]} - 1; i >= 0; i--)); do
     rm -rf .terraform/
   # Destroy the backend only if we're destroying the initialize service
   else
-    rm -rf backend.tf
+    rm -rf "${TERRAFORM_DIRECTORY_PATH}/${terraservice}/backend.tf"
     terraform -chdir="${TERRAFORM_DIRECTORY_PATH}/${terraservice}" init -force-copy -lock=false -migrate-state
 
     # Quote the globbing expression because we don't want to expand it with the
     # shell
     gcloud storage rm -r "gs://${terraform_bucket_name}/*"
-    terraform destroy -auto-approve
+    terraform -chdir="${TERRAFORM_DIRECTORY_PATH}/${terraservice}" destroy -auto-approve
 
     rm -rf \
       "${TERRAFORM_DIRECTORY_PATH}/_shared_config/.terraform/" \
       "${TERRAFORM_DIRECTORY_PATH}/_shared_config"/terraform.tfstate* \
-      "${TERRAFORM_DIRECTORY_PATH}/${terraservice}/.terraform/" \
-      "${TERRAFORM_DIRECTORY_PATH}/${terraservice}"/terraform.tfstate*
+      "${TERRAFORM_DIRECTORY_PATH}/initialize/.terraform/" \
+      "${TERRAFORM_DIRECTORY_PATH}/initialize"/terraform.tfstate*
 
     git restore \
-      "${ACP_PLATFORM_BASE_DIR}/_shared_config"/*.auto.tfvars
+      "${TERRAFORM_DIRECTORY_PATH}/_shared_config"/*.auto.tfvars
   fi
 done
 
