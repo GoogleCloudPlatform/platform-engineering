@@ -23,4 +23,5 @@ set -o pipefail
 declare -a terraservices
 # shellcheck disable=SC2034
 terraservices=(
+  initialize
 )

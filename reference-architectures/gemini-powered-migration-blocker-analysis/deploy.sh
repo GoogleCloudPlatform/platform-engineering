@@ -27,18 +27,14 @@ echo "This script directory path is: ${SCRIPT_DIRECTORY_PATH}"
 # shellcheck disable=SC1091
 . "${SCRIPT_DIRECTORY_PATH}/common.sh"
 
+TERRAFORM_DIRECTORY_PATH="${SCRIPT_DIRECTORY_PATH}/terraform"
+
 start_timestamp=$(date +%s)
 
 # shellcheck disable=SC2154
 echo "Terraservices to provision: ${terraservices[*]}"
 
-TERRAFORM_DIRECTORY_PATH="${SCRIPT_DIRECTORY_PATH}/terraform"
-
-terraform -chdir="${TERRAFORM_DIRECTORY_PATH}/initialize" init -force-copy -migrate-state
-terraform -chdir="${TERRAFORM_DIRECTORY_PATH}/initialize" plan -input=false -out=tfplan
-terraform -chdir="${TERRAFORM_DIRECTORY_PATH}/initialize" apply -input=false tfplan
-
-# Run init again in case we migrated the state
+# Run initialize first because this might be the first time we run the provisioning script
 terraform -chdir="${TERRAFORM_DIRECTORY_PATH}/initialize" init -force-copy -migrate-state
 terraform -chdir="${TERRAFORM_DIRECTORY_PATH}/initialize" plan -input=false -out=tfplan
 terraform -chdir="${TERRAFORM_DIRECTORY_PATH}/initialize" apply -input=false tfplan
@@ -53,7 +49,8 @@ if gcloud storage ls "gs://${terraform_bucket_name}/terraform/initialize/default
 fi
 
 for terraservice in "${terraservices[@]}"; do
-  terraform -chdir="${TERRAFORM_DIRECTORY_PATH}/${terraservice}" init
+  echo "Provisioning ${terraservice}"
+  terraform -chdir="${TERRAFORM_DIRECTORY_PATH}/${terraservice}" init -force-copy -migrate-state
   terraform -chdir="${TERRAFORM_DIRECTORY_PATH}/${terraservice}" plan -input=false -out=tfplan
   terraform -chdir="${TERRAFORM_DIRECTORY_PATH}/${terraservice}" apply -input=false tfplan
   rm -rf "${TERRAFORM_DIRECTORY_PATH}/${terraservice}/tfplan"
