@@ -138,8 +138,28 @@ To run this application using Docker Compose, you do the following:
     UID="$(id -u)" GID="$(id -g)" docker compose up --build --renew-anon-volumes
     ```
 
+## Configure the Federated learning reference architecture
+
+You can configure the reference architecture by modifying files in the following
+directories:
+
+- `reference-architectures/gemini-powered-migration-blocker-analysis/terraform/_shared_config`
+
+## Destroy the reference architecture
+
+To destroy an instance of the reference architecture, you do the following:
+
+1. Open your shell.
+
+2. Change the working directory to the directory where you cloned this
+   repository.
+
+3. Run the script to destroy the reference architecture:
+
+    ```sh
+    "reference-architectures/gemini-powered-migration-blocker-analysis/teardown.sh"
+    ```
+
 ## Troubleshooting
 
 This section describes common issues and troubleshooting steps.
-
-TODO
