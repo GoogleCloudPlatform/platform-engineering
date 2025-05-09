@@ -32,7 +32,7 @@ TERRAFORM_DIRECTORY_PATH="${SCRIPT_DIRECTORY_PATH}/terraform"
 start_timestamp=$(date +%s)
 
 # shellcheck disable=SC2154
-echo "Core platform terraservices to destroy: ${terraservices[*]}"
+echo "Terraservices to destroy: ${terraservices[*]}"
 
 # shellcheck disable=SC1091
 . "${SCRIPT_DIRECTORY_PATH}/load-shared-config.sh" "${TERRAFORM_DIRECTORY_PATH}/_shared_config"
@@ -57,10 +57,10 @@ for ((i = ${#federated_learning_terraservices[@]} - 1; i >= 0; i--)); do
     terraform destroy -auto-approve
 
     rm -rf \
-      "${ACP_PLATFORM_BASE_DIR}/_shared_config/.terraform/" \
-      "${ACP_PLATFORM_BASE_DIR}/_shared_config"/terraform.tfstate* \
-      "${ACP_PLATFORM_CORE_DIR}/initialize/.terraform/" \
-      "${ACP_PLATFORM_CORE_DIR}/initialize"/terraform.tfstate*
+      "${TERRAFORM_DIRECTORY_PATH}/_shared_config/.terraform/" \
+      "${TERRAFORM_DIRECTORY_PATH}/_shared_config"/terraform.tfstate* \
+      "${TERRAFORM_DIRECTORY_PATH}/${terraservice}/.terraform/" \
+      "${TERRAFORM_DIRECTORY_PATH}/${terraservice}"/terraform.tfstate*
 
     git restore \
       "${ACP_PLATFORM_BASE_DIR}/_shared_config"/*.auto.tfvars
