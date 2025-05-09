@@ -1,6 +1,7 @@
 # Terraform temp files
 **/.terraform/
 tfplan
+*.tfstate*
 
 ### JS Proto ###
 **/.protojs_generated/
