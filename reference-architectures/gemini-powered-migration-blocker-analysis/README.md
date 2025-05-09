@@ -70,6 +70,42 @@ to interact with Gemini.
 
 ### Provision Google Cloud resources
 
+1. Open your shell.
+
+2. Clone this repository.
+
+3. Change the working directory to the directory where you cloned this
+   repository.
+
+4. Change the working directory to
+   `reference-architectures/gemini-powered-migration-blocker-analysis`:
+
+    ```bash
+    cd reference-architectures/gemini-powered-migration-blocker-analysis
+    ```
+
+5. Run the deployment script:
+
+    ```bash
+    TF_VAR_default_project_id="<default_project_id>" \
+    TF_VAR_terraform_project_id="<terraform_project_id>" \
+    TF_VAR_terraform_backend_bucket_location="<terraform_backend_bucket_location>" \
+    ./deploy.sh
+    ```
+
+    Where:
+
+    - `<default_project_id>` is the id of the project where to create resources
+      to deploy this reference architecture.
+    - `<terraform_project_id>` is the id of the project where to create
+      resources to run Terraform.
+    - `<terraform_backend_bucket_location>` is the location where to create the
+      Cloud Storage bucket to configure the Terraform backend.
+
+    After running the deployment script to completion, Terraform persists these
+    configuration variables in the `_shared_config` directory, so you don't need
+    to set them on future invocations of the deployment script.
+
 ### Deploy on Google Cloud
 
 TODO
@@ -86,19 +122,17 @@ To run this application using Docker Compose, you do the following:
 
 1. Open your shell.
 
-2. Clone this repository.
-
-3. Change the working directory to the directory where you cloned this
+2. Change the working directory to the directory where you cloned this
    repository.
 
-4. Change the working directory to
+3. Change the working directory to
    `reference-architectures/gemini-powered-migration-blocker-analysis`:
 
     ```bash
     cd reference-architectures/gemini-powered-migration-blocker-analysis
     ```
 
-5. Run the application using Docker Compose
+4. Run the application using Docker Compose
 
     ```bash
     UID="$(id -u)" GID="$(id -g)" docker compose up --build --renew-anon-volumes

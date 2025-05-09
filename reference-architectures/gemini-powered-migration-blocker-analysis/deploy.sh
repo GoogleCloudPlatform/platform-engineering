@@ -25,7 +25,7 @@ echo "This script (${SCRIPT_BASENAME}) has been invoked with: $0 $*"
 echo "This script directory path is: ${SCRIPT_DIRECTORY_PATH}"
 
 # shellcheck disable=SC1091
-source "${SCRIPT_DIRECTORY_PATH}/common.sh"
+. "${SCRIPT_DIRECTORY_PATH}/common.sh"
 
 start_timestamp=$(date +%s)
 
@@ -34,22 +34,28 @@ echo "Terraservices to provision: ${terraservices[*]}"
 
 TERRAFORM_DIRECTORY_PATH="${SCRIPT_DIRECTORY_PATH}/terraform"
 
-terraform -chdir="${TERRAFORM_DIRECTORY_PATH}/initialize" init -force-copy -migrate-state &&
-  terraform -chdir="${TERRAFORM_DIRECTORY_PATH}/initialize" plan -input=false -out=tfplan &&
-  terraform -chdir="${TERRAFORM_DIRECTORY_PATH}/initialize" apply -input=false tfplan
+terraform -chdir="${TERRAFORM_DIRECTORY_PATH}/initialize" init -force-copy -migrate-state
+terraform -chdir="${TERRAFORM_DIRECTORY_PATH}/initialize" plan -input=false -out=tfplan
+terraform -chdir="${TERRAFORM_DIRECTORY_PATH}/initialize" apply -input=false tfplan
 
 # Run init again in case we migrated the state
-terraform -chdir="${TERRAFORM_DIRECTORY_PATH}/initialize" init -force-copy -migrate-state &&
-  terraform -chdir="${TERRAFORM_DIRECTORY_PATH}/initialize" plan -input=false -out=tfplan &&
-  terraform -chdir="${TERRAFORM_DIRECTORY_PATH}/initialize" apply -input=false tfplan
+terraform -chdir="${TERRAFORM_DIRECTORY_PATH}/initialize" init -force-copy -migrate-state
+terraform -chdir="${TERRAFORM_DIRECTORY_PATH}/initialize" plan -input=false -out=tfplan
+terraform -chdir="${TERRAFORM_DIRECTORY_PATH}/initialize" apply -input=false tfplan
 
-rm -rf "${TERRAFORM_DIRECTORY_PATH}/initialize/terraform.tfstate"*
-rm -rf "${TERRAFORM_DIRECTORY_PATH}/initialize/tfplan"
+# shellcheck disable=SC1091
+. "${SCRIPT_DIRECTORY_PATH}/load-shared-config.sh" "${TERRAFORM_DIRECTORY_PATH}/_shared_config"
+
+# Ensure that the Terraform state was migrated before deleting the local state
+# shellcheck disable=SC2154
+if gcloud storage ls "gs://${terraform_bucket_name}/terraform/initialize/default.tfstate" &>/dev/null; then
+  rm -rf "${TERRAFORM_DIRECTORY_PATH}/initialize/terraform.tfstate"*
+fi
 
 for terraservice in "${terraservices[@]}"; do
-  terraform -chdir="${TERRAFORM_DIRECTORY_PATH}/${terraservice}" init &&
-    terraform -chdir="${TERRAFORM_DIRECTORY_PATH}/${terraservice}" plan -input=false -out=tfplan &&
-    terraform -chdir="${TERRAFORM_DIRECTORY_PATH}/${terraservice}" apply -input=false tfplan || exit 1
+  terraform -chdir="${TERRAFORM_DIRECTORY_PATH}/${terraservice}" init
+  terraform -chdir="${TERRAFORM_DIRECTORY_PATH}/${terraservice}" plan -input=false -out=tfplan
+  terraform -chdir="${TERRAFORM_DIRECTORY_PATH}/${terraservice}" apply -input=false tfplan
   rm -rf "${TERRAFORM_DIRECTORY_PATH}/${terraservice}/tfplan"
 done
 

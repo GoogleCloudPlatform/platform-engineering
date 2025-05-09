@@ -18,7 +18,7 @@ locals {
   backend_template = "${path.module}/templates/terraform/backend.tf.tftpl"
 
   core_backend_directories = toset([for _, version_file in local.core_versions_files : trimprefix(trimsuffix(version_file, "/versions.tf"), "../")])
-  core_versions_files      = flatten([for _, file in flatten(fileset(local.base_directory, "core/**/versions.tf")) : file])
+  core_versions_files      = flatten([for _, file in flatten(fileset(local.base_directory, "**/versions.tf")) : file])
 
   shared_config_folder = "${path.module}/../_shared_config"
 }
