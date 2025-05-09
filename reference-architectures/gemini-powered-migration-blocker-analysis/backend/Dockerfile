@@ -38,9 +38,7 @@ RUN groupadd -g "${GID}" backend && useradd --no-log-init -u "${UID}" -s /bin/ba
 RUN mkdir -p /home/backend
 RUN chown backend:backend /home/backend
 
-
 USER backend
-
 
 COPY --chown=backend:backend . /srv/mesop-backend
 
@@ -49,4 +47,4 @@ EXPOSE 8000
 CMD ["fastapi", "run", "main.py", "--port", "8000"]
 
 HEALTHCHECK --interval=20s --timeout=3s \
-  CMD curl -f http://localhost:8000/ || exit 1
+  CMD curl -f http://localhost:8000/health || exit 1
