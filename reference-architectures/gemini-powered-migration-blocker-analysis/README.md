@@ -89,7 +89,7 @@ to interact with Gemini.
     ```bash
     TF_VAR_default_project_id="<default_project_id>" \
     TF_VAR_terraform_project_id="<terraform_project_id>" \
-    TF_VAR_terraform_backend_bucket_location="<terraform_backend_bucket_location>" \
+    TF_VAR_terraform_backend_bucket_location="<terraform_bucket_location>" \
     ./deploy.sh
     ```
 
@@ -99,8 +99,8 @@ to interact with Gemini.
       to deploy this reference architecture.
     - `<terraform_project_id>` is the id of the project where to create
       resources to run Terraform.
-    - `<terraform_backend_bucket_location>` is the location where to create the
-      Cloud Storage bucket to configure the Terraform backend.
+    - `<terraform_bucket_location>` is the location where to create the Cloud
+      Storage bucket to configure the Terraform backend.
 
     After running the deployment script to completion, Terraform persists these
     configuration variables in the `_shared_config` directory, so you don't need
