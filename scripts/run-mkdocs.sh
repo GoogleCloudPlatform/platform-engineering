@@ -111,6 +111,8 @@ for CURRENT_PROJECT_DIR in "${PROJECTS_DIR}"/*/; do
     INCLUDED_FILES_ARGS=(-name "*.md" -o -name "*.png" -o -name "*.jpg" -o -name "*.svg")
     EXCLUDED_FILES_ARGS=(-iname "CHANGELOG*" -o -iname "LICENSE*" -o -iname "CONTRIBUTING*" -o -iname "TODO*")
     EXCLUDED_DIRS_ARGS=(-path "*/node_modules/*" -o -path "*/build/*" -o -path "*/venv/*")
+    # Exclude example development platform documentation
+    EXCLUDED_DIRS_ARGS+=(-o -path "*/sample-platform/*")
     find "${CURRENT_PROJECT_DIR}" \
       \( "${INCLUDED_FILES_ARGS[@]}" \) \
       -a -not \( "${EXCLUDED_FILES_ARGS[@]}" \) \
