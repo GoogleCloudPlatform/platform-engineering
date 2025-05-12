@@ -44,8 +44,8 @@ the structure of the repository so you can better navigate the code.
 
 The examples directory contains a sample Terraform deployment for deploying the
 refrence architecture and command-line tool to exercise the golden path. The
-examples are intended to provide you a starting point so you can incorporate
-the reference architecure into your infrastructure.
+examples are intended to provide you a starting point so you can incorporate the
+reference architecure into your infrastructure.
 
 #### GCP Sandboxes
 
