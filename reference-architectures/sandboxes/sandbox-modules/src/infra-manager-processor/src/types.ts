@@ -46,7 +46,7 @@ export interface DeleteRequest {
   data: {
     infraManagerDeploymentId: string;
     region: string;
-  }
+  };
 }
 
 export interface DeploymentResponse {
@@ -57,10 +57,10 @@ export interface DeploymentResponse {
 export interface DeploymentRequest {
   documentId: string;
   data: {
-    name: string;           // Deployment name
-    region: string;         // Deployment region
-    type: TemplateType;     // Type of infrastructure (e.g., 'basic-vm', 'gke-basic')
-  }
+    name: string; // Deployment name
+    region: string; // Deployment region
+    type: TemplateType; // Type of infrastructure (e.g., 'basic-vm', 'gke-basic')
+  };
 }
 
 export interface OperationResponse {

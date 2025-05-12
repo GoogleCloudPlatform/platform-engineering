@@ -15,11 +15,11 @@
  */
 
 // Quick test script
-import { Firestore } from '@google-cloud/firestore';
-import { Storage } from '@google-cloud/storage';
-import { GoogleAuth } from 'google-auth-library';
-import { config } from './config';
-import { TemplateType } from './types';
+import {Firestore} from '@google-cloud/firestore';
+import {Storage} from '@google-cloud/storage';
+import {GoogleAuth} from 'google-auth-library';
+import {config} from './config';
+import {TemplateType} from './types';
 
 /*
 async function test() {
@@ -63,7 +63,7 @@ async function testInfraManagerDeploy() {
 
   try {
     const auth = new GoogleAuth({
-      scopes: ['https://www.googleapis.com/auth/cloud-platform']
+      scopes: ['https://www.googleapis.com/auth/cloud-platform'],
     });
     const client = await auth.getClient();
 
@@ -84,10 +84,10 @@ async function testInfraManagerDeploy() {
     console.log(`- Terraform Version: ${config.terraform.version}`);
 
     // Prepare input values for Terraform
-    const inputValues: Record<string, { inputValue: string }> = {
-      project_id: { inputValue: config.project.id },
-      region: { inputValue: config.project.region },
-      zone: { inputValue: config.project.zone }
+    const inputValues: Record<string, {inputValue: string}> = {
+      project_id: {inputValue: config.project.id},
+      region: {inputValue: config.project.region},
+      zone: {inputValue: config.project.zone},
     };
 
     // Prepare the deployment request following Infrastructure Manager API spec
@@ -98,7 +98,7 @@ async function testInfraManagerDeploy() {
       name: deploymentName,
       terraformBlueprint: {
         gcsSource: gcsPath,
-        inputValues: inputValues
+        inputValues: inputValues,
       },
       serviceAccount: serviceAccount,
       tfVersionConstraint: config.terraform.version,
@@ -107,12 +107,12 @@ async function testInfraManagerDeploy() {
       // Add labels and annotations as recommended in the docs
       labels: {
         environment: 'test',
-        created_by: 'infrastructure-manager-test'
+        created_by: 'infrastructure-manager-test',
       },
       annotations: {
         description: 'Test deployment from Infrastructure Manager API',
-        template_type: templateType
-      }
+        template_type: templateType,
+      },
     };
 
     // Make the API request to Infrastructure Manager
@@ -127,13 +127,13 @@ async function testInfraManagerDeploy() {
       data: payload,
       headers: {
         'Content-Type': 'application/json',
-        'X-Goog-User-Project': config.project.id
-      }
+        'X-Goog-User-Project': config.project.id,
+      },
     });
 
     console.log('\n✅ Deployment request accepted:', {
       status: response.status,
-      operation: response.data.name
+      operation: response.data.name,
     });
 
     // Poll for initial operation status
@@ -142,29 +142,35 @@ async function testInfraManagerDeploy() {
       url: `https://config.googleapis.com/v1/${response.data.name}`,
       method: 'GET',
       headers: {
-        'X-Goog-User-Project': config.project.id
-      }
+        'X-Goog-User-Project': config.project.id,
+      },
     });
 
     console.log('📊 Operation status:', {
       name: operationResponse.data.name,
       done: operationResponse.data.done,
-      error: operationResponse.data.error || 'none'
+      error: operationResponse.data.error || 'none',
     });
 
     // Print deployment URL
     console.log('\n🔍 View deployment in Console:');
-    console.log(`https://console.cloud.google.com/config-management/deployments/detail/${config.project.region}/${deploymentId}?project=${config.project.id}`);
+    console.log(
+      `https://console.cloud.google.com/config-management/deployments/detail/${config.project.region}/${deploymentId}?project=${config.project.id}`
+    );
 
     // Print helpful next steps
     console.log('\n📋 Next steps:');
     console.log('1. View the deployment in the Console using the URL above');
     console.log('2. Monitor the deployment progress');
     console.log('3. Check quota usage if any warnings appear');
-    console.log(`4. View deployed resources once complete in project: ${config.project.id}`);
-
+    console.log(
+      `4. View deployed resources once complete in project: ${config.project.id}`
+    );
   } catch (error) {
-    console.error('\n❌ Deployment failed:', error instanceof Error ? error.message : 'Unknown error');
+    console.error(
+      '\n❌ Deployment failed:',
+      error instanceof Error ? error.message : 'Unknown error'
+    );
     if (error instanceof Error && error.stack) {
       console.error('Stack trace:', error.stack);
     }

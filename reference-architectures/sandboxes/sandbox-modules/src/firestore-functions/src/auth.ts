@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { GoogleAuth } from 'google-auth-library';
+import {GoogleAuth} from 'google-auth-library';
 
 const auth = new GoogleAuth();
 

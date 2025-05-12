@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Config } from './types';
+import {Config} from './types';
 
 // Validate required environment variables
 const requiredEnvVars = ['PROJECT_ID', 'REGION', 'ZONE'] as const;
@@ -33,7 +33,7 @@ export const config: Config = {
   project: {
     id: PROJECT_ID,
     region: REGION,
-    zone: ZONE
+    zone: ZONE,
   },
   storage: {
     get terraformBucketName() {
@@ -42,21 +42,21 @@ export const config: Config = {
     get terraformStateBucketName() {
       return process.env.TERRAFORM_STATE_BUCKET || `${config.project.id}-state`;
     },
-    catalogPath: process.env.TERRAFORM_CATALOG_PATH || 'templates'
+    catalogPath: process.env.TERRAFORM_CATALOG_PATH || 'templates',
   },
   serviceAccount: {
     name: process.env.SERVICE_ACCOUNT_NAME || 'inframgr-sa',
     get email() {
       return `${this.name}@${config.project.id}.iam.gserviceaccount.com`;
-    }
+    },
   },
   terraform: {
     version: '1.5.7',
-    files: ['main.tf', 'variables.tf', 'outputs.tf']
+    files: ['main.tf', 'variables.tf', 'outputs.tf'],
   },
   service: {
     port: process.env.PORT || 8080,
-    url: process.env.SERVICE_URL || 'http://localhost:8080'
+    url: process.env.SERVICE_URL || 'http://localhost:8080',
   },
-  templates: {} // Will be populated dynamically
+  templates: {}, // Will be populated dynamically
 };

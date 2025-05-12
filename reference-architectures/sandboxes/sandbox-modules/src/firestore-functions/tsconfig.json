@@ -10,7 +10,5 @@
     "rootDir": "src"
   },
   "compileOnSave": true,
-  "include": [
-    "src"
-  ]
+  "include": ["src"]
 }

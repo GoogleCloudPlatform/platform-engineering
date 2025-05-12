@@ -1,9 +1,7 @@
 {
   "functions": {
     "source": ".",
-    "predeploy": [
-      "npm run build"
-    ]
+    "predeploy": ["npm run build"]
   },
   "firestore": {
     "rules": "firestore.rules",

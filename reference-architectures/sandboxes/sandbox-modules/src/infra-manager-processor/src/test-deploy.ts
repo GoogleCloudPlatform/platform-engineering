@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { GoogleAuth } from 'google-auth-library';
-import { config } from './config';
+import {GoogleAuth} from 'google-auth-library';
+import {config} from './config';
 
 async function testDeployCall() {
   try {
@@ -31,7 +31,7 @@ async function testDeployCall() {
 
     // Get authenticated client
     const auth = new GoogleAuth({
-      scopes: ['https://www.googleapis.com/auth/cloud-platform']
+      scopes: ['https://www.googleapis.com/auth/cloud-platform'],
     });
     const client = await auth.getClient();
 
@@ -40,25 +40,28 @@ async function testDeployCall() {
       terraform_blueprint: {
         gcs_source: gcsPath,
         input_values: {
-          "project_id": {
-            "input_value": projectId
+          project_id: {
+            input_value: projectId,
           },
-          "region": {
-            "input_value": region
+          region: {
+            input_value: region,
           },
-          "zone": {
-            "input_value": `${region}-a`
-          }
-        }
+          zone: {
+            input_value: `${region}-a`,
+          },
+        },
       },
       service_account: serviceAccount,
       labels: {
         environment: 'development',
-        created_by: 'test'
-      }
+        created_by: 'test',
+      },
     };
 
-    console.log('🚀 Making deployment request with payload:', JSON.stringify(payload, null, 2));
+    console.log(
+      '🚀 Making deployment request with payload:',
+      JSON.stringify(payload, null, 2)
+    );
 
     // Make the API request
     const apiUrl = `https://config.googleapis.com/v1/projects/${projectId}/locations/${region}/deployments?deploymentId=${deploymentId}`;
@@ -68,8 +71,8 @@ async function testDeployCall() {
       data: payload,
       headers: {
         'Content-Type': 'application/json',
-        'X-Goog-User-Project': projectId
-      }
+        'X-Goog-User-Project': projectId,
+      },
     });
 
     console.log('✅ Response:', JSON.stringify(response.data, null, 2));
