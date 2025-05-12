@@ -90,6 +90,7 @@ to interact with Gemini.
     TF_VAR_default_project_id="<default_project_id>" \
     TF_VAR_terraform_project_id="<terraform_project_id>" \
     TF_VAR_terraform_backend_bucket_location="<terraform_bucket_location>" \
+    TF_VAR_reports_bucket_location="<reports_bucket_location>" \
     ./deploy.sh
     ```
 
@@ -101,6 +102,8 @@ to interact with Gemini.
       resources to run Terraform.
     - `<terraform_bucket_location>` is the location where to create the Cloud
       Storage bucket to configure the Terraform backend.
+    - `<reports_bucket_location>` is the location where to create the Cloud
+      Storage bucket to store generated reports.
 
     After running the deployment script to completion, Terraform persists these
     configuration variables in the `_shared_config` directory, so you don't need
