@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-// Quick test script
-import {Firestore} from '@google-cloud/firestore';
-import {Storage} from '@google-cloud/storage';
+/* eslint-disable n/no-missing-import */
+
 import {GoogleAuth} from 'google-auth-library';
 import {config} from './config';
 import {TemplateType} from './types';
@@ -47,8 +46,8 @@ test();
 interface OperationResponse {
   name: string;
   done: boolean;
-  error?: any;
-  response?: any;
+  error?: any /* eslint-disable-line @typescript-eslint/no-explicit-any */;
+  response?: any /* eslint-disable-line @typescript-eslint/no-explicit-any */;
 }
 
 interface DeploymentResponse {

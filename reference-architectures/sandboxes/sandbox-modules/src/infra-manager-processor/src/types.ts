@@ -66,8 +66,8 @@ export interface DeploymentRequest {
 export interface OperationResponse {
   name: string;
   done: boolean;
-  error?: any;
-  response?: any;
+  error?: any /* eslint-disable-line @typescript-eslint/no-explicit-any */;
+  response?: any /* eslint-disable-line @typescript-eslint/no-explicit-any */;
 }
 
 export interface Template {

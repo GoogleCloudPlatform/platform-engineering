@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
+/* eslint-disable n/no-missing-import */
+
 import {GoogleAuth} from 'google-auth-library';
 import {Firestore} from '@google-cloud/firestore';
 import {config} from './config';
 import {DeploymentResponse, OperationResponse, TemplateType} from './types';
 
 const firestore = new Firestore();
-const auth = new GoogleAuth({
-  scopes: ['https://www.googleapis.com/auth/cloud-platform'],
-});
 
 // Real function to deploy infrastructure using Infrastructure Manager API
 export async function deployInfrastructure(
@@ -64,7 +63,6 @@ export async function deployInfrastructure(
     const bucketName = config.storage.terraformBucketName;
     const catalogPath = config.storage.catalogPath;
     const gcsPath = `gs://${bucketName}/${catalogPath}/${templateType}`;
-    const gcsStatePath = `gs://${config.storage.terraformStateBucketName}`;
     // Construct the full service account resource name
     const serviceAccount = `projects/${config.project.id}/serviceAccounts/${config.serviceAccount.email}`;
 

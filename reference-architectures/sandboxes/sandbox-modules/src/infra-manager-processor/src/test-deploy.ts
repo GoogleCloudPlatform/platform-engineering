@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+/* eslint-disable n/no-missing-import */
+
 import {GoogleAuth} from 'google-auth-library';
 import {config} from './config';
 
@@ -25,7 +27,6 @@ async function testDeployCall() {
     const deploymentId = `test-${Date.now()}-${Math.random().toString(36).substring(2, 10)}`;
     const bucketName = config.storage.terraformBucketName;
     const gcsPath = `gs://${bucketName}/${config.storage.catalogPath}/${config.templates['basic-vm'].path}`;
-    const serviceAccountName = config.serviceAccount.name;
     const serviceAccountEmail = config.serviceAccount.email;
     const serviceAccount = `projects/${projectId}/serviceAccounts/${serviceAccountEmail}`;
 

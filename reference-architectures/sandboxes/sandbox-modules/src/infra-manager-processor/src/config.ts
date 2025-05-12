@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+/* eslint-disable n/no-missing-import */
+
 import {Config} from './types';
 
 // Validate required environment variables

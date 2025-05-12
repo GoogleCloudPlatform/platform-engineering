@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+/* eslint-disable n/no-missing-import */
+
 import express from 'express';
 import {Firestore} from '@google-cloud/firestore';
 import {Storage} from '@google-cloud/storage';
@@ -26,20 +28,17 @@ import {pollDeletionStatus} from './deleteSandbox';
 const app = express();
 const firestore = new Firestore();
 const storage = new Storage();
-const auth = new GoogleAuth({
-  scopes: ['https://www.googleapis.com/auth/cloud-platform'],
-});
 const port = process.env.PORT || 8080;
 
 // Track whether templates have been loaded
 let templatesLoaded = false;
-let templateLoadError: Error | null = null;
 
 // Load templates before starting server
 async function initializeTemplates() {
   try {
     const bucketName = config.storage.terraformBucketName;
-    const templates: Record<string, any> = {};
+    const templates: Record<string, any> =
+      {}; /* eslint-disable-line @typescript-eslint/no-explicit-any */
 
     // List all template directories in both deployments and projects
     const [deploymentFiles] = await storage.bucket(bucketName).getFiles({
@@ -57,8 +56,11 @@ async function initializeTemplates() {
           description: metadata.description,
           requiredVariables:
             metadata.variables
-              ?.filter((v: any) => v.required)
-              .map((v: any) => v.name) || [],
+              ?.filter(
+                (v: any) => v.required
+              ) /* eslint-disable-line @typescript-eslint/no-explicit-any */
+              .map((v: any) => v.name) ||
+            [] /* eslint-disable-line @typescript-eslint/no-explicit-any */,
         };
       }
     }

@@ -14,15 +14,11 @@
  * limitations under the License.
  */
 
+/* eslint-disable n/no-missing-import */
+
 import {GoogleAuth} from 'google-auth-library';
-import {Firestore} from '@google-cloud/firestore';
 import {config} from './config';
 import {OperationResponse} from './types';
-
-const firestore = new Firestore();
-const auth = new GoogleAuth({
-  scopes: ['https://www.googleapis.com/auth/cloud-platform'],
-});
 
 export async function pollDeletionStatus(
   operationName: string,
