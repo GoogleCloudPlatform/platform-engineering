@@ -37,14 +37,15 @@ let templatesLoaded = false;
 async function initializeTemplates() {
   try {
     const bucketName = config.storage.terraformBucketName;
-    const templates: Record<string, any> =
-      {}; /* eslint-disable-line @typescript-eslint/no-explicit-any */
+    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+    const templates: Record<string, any> = {};
 
     // List all template directories in both deployments and projects
     const [deploymentFiles] = await storage.bucket(bucketName).getFiles({
       prefix: 'catalog/',
     });
 
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     // Process deployment templates
     for (const file of deploymentFiles) {
       if (file.name.endsWith('metadata.json')) {
@@ -56,14 +57,12 @@ async function initializeTemplates() {
           description: metadata.description,
           requiredVariables:
             metadata.variables
-              ?.filter(
-                (v: any) => v.required
-              ) /* eslint-disable-line @typescript-eslint/no-explicit-any */
-              .map((v: any) => v.name) ||
-            [] /* eslint-disable-line @typescript-eslint/no-explicit-any */,
+              ?.filter((v: any) => v.required)
+              .map((v: any) => v.name) || [],
         };
       }
     }
+    /* eslint-enable @typescript-eslint/no-explicit-any */
 
     // Update config templates
     Object.assign(config.templates, templates);
