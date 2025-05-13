@@ -1566,13 +1566,13 @@ local UID/GID so that the bind mount works correctly.</p>
 </span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="nv">GROUP_ID</span><span class="o">=</span><span class="k">$(</span>id<span class="w"> </span>-g<span class="k">)</span>
 </span></code></pre></div>
 <p>Then run the container with :</p>
-<p><code>bash docker run -p 8000:8000 \
---user $USER_ID:$GROUP_ID \
---env-file .env \
--e GOOGLE_APPLICATION_CREDENTIALS=/home/backend/application_default_credentials.json
-\
--v $ADC:/home/backend/application_default_credentials.json:ro \
-mesop-backend:latest</code></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>docker<span class="w"> </span>run<span class="w"> </span>-p<span class="w"> </span><span class="m">8000</span>:8000<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>--user<span class="w"> </span><span class="nv">$USER_ID</span>:<span class="nv">$GROUP_ID</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>--env-file<span class="w"> </span>.env<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>-e<span class="w"> </span><span class="nv">GOOGLE_APPLICATION_CREDENTIALS</span><span class="o">=</span>/home/backend/application_default_credentials.json<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>-v<span class="w"> </span><span class="nv">$ADC</span>:/home/backend/application_default_credentials.json:ro<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>mesop-backend:latest
+</span></code></pre></div>
 
 
 
