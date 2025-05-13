@@ -127,10 +127,11 @@ GROUP_ID=$(id -g)
 
 Then run the container with :
 
-'''bash docker run -p 8000:8000 \
+```bash docker run -p 8000:8000 \
 --user $USER_ID:$GROUP_ID \
 --env-file .env \
 -e GOOGLE_APPLICATION_CREDENTIALS=/home/backend/application_default_credentials.json
 \
 -v $ADC:/home/backend/application_default_credentials.json:ro \
-mesop-backend:latest '''
+mesop-backend:latest ```
+
