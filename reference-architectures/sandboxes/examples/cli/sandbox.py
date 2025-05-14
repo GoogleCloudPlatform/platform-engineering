@@ -1,4 +1,4 @@
-# Copyright 2024 Google LLC
+# Copyright 2025 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -41,13 +41,13 @@ def create(project_id, system_project):
                 "%B %-d, %Y at %-I:%-M:%-S.%f %p UTC-7"
             ),
         },
-        "userId": "8ac69ead-bbb7-46f0-8cf7-b44140d1b77b",
+        "userId": "user@example.com",
         "createdAt": now.strftime("%B %-d, %Y at %-I:%-M:%-S.%f %p UTC-7"),
         "updatedAt": now.strftime("%B %-d, %Y at %-I:%-M:%-S.%f %p UTC-7"),
         "variables": {
             "billing_account": "<your_billing_id>",
-            "name": project_id,
-            "parent_folder": "folders/87523515960",
+            "project_id": project_id,
+            "parent_folder": "<your_folder_id>",
         },
         "auditLog": ["python_cli - Sandbox initial provision_request"],
     }
@@ -59,8 +59,8 @@ def create(project_id, system_project):
 
 def delete(project_id, system_project):
     # The `project` parameter is optional and represents which project the client
-    # will act on behalf of. If not supplied, the client falls back to the default
-    # project inferred from the environment.
+    # will operate on behalf of. If not supplied, the client falls back to the
+    # default project inferred from the environment.
     db = firestore.Client(project=system_project)
 
     deployment_ref = db.collection("deployments").document(project_id)

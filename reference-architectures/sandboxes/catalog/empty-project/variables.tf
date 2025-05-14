@@ -1,5 +1,5 @@
 /**
- * Copyright 2024 Google LLC
+ * Copyright 2025 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,6 @@
  * limitations under the License.
  */
 
-variable "name" {
-  description = "Name of the sandbox project."
-  type        = string
-}
-
 variable "billing_account" {
   description = "Billing account that will be associated with the sandbox project."
   type        = string
@@ -26,5 +21,10 @@ variable "billing_account" {
 
 variable "parent_folder" {
   description = "Folder that the sandbox project will be created in. Needs to be in the format of folders/<folder_id>."
+  type        = string
+}
+
+variable "project_id" {
+  description = "Project ID of the sandbox project."
   type        = string
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright 2024 Google LLC
+ * Copyright 2025 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,7 @@
 module "gcp_sandboxes" {
   source = "../../sandbox-modules/tf/system-project"
 
-  billing_account  = var.billing_account
-  sandboxes_folder = var.sandboxes_folder
-  #sandboxes_folder_parent = var.sandboxes_folder_parent
+  billing_account     = var.billing_account
+  sandboxes_folder    = var.sandboxes_folder
   system_project_name = var.system_project_name
 }

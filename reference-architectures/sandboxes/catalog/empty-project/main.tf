@@ -1,5 +1,5 @@
 /**
- * Copyright 2024 Google LLC
+ * Copyright 2025 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@
 module "project" {
   source = "gcs::https://www.googleapis.com/storage/v1/TERRAFORM_GCS_BUCKET/fabric-modules/project"
 
-  name            = var.name
+  name            = var.project_id
   billing_account = var.billing_account
   parent          = var.parent_folder
 }
