@@ -1,0 +1,157 @@
+{
+  "metadata": {
+    "report_id": "af06ea02-1c52-4e7f-b35c-e0aaa3b17b5d",
+    "github_repo_url": "https://github.com/dockersamples/example-voting-app/",
+    "target_platform": null,
+    "documentation_gcs_uris": [
+      "gs://prev-alto-gemini-migration/docs/af06ea02-1c52-4e7f-b35c-e0aaa3b17b5d/platform-doc.pdf"
+    ],
+    "status": "completed",
+    "created_at": "2025-05-15T00:29:03.670077Z",
+    "updated_at": "2025-05-15T00:29:17.111000Z",
+    "error_message": null,
+    "report_content_gcs_uri": null,
+    "report_summary": {
+      "$schema": "https://raw.githubusercontent.com/GoogleCloudPlatform/platform-engineering/refs/heads/migration-blocker-analysis/reference-architectures/gemini-powered-migration-blocker-analysis/schemas/report-template-v1.0.0-schema.json",
+      "name": "Migration Blocker Analysis Report Template v0.0.1",
+      "version": "0.0.1",
+      "id": "migration-blocker-analysis-report-template-v0.0.1",
+      "reportSections": [
+        {
+          "reportSubsections": [
+            {
+              "prompt": "Provide a high-level overview of the migration feasibility, key blockers identified, and recommended next steps based on the analyzed application.",
+              "content": "Based on the provided Internal Developer Platform (IDP) documentation and assuming the target platform is this IDP, the example-voting-app appears well-suited for migration, especially leveraging the 'Golden Path 1: Containerized Applications on GKE Autopilot'. The IDP is designed for containerized applications and the example-voting-app is already containerized, simplifying the process. Key blockers involve ensuring proper registration within the CMDB, securing an internal billing ID, and adhering to the IDP's GitOps workflow using KRM manifests. Next steps include thoroughly reviewing the application's dependencies, registering the application within the CMDB, and selecting a Golden Path, likely GKE Autopilot. The application should be packaged into Open Container Initiative (OCI) containers.",
+              "id": "subsection-overall-findings",
+              "heading": "1.1. Overall Findings",
+              "name": "Overall Findings"
+            },
+            {
+              "prompt": "Summarize the primary risks associated with migrating the application and the potential impact of the identified blockers.",
+              "content": "The primary risks involve potential configuration mismatches between the existing application setup and the IDP's expected configuration, particularly around networking, storage, and secret management. Failure to properly register the application within the CMDB could lead to inaccurate billing, compliance issues, and difficulties with incident management. Incorrectly generating KRM manifests for the GitOps workflow could result in deployment failures and infrastructure inconsistencies. The impact of these blockers ranges from minor delays to complete migration failure if not addressed properly.",
+              "id": "subsection-risk-assessment",
+              "heading": "1.2. Risk Assessment",
+              "name": "Risk Assessment"
+            }
+          ],
+          "heading": "1. Executive Summary",
+          "id": "section-exec-summary",
+          "name": "Executive Summary"
+        },
+        {
+          "reportSubsections": [
+            {
+              "prompt": "List and describe each specific technical or architectural blocker identified during the analysis. Include details on the components affected and the nature of the blocker.",
+              "content": "1. **CMDB Registration**: The application must be registered in the internal CMDB to ensure proper tracking for asset management, incident response, and compliance. This affects all components of the application.  Failure to register will prevent onboarding.\n2. **Internal Billing ID**: An internal billing ID must be acquired and associated with the application for accurate cost tracking. This affects all components, especially cost management. Without a billing ID, the application cannot be onboarded.\n3. **KRM Manifest Generation**: The application's configuration must be translated into Kubernetes Resource Model (KRM) manifests for the IDP's GitOps workflow. This affects deployment and configuration management. Incorrect manifests lead to deployment failures.\n4. **Secret Management**: Existing secrets (e.g., database passwords, API keys) must be migrated to the IDP's Secret Manager. This affects all components requiring secrets. Without proper secret management, the application will fail to connect to necessary resources.\n5. **Networking Configuration**: The application's networking configuration must be compatible with the IDP's network policies and ingress/egress rules. This affects all components requiring network access. Incorrect configuration leads to network connectivity issues.\n6. **Dependency Conflicts:** Review the application's dependencies and ensure compatibility with the IDP's supported versions and libraries. Incompatibility could lead to runtime errors or build failures.",
+              "id": "subsection-identified-blockers",
+              "heading": "2.1. Identified Blockers",
+              "name": "Identified Blockers"
+            },
+            {
+              "prompt": "Estimate the effort (e.g., in T-shirt sizes or story points) required to remediate each identified blocker.",
+              "content": "1. **CMDB Registration**: Small (1-2 days)\n2. **Internal Billing ID**: Small (1 day)\n3. **KRM Manifest Generation**: Medium (3-5 days), depending on the complexity of the application's configuration.\n4. **Secret Management**: Small (1-2 days)\n5. **Networking Configuration**: Medium (2-4 days), depending on existing network policies.\n6. **Dependency Conflicts**: Small to Medium (1-5 days), depending on the number and severity of conflicts.",
+              "id": "subsection-effort-estimation",
+              "heading": "2.2. Remediation Effort Estimation",
+              "name": "Effort Estimation"
+            },
+            {
+              "prompt": "Suggest potential solutions or workarounds for each identified blocker. Specify any tools, technology changes, or refactoring needed.",
+              "content": "1. **CMDB Registration**: Follow the CMDB registration process outlined in the IDP documentation. Provide all required information and obtain the application identifier.\n2. **Internal Billing ID**: Contact the appropriate department (e.g., Engineering) to obtain a valid internal billing ID. Provide the ID during onboarding.\n3. **KRM Manifest Generation**: Use the IDP's provided examples and documentation to create KRM manifests for the application's Kubernetes resources (Deployments, Services, etc.) and Google Cloud resources (Cloud SQL instances, etc.). Consider using tools to automate manifest generation from existing configurations.\n4. **Secret Management**: Migrate secrets to the IDP's Secret Manager. Update application code to retrieve secrets from Secret Manager instead of storing them in configuration files or environment variables.\n5. **Networking Configuration**: Review the IDP's network policies and configure the application's network settings (e.g., NetworkPolicies, ingress rules) to comply with these policies. Consult with the platform team for assistance.\n6. **Dependency Conflicts**: Review the IDP's documentation for supported dependency versions. If conflicts exist, attempt to upgrade or downgrade dependencies to compatible versions. If necessary, refactor the application code to remove dependencies or use alternative libraries.",
+              "id": "subsection-remediation-suggestions",
+              "heading": "2.3. Remediation Suggestions",
+              "name": "Remediation Suggestions"
+            }
+          ],
+          "heading": "2. Detailed Blocker Analysis",
+          "id": "section-blocker-analysis",
+          "name": "Detailed Blocker Analysis"
+        },
+        {
+          "reportSubsections": [
+            {
+              "prompt": "Briefly describe the application's architecture, key components, dependencies, and technologies used.",
+              "content": "The example-voting-app is a multi-component application consisting of a voting application, a worker, a Redis queue, and a PostgreSQL database. The application is designed to be deployed using Docker containers. The architecture is relatively simple, consisting of stateless web applications and APIs. The components communicate via Redis and PostgreSQL. The application appears suitable for deployment on the IDP using the GKE Autopilot golden path.",
+              "id": "subsection-arch-summary",
+              "heading": "3.1. Architecture Summary",
+              "name": "Architecture Summary"
+            }
+          ],
+          "heading": "3. Application Overview",
+          "id": "section-app-overview",
+          "name": "Application Overview"
+        }
+      ]
+    }
+  },
+  "analysis_result": {
+    "$schema": "https://raw.githubusercontent.com/GoogleCloudPlatform/platform-engineering/refs/heads/migration-blocker-analysis/reference-architectures/gemini-powered-migration-blocker-analysis/schemas/report-template-v1.0.0-schema.json",
+    "name": "Migration Blocker Analysis Report Template v0.0.1",
+    "version": "0.0.1",
+    "id": "migration-blocker-analysis-report-template-v0.0.1",
+    "reportSections": [
+      {
+        "reportSubsections": [
+          {
+            "prompt": "Provide a high-level overview of the migration feasibility, key blockers identified, and recommended next steps based on the analyzed application.",
+            "content": "Based on the provided Internal Developer Platform (IDP) documentation and assuming the target platform is this IDP, the example-voting-app appears well-suited for migration, especially leveraging the 'Golden Path 1: Containerized Applications on GKE Autopilot'. The IDP is designed for containerized applications and the example-voting-app is already containerized, simplifying the process. Key blockers involve ensuring proper registration within the CMDB, securing an internal billing ID, and adhering to the IDP's GitOps workflow using KRM manifests. Next steps include thoroughly reviewing the application's dependencies, registering the application within the CMDB, and selecting a Golden Path, likely GKE Autopilot. The application should be packaged into Open Container Initiative (OCI) containers.",
+            "id": "subsection-overall-findings",
+            "heading": "1.1. Overall Findings",
+            "name": "Overall Findings"
+          },
+          {
+            "prompt": "Summarize the primary risks associated with migrating the application and the potential impact of the identified blockers.",
+            "content": "The primary risks involve potential configuration mismatches between the existing application setup and the IDP's expected configuration, particularly around networking, storage, and secret management. Failure to properly register the application within the CMDB could lead to inaccurate billing, compliance issues, and difficulties with incident management. Incorrectly generating KRM manifests for the GitOps workflow could result in deployment failures and infrastructure inconsistencies. The impact of these blockers ranges from minor delays to complete migration failure if not addressed properly.",
+            "id": "subsection-risk-assessment",
+            "heading": "1.2. Risk Assessment",
+            "name": "Risk Assessment"
+          }
+        ],
+        "heading": "1. Executive Summary",
+        "id": "section-exec-summary",
+        "name": "Executive Summary"
+      },
+      {
+        "reportSubsections": [
+          {
+            "prompt": "List and describe each specific technical or architectural blocker identified during the analysis. Include details on the components affected and the nature of the blocker.",
+            "content": "1. **CMDB Registration**: The application must be registered in the internal CMDB to ensure proper tracking for asset management, incident response, and compliance. This affects all components of the application.  Failure to register will prevent onboarding.\n2. **Internal Billing ID**: An internal billing ID must be acquired and associated with the application for accurate cost tracking. This affects all components, especially cost management. Without a billing ID, the application cannot be onboarded.\n3. **KRM Manifest Generation**: The application's configuration must be translated into Kubernetes Resource Model (KRM) manifests for the IDP's GitOps workflow. This affects deployment and configuration management. Incorrect manifests lead to deployment failures.\n4. **Secret Management**: Existing secrets (e.g., database passwords, API keys) must be migrated to the IDP's Secret Manager. This affects all components requiring secrets. Without proper secret management, the application will fail to connect to necessary resources.\n5. **Networking Configuration**: The application's networking configuration must be compatible with the IDP's network policies and ingress/egress rules. This affects all components requiring network access. Incorrect configuration leads to network connectivity issues.\n6. **Dependency Conflicts:** Review the application's dependencies and ensure compatibility with the IDP's supported versions and libraries. Incompatibility could lead to runtime errors or build failures.",
+            "id": "subsection-identified-blockers",
+            "heading": "2.1. Identified Blockers",
+            "name": "Identified Blockers"
+          },
+          {
+            "prompt": "Estimate the effort (e.g., in T-shirt sizes or story points) required to remediate each identified blocker.",
+            "content": "1. **CMDB Registration**: Small (1-2 days)\n2. **Internal Billing ID**: Small (1 day)\n3. **KRM Manifest Generation**: Medium (3-5 days), depending on the complexity of the application's configuration.\n4. **Secret Management**: Small (1-2 days)\n5. **Networking Configuration**: Medium (2-4 days), depending on existing network policies.\n6. **Dependency Conflicts**: Small to Medium (1-5 days), depending on the number and severity of conflicts.",
+            "id": "subsection-effort-estimation",
+            "heading": "2.2. Remediation Effort Estimation",
+            "name": "Effort Estimation"
+          },
+          {
+            "prompt": "Suggest potential solutions or workarounds for each identified blocker. Specify any tools, technology changes, or refactoring needed.",
+            "content": "1. **CMDB Registration**: Follow the CMDB registration process outlined in the IDP documentation. Provide all required information and obtain the application identifier.\n2. **Internal Billing ID**: Contact the appropriate department (e.g., Engineering) to obtain a valid internal billing ID. Provide the ID during onboarding.\n3. **KRM Manifest Generation**: Use the IDP's provided examples and documentation to create KRM manifests for the application's Kubernetes resources (Deployments, Services, etc.) and Google Cloud resources (Cloud SQL instances, etc.). Consider using tools to automate manifest generation from existing configurations.\n4. **Secret Management**: Migrate secrets to the IDP's Secret Manager. Update application code to retrieve secrets from Secret Manager instead of storing them in configuration files or environment variables.\n5. **Networking Configuration**: Review the IDP's network policies and configure the application's network settings (e.g., NetworkPolicies, ingress rules) to comply with these policies. Consult with the platform team for assistance.\n6. **Dependency Conflicts**: Review the IDP's documentation for supported dependency versions. If conflicts exist, attempt to upgrade or downgrade dependencies to compatible versions. If necessary, refactor the application code to remove dependencies or use alternative libraries.",
+            "id": "subsection-remediation-suggestions",
+            "heading": "2.3. Remediation Suggestions",
+            "name": "Remediation Suggestions"
+          }
+        ],
+        "heading": "2. Detailed Blocker Analysis",
+        "id": "section-blocker-analysis",
+        "name": "Detailed Blocker Analysis"
+      },
+      {
+        "reportSubsections": [
+          {
+            "prompt": "Briefly describe the application's architecture, key components, dependencies, and technologies used.",
+            "content": "The example-voting-app is a multi-component application consisting of a voting application, a worker, a Redis queue, and a PostgreSQL database. The application is designed to be deployed using Docker containers. The architecture is relatively simple, consisting of stateless web applications and APIs. The components communicate via Redis and PostgreSQL. The application appears suitable for deployment on the IDP using the GKE Autopilot golden path.",
+            "id": "subsection-arch-summary",
+            "heading": "3.1. Architecture Summary",
+            "name": "Architecture Summary"
+          }
+        ],
+        "heading": "3. Application Overview",
+        "id": "section-app-overview",
+        "name": "Application Overview"
+      }
+    ]
+  }
+}
