@@ -14,6 +14,11 @@
  * limitations under the License.
  */
 
+locals {
+  firestore_location = var.firestore_location != "" ? var.firestore_location : var.region
+  gcs_location       = var.gcs_location != "" ? var.gcs_location : var.region
+}
+
 #
 # System Project
 #
@@ -49,7 +54,7 @@ module "terraform_bucket" {
 
   project_id = module.system_project.id
   name       = "${module.system_project.name}_terraform"
-  location   = "US"
+  location   = local.gcs_location
   versioning = true
 }
 
@@ -58,7 +63,7 @@ module "terraform_state_bucket" {
 
   project_id = module.system_project.id
   name       = "${module.system_project.name}_terraform_state"
-  location   = "US"
+  location   = local.gcs_location
   versioning = true
 }
 
@@ -111,7 +116,7 @@ module "sandbox_factory_sa" {
 resource "google_firestore_database" "database" {
   project     = module.system_project.id
   name        = "(default)"
-  location_id = "nam5"
+  location_id = local.firestore_location
   type        = "FIRESTORE_NATIVE"
 }
 
@@ -121,7 +126,7 @@ resource "google_firestore_database" "database" {
 
 resource "google_artifact_registry_repository" "infra_manager_processor" {
   project       = module.system_project.id
-  location      = "us-central1"
+  location      = var.region
   repository_id = "infra-manager-processor"
   description   = "Docker Image repository for infra-manager-processor Cloud Run service"
   format        = "DOCKER"
@@ -131,7 +136,7 @@ resource "null_resource" "build_image" {
   provisioner "local-exec" {
     command = <<EOT
       cd ${abspath("${path.module}/../../src/infra-manager-processor")}
-      gcloud builds submit --project=${module.system_project.id} --tag us-central1-docker.pkg.dev/${module.system_project.id}/${google_artifact_registry_repository.infra_manager_processor.repository_id}/infra-manager-processor
+      gcloud builds submit --project=${module.system_project.id} --tag ${var.region}-docker.pkg.dev/${module.system_project.id}/${google_artifact_registry_repository.infra_manager_processor.repository_id}/infra-manager-processor
     EOT
   }
 
@@ -146,14 +151,13 @@ module "cloud_run" {
   source     = "../../../fabric-modules/cloud-run-v2"
   project_id = module.system_project.id
   name       = "infra-manager-processor"
-  region     = "us-central1"
+  region     = var.region
   containers = {
     hello = {
-      image = "us-central1-docker.pkg.dev/${module.system_project.id}/${google_artifact_registry_repository.infra_manager_processor.repository_id}/infra-manager-processor"
+      image = "${var.region}-docker.pkg.dev/${module.system_project.id}/${google_artifact_registry_repository.infra_manager_processor.repository_id}/infra-manager-processor"
       env = {
         PROJECT_ID             = module.system_project.id
-        REGION                 = "us-central1"
-        ZONE                   = "us-central1a"
+        REGION                 = var.region
         SERVICE_ACCOUNT_NAME   = "sandbox-factory-sa"
         TERRAFORM_BUCKET       = module.terraform_bucket.name
         TERRAFORM_CATALOG_PATH = "catalog"
@@ -185,11 +189,11 @@ resource "google_firebase_project" "default" {
 module "deploymentCreated" {
   source      = "../../../fabric-modules/cloud-function-v2"
   project_id  = module.system_project.id
-  region      = "us-central1"
+  region      = var.region
   name        = "deploymentCreated"
   bucket_name = "${module.system_project.name}_functions-deploymentcreated"
   bucket_config = {
-    location      = "us-central1"
+    location      = var.region
     force_destroy = true
   }
   bundle_config = {
@@ -202,7 +206,7 @@ module "deploymentCreated" {
       projectId     = module.system_project.id
       storageBucket = "${module.system_project.id}.firebasestorage.app"
     })
-    EVENTARC_CLOUD_EVENT_SOURCE = "projects/${module.system_project.id}/locations/us-central1/services/deploymentcreated"
+    EVENTARC_CLOUD_EVENT_SOURCE = "projects/${module.system_project.id}/locations/${var.region}/services/deploymentcreated"
     FUNCTION_SIGNATURE_TYPE     = "cloudevent"
     FUNCTION_TARGET             = "deploymentCreated"
   }
@@ -232,11 +236,11 @@ module "deploymentCreated" {
 module "deploymentUpdated" {
   source      = "../../../fabric-modules/cloud-function-v2"
   project_id  = module.system_project.id
-  region      = "us-central1"
+  region      = var.region
   name        = "deploymentUpdated"
   bucket_name = "${module.system_project.name}_functions-deploymentupdated"
   bucket_config = {
-    location      = "us-central1"
+    location      = var.region
     force_destroy = true
   }
   bundle_config = {
@@ -249,7 +253,7 @@ module "deploymentUpdated" {
       projectId     = module.system_project.id
       storageBucket = "${module.system_project.id}.firebasestorage.app"
     })
-    EVENTARC_CLOUD_EVENT_SOURCE = "projects/${module.system_project.id}/locations/us-central1/services/deploymentUpdated"
+    EVENTARC_CLOUD_EVENT_SOURCE = "projects/${module.system_project.id}/locations/${var.region}/services/deploymentUpdated"
     FUNCTION_SIGNATURE_TYPE     = "cloudevent"
     FUNCTION_TARGET             = "deploymentUpdated"
   }

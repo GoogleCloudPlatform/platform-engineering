@@ -86,7 +86,6 @@ async function testInfraManagerDeploy() {
     const inputValues: Record<string, {inputValue: string}> = {
       project_id: {inputValue: config.project.id},
       region: {inputValue: config.project.region},
-      zone: {inputValue: config.project.zone},
     };
 
     // Prepare the deployment request following Infrastructure Manager API spec

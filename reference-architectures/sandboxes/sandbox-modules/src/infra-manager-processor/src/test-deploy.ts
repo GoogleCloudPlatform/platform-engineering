@@ -47,9 +47,6 @@ async function testDeployCall() {
           region: {
             input_value: region,
           },
-          zone: {
-            input_value: `${region}-a`,
-          },
         },
       },
       service_account: serviceAccount,

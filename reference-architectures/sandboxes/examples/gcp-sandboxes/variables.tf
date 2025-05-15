@@ -20,6 +20,12 @@ variable "billing_account" {
 }
 
 variable "sandboxes_folder" {
+  description = "Name of the folder that the system project and sandboxes will be created in."
+  type        = string
+  default     = "us-central1"
+}
+
+variable "sandboxes_folder" {
   description = "The folder the system project will be created in, needs to be in the format of folders/<folder_id>. This folder id can be different from the folder used for the sandboxes, but is not demonstrated in this example."
   type        = string
 }

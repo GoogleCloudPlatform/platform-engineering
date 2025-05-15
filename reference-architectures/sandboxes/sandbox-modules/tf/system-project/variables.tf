@@ -19,17 +19,34 @@ variable "billing_account" {
   type        = string
 }
 
+variable "firestore_location" {
+  description = "Location to be used for the Cloud Firestore database. If not specified the default value is var.region"
+  type        = string
+  default     = ""
+}
+
+variable "gcs_location" {
+  description = "Location that the GCS buckets for Terraform templates and state. If not specified the default value is var.region"
+  type        = string
+  default     = ""
+}
+
+variable "region" {
+  description = "Region the sandboxes system project will be created in."
+  type        = string
+}
+
 variable "sandboxes_folder" {
   description = "Name of the folder that the system project and sandboxes will be created in."
   type        = string
 }
 
 variable "system_project_id" {
-  description = "Project Id of the system project for the sandboxes."
+  description = "Project ID of the system project for the sandboxes."
   type        = string
 
-  # validation = {
-  #    condition     = length(var.system_project_name) >= 4 && length(var.system_project_name) <= 30
-  #    error_message = "The system_project_name must be between 4 and 30 characters"
-  # }
+  validation = {
+    condition     = length(var.system_project_id) >= 4 && length(var.system_project_id) <= 30
+    error_message = "The system_project_name must be between 4 and 30 characters"
+  }
 }

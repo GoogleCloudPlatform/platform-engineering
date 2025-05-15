@@ -19,7 +19,7 @@
 import {Config} from './types';
 
 // Validate required environment variables
-const requiredEnvVars = ['PROJECT_ID', 'REGION', 'ZONE'] as const;
+const requiredEnvVars = ['PROJECT_ID', 'REGION'] as const;
 for (const envVar of requiredEnvVars) {
   if (!process.env[envVar]) {
     throw new Error(`${envVar} environment variable is required but not set`);
@@ -29,13 +29,11 @@ for (const envVar of requiredEnvVars) {
 // After validation, we know these exist
 const PROJECT_ID = process.env.PROJECT_ID!;
 const REGION = process.env.REGION!;
-const ZONE = process.env.ZONE!;
 
 export const config: Config = {
   project: {
     id: PROJECT_ID,
     region: REGION,
-    zone: ZONE,
   },
   storage: {
     get terraformBucketName() {

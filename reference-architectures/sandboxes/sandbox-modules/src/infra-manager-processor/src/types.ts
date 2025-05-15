@@ -18,7 +18,6 @@ export interface Config {
   project: {
     id: string;
     region: string;
-    zone: string;
   };
   storage: {
     terraformBucketName: string;

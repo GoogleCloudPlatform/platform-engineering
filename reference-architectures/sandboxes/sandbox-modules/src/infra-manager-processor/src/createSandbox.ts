@@ -84,9 +84,6 @@ export async function deployInfrastructure(
       if (!inputValues.region) {
         inputValues.region = {inputValue: region};
       }
-      if (!inputValues.zone && templateType !== 'project') {
-        inputValues.zone = {inputValue: config.project.zone};
-      }
     } catch (error) {
       console.error(`[InfraManager] ❌ Error preparing variables:`, {
         documentId,
