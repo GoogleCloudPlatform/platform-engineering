@@ -21,6 +21,9 @@ from datetime import datetime, timedelta
 
 from google.cloud import firestore
 
+billing_account = "<your_billing_id>"
+folder_id = "folders/<your_folder_id>"
+
 
 def create(project_id, system_project):
     # The `project` parameter is optional and represents which project the client
@@ -45,9 +48,9 @@ def create(project_id, system_project):
         "createdAt": now.strftime("%B %-d, %Y at %-I:%-M:%-S.%f %p UTC-7"),
         "updatedAt": now.strftime("%B %-d, %Y at %-I:%-M:%-S.%f %p UTC-7"),
         "variables": {
-            "billing_account": "<your_billing_id>",
+            "billing_account": billing_account,
             "project_id": project_id,
-            "parent_folder": "<your_folder_id>",
+            "parent_folder": folder_id,
         },
         "auditLog": ["python_cli - Sandbox initial provision_request"],
     }
@@ -78,6 +81,20 @@ def list_sandboxes():
     print("list action not implemented")
 
 
+# Simple sanity checks to make sure users have set the required constants
+def check_config():
+    if billing_account == "<your_billing_id>":
+        print(
+            "ERROR: The billing account information must be updated before \
+the cli can be used."
+        )
+        exit()
+
+    if folder_id == "folders/<your_folder_id>":
+        print("ERROR: The folder id must be set before the cli can be used.")
+        exit()
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Simple cli tool to interact with the sanboxes "
@@ -91,6 +108,8 @@ def main():
         help="project id of the system project which has the state database",
     )
     args = parser.parse_args()
+
+    check_config()
 
     match args.action:
         case "create":
