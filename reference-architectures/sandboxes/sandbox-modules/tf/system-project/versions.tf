@@ -31,9 +31,9 @@ terraform {
     }
   }
   provider_meta "google" {
-    module_name = "google-pso-tool/cloud-foundation-fabric/modules/folder:v37.1.0-tf"
+    module_name = "cloud-solutions/platform-engineering-sandboxes-v0.1"
   }
   provider_meta "google-beta" {
-    module_name = "google-pso-tool/cloud-foundation-fabric/modules/folder:v37.1.0-tf"
+    module_name = "cloud-solutions/platform-engineering-sandboxes-v0.1"
   }
 }

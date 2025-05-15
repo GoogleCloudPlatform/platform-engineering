@@ -24,7 +24,7 @@ variable "sandboxes_folder" {
   type        = string
 }
 
-variable "system_project_name" {
-  description = "Project name for the system project."
+variable "system_project_id" {
+  description = "Project ID for the system project."
   type        = string
 }

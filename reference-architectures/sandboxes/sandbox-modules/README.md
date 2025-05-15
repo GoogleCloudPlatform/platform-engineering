@@ -2,6 +2,9 @@
 
 ## Data Model
 
+Each document stored in Cloud Firestore represents a sandbox. The following
+sections document the fields and structure of those documents.
+
 ### Deployment
 
 | Field                      | Type                                                  | Description                                                                                                                                                                                                                                                 |

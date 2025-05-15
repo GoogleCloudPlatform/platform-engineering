@@ -24,13 +24,8 @@ variable "sandboxes_folder" {
   type        = string
 }
 
-# variable "sandboxes_folder_parent" {
-#   description = "The parent object (folder or organization) that the sandboxes folder should be associated with."
-#   type = string
-# }
-
-variable "system_project_name" {
-  description = "Name of the system project for the sandboxes."
+variable "system_project_id" {
+  description = "Project Id of the system project for the sandboxes."
   type        = string
 
   # validation = {

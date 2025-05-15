@@ -47,7 +47,7 @@ In this section you prepare your environment for deploying the system project.
 3.  Enter a name for your folder. This folder will be used to contain the system
     and sandbox projects.
 
-4.  Click Create
+4.  Click _Create_
 
 5.  Copy the folder ID from the Manage resources page, you will need this value
     later for use as Terraform variable.
@@ -109,7 +109,7 @@ Your sandboxes infrastructure is ready, you may continue to use the example cli
 to create and delete sandboxes. At this point it is recommended that you:
 
 - Review the [detailed object and operating model][object-model]
-- Create a more robust user experience
+- Adapt the CLI to meet your organization's requirements
 
 <!-- LINKS: https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 

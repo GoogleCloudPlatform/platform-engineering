@@ -21,7 +21,7 @@
 module "system_project" {
   source = "../../../fabric-modules/project"
 
-  name            = var.system_project_name
+  name            = var.system_project_id
   parent          = var.sandboxes_folder
   billing_account = var.billing_account
 
@@ -109,7 +109,7 @@ module "sandbox_factory_sa" {
 #
 
 resource "google_firestore_database" "database" {
-  project     = var.system_project_name
+  project     = module.system_project.id
   name        = "(default)"
   location_id = "nam5"
   type        = "FIRESTORE_NATIVE"

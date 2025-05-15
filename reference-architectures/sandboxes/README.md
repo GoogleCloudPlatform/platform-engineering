@@ -1,10 +1,9 @@
 # Sandbox Projects Reference Architecure
 
 This architecture demonstrates how you can automate the provisioning of sandbox
-projects and automatically apply sensible sensbile guardrails and constraints. A
-sandbox project is allows engineers to experiment with new technologies,
-sandboxes are provisioned for a short period of time and with budget
-constraints.
+projects and automatically apply sensible guardrails and constraints. A sandbox
+project allows engineers to experiment with new technologies. Sandboxes are
+provisioned for a short period of time and with budget constraints.
 
 ## Architecture
 
@@ -14,21 +13,21 @@ creation of sandbox projects.
 ![architecture](resources/high-level-arch.png)
 
 1.  The system project contains the state database and infrastructure required
-    to create, delete and manage they lifecycle of the sandboxes.
+    to create, delete and manage the lifecycle of the sandboxes.
 2.  User interface that engineers use to request and manage the sandboxes they
     own.
 3.  Firestore stores the state of the overall environment. Documents in the
     database represent all the active and inactive sandboxes. The document model
     is detailed in the [sandbox-modules readme](sandbox-modules/README.md).
-4.  Firestore triggers the Cloud Run functions whenever a document is created or
+4.  Firestore triggers are Cloud Run functions whenever a document is created or
     updated. Create and update events are handled by Cloud Run functions
-    `onCreate` and `onModify`. The functions contain the logic required to
-    decided if a sandbox should be created or deleted.
+    `onCreate` and `onModify`. The functions contain the logic to decide if a
+    sandbox should be created or deleted.
 5.  `infraManagerProcessor` is a Cloud Run service that works with
     Infrastructure Manager to kick off and monitor the infrastructure
     management. This is handled in a Cloud Run service because the execution of
     Terraform is a long running process.
-6.  Cloud Storage containss the Terraform templates and state used by
+6.  Cloud Storage contains the Terraform templates and state used by
     Infrastructure Manager.
 7.  Cloud Scheduler triggers the execution of sandbox lifecycle management
     processes, for example a function that check for the expiration of sandboxes
@@ -42,10 +41,11 @@ the structure of the repository so you can better navigate the code.
 
 ### Examples
 
-The examples directory contains a sample Terraform deployment for deploying the
-refrence architecture and command-line tool to exercise the automated creation
-of developer sandboxes. The examples are intended to provide you a starting
-point so you can incorporate the reference architecure into your infrastructure.
+The `/examples` directory contains a sample Terraform deployment for deploying
+the reference architecture and command-line tool to exercise the automated
+creation of developer sandboxes. The examples are intended to provide you a
+starting point so you can incorporate the reference architecure into your
+infrastructure.
 
 #### GCP Sandboxes
 
@@ -59,7 +59,7 @@ The workflows and lifecycle of the sandboxes deployed via the reference
 architecture are managed through the document model stored in [Cloud
 Firestore][firestore]. This abstraction has the benefit of separating the core
 logic included in the reference archiecture from the user experience (UX). As
-such the [example command line interface][example-cli] let's you experiment with
+such the [example command line interface][example-cli] lets you experiment with
 the reference architecture and learn about the object model.
 
 ### Catalog
