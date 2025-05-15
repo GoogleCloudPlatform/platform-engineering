@@ -28,39 +28,67 @@ Consider potential challenges, risks, necessary steps, and technology factors. P
 
 ```json
 {{
-  "readiness_assessment": {{
-    "score_category": "<High|Medium|Low|Blocked>",
-    "score_value": <integer | null>, // Optional numerical score 1-10
-    "summary": "<Brief text summary of overall readiness, synthesizing info from code and platform docs>"
-  }},
-  "key_challenges": [
-    // Include challenges identified from dependencies, Dockerfile, README, AND potential conflicts with platform docs
+  "$schema": "https://raw.githubusercontent.com/GoogleCloudPlatform/platform-engineering/refs/heads/migration-blocker-analysis/reference-architectures/gemini-powered-migration-blocker-analysis/schemas/report-template-v1.0.0-schema.json",
+  "version": "0.0.1",
+  "id": "migration-blocker-analysis-report-template-v0.0.1",
+  "name": "Migration Blocker Analysis Report Template v0.0.1",
+  "reportSections": [
     {{
-      "id": "<Unique ID string, e.g., CHAL-001>",
-      "title": "<Concise title of the challenge>",
-      "description": "<Detailed description of the challenge/risk>",
-      "severity": "<High|Medium|Low>"
-    }}
-    // ... include other challenge objects
-  ],
-  "recommended_steps": [
-    // Include steps relevant to code changes, configuration, and platform specifics
+      "name": "Executive Summary",
+      "id": "section-exec-summary",
+      "heading": "1. Executive Summary",
+      "reportSubsections": [
+        {{
+          "name": "Overall Findings",
+          "id": "subsection-overall-findings",
+          "prompt": "Provide a high-level overview of the migration feasibility, key blockers identified, and recommended next steps based on the analyzed application.",
+          "heading": "1.1. Overall Findings"
+        }},
+        {{
+          "name": "Risk Assessment",
+          "id": "subsection-risk-assessment",
+          "prompt": "Summarize the primary risks associated with migrating the application and the potential impact of the identified blockers.",
+          "heading": "1.2. Risk Assessment"
+        }}
+      ]
+    }},
     {{
-      "id": "<Unique ID string, e.g., STEP-001>",
-      "title": "<Actionable title of the step>",
-      "description": "<Details about the recommended step>",
-      "priority": <integer> // Lower number means higher priority
+      "name": "Detailed Blocker Analysis",
+      "id": "section-blocker-analysis",
+      "heading": "2. Detailed Blocker Analysis",
+      "reportSubsections": [
+        {{
+          "name": "Identified Blockers",
+          "id": "subsection-identified-blockers",
+          "prompt": "List and describe each specific technical or architectural blocker identified during the analysis. Include details on the components affected and the nature of the blocker.",
+          "heading": "2.1. Identified Blockers"
+        }},
+        {{
+          "name": "Effort Estimation",
+          "id": "subsection-effort-estimation",
+          "prompt": "Estimate the effort (e.g., in T-shirt sizes or story points) required to remediate each identified blocker.",
+          "heading": "2.2. Remediation Effort Estimation"
+        }},
+        {{
+          "name": "Remediation Suggestions",
+          "id": "subsection-remediation-suggestions",
+          "prompt": "Suggest potential solutions or workarounds for each identified blocker. Specify any tools, technology changes, or refactoring needed.",
+          "heading": "2.3. Remediation Suggestions"
+        }}
+      ]
+    }},
+    {{
+      "name": "Application Overview",
+      "id": "section-app-overview",
+      "heading": "3. Application Overview",
+      "reportSubsections": [
+        {{
+          "name": "Architecture Summary",
+          "id": "subsection-arch-summary",
+          "prompt": "Briefly describe the application's architecture, key components, dependencies, and technologies used.",
+          "heading": "3.1. Architecture Summary"
+        }}
+      ]
     }}
-    // ... include other step objects
-  ],
-  "technology_notes": [
-    // Infer technologies from dependencies, Dockerfile, README
-    "<Brief note about detected or inferred application technology/framework/language>"
-    // ... include other relevant notes
-  ],
-  "documentation_notes": [
-     // Summarize key aspects of the target platform based *only* on the uploaded documents
-    "<Note summarizing relevant feature/constraint from uploaded platform documentation>"
-    // ... include other relevant notes from platform docs
   ]
 }}
