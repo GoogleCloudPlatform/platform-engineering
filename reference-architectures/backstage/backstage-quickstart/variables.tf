@@ -13,25 +13,18 @@
 # limitations under the License.
 
 variable "environment_name" {
-  default     = "qs"
   description = "Name of the environment"
   type        = string
+  default     = "qs"
 }
 
 variable "iap_support_email" {
   description = "The email address for the IAP support contact"
   type        = string
-  default     = ""
 }
 
 variable "iap_user_domain" {
   description = "The base domain name for the GCP org users accessing Backstage through IAP"
-  type        = string
-  default     = ""
-}
-
-variable "project_id_suffix" {
-  description = "suffix to add to resources"
   type        = string
 }
 
@@ -48,7 +41,8 @@ variable "environment_project_id" {
 variable "backstage_hosting_project_services" {
   description = "Service APIs to enable"
   type        = list(string)
-  default = ["cloudresourcemanager.googleapis.com",
+  default = [
+    "cloudresourcemanager.googleapis.com",
     "artifactregistry.googleapis.com",
     "compute.googleapis.com",
     "container.googleapis.com",
@@ -60,7 +54,8 @@ variable "backstage_hosting_project_services" {
     "secretmanager.googleapis.com",
     "servicenetworking.googleapis.com",
     "dns.googleapis.com",
-  "iap.googleapis.com"]
+    "iap.googleapis.com"
+  ]
 }
 
 variable "region" {

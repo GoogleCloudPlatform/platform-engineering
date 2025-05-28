@@ -10,13 +10,11 @@
 - [ ] Rationalize and refactor environment_name
 - [ ] Rationalize and refactor environment_project_id
 - [ ] Rationalize and refactor project_id_prefix
-- [ ] Rationalize and refactor project_id_suffix
 - [ ] Handle TFVARS file in a more automated way
 - [ ] Migrate to template files
 - [ ] Create template directory
 - [ ] Move template files into template directory
 - [ ] Refactor TF to use template directory when referencing template files
-- [ ] Add architecture diagram
 - [ ] Update readme to include architecture diagram explanation
 - [ ] Update readme to include information about the Backstage deployment
 - [ ] Lock TF providers
@@ -33,3 +31,5 @@
 - [x] Add solutions tracking metadata
 - [x] Verify the local exec functioanlity and ensure files are cleaned up when
       action is destroy
+- [x] Add architecture diagram
+- [x] Rationalize and refactor project_id_suffix
