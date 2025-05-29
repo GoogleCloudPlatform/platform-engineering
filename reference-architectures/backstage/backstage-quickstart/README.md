@@ -6,8 +6,8 @@ concepts related to hosting [Backstage][backstage] on Google Cloud.
 
 **NOTE: This environment is not intended to be a long lived environment. It is
 intended for temporary demonstration and learning purposes. You will need to
-modify the configurations provided to align with your orginazations needs.
-Along the way the guide will make callouts to tasks or areas that should be
+modify the configurations provided to align with your orginazations needs. Along
+the way the guide will make callouts to tasks or areas that should be
 productionized in for long lived deployments.**
 
 ## Architecture
@@ -22,11 +22,12 @@ that will be deployed.
 To keep this guide simple it makes a few assumptions. Where the are alternatives
 we have linked to some additional documentation.
 
-1.  The Backstage quick start will be deployed in a new project that you will 
-manually create. If you want to use a project managed through Terraform refer
-to the [Terraform managed project](#terraform-managed-project) section.
+1.  The Backstage quick start will be deployed in a new project that you will
+    manually create. If you want to use a project managed through Terraform
+    refer to the [Terraform managed project](#terraform-managed-project)
+    section.
 2.  [Identity Aware Proxy][iap] (IAP) will be used for controlling access to
-Backstage.
+    Backstage.
 
 ## Before you begin
 
@@ -44,8 +45,8 @@ In this section you prepare your project for deployment.
 1.  Go to the [project selector page][project-selector] in the Cloud Console.
     Select or create a Cloud project.
 
-2.  Make sure that billing is enabled for your Google Cloud project.
-    [Learn how to confirm billing is enabled for your project][enable-billing].
+2.  Make sure that billing is enabled for your Google Cloud project. [Learn how
+    to confirm billing is enabled for your project][enable-billing].
 
 3.  In Cloud Shell, set environment variables with the ID of your project:
 
@@ -79,19 +80,13 @@ In this section you prepare your project for deployment.
     export IAP_SUPPORT_EMAIL="<your org's support email>"
     ```
 
-2.  Set the default `gcloud` project
-
-    ```bash
-    gcloud config set project ${PROJECT_ID}
-    ```
-
-3.  Create a Cloud Storage bucket to store the Terraform state
+2.  Create a Cloud Storage bucket to store the Terraform state
 
     ```bash
     gcloud storage buckets create gs://${BACKSTAGE_QS_STATE_BUCKET} --project ${PROJECT_ID}
     ```
 
-4.  Set the configuration variables
+3.  Set the configuration variables
 
     ```bash
     sed -i "s/YOUR_STATE_BUCKET/${BACKSTAGE_QS_STATE_BUCKET}/g" ${BACKSTAGE_QS_BASE_DIR}/backend.tf
@@ -122,8 +117,8 @@ Management API are enabled.
     rm tfplan
     ```
 
-    This will take a while to create all of the required resources, figure somewhere
-    between 15 and 20 minutes.
+    This will take a while to create all of the required resources, figure
+    somewhere between 15 and 20 minutes.
 
 ## Cleanup
 
@@ -175,11 +170,11 @@ Management API are enabled.
 ### Terraform managed project
 
 In some instances you will need to create and manage the project through
-Terraform. This quickstart provides a sample process and Terraform to
-create and destory the project via Terraform.
+Terraform. This quickstart provides a sample process and Terraform to create and
+destory the project via Terraform.
 
-To run this part of the quick start you will need the following information
-and permissions.
+To run this part of the quick start you will need the following information and
+permissions.
 
 - Billing account ID
 - Organization or folder ID
@@ -207,21 +202,21 @@ and permissions.
     }
     ```
 
-Values required :
+    Values required :
 
--   `environment_name`: the name of the environment (defaults to qs for
-quickstart)
--   `iapUserDomain`: the root domain of the GCP Org that the Backstage users will
-be in
--   `iapSupportEmail`: support contact for the IAP brand
--   `project.billing_account_id`: the billing account ID
--   `project.name`: the prefix for the display name of the project, the full name
-will be `<project.name>-<environment_name>`
--  Either `project.folder_id` **OR** `project.org_id`
-   - `project.folder_id`: the Google Cloud folder ID
-   - `project.org_id`: the Google Cloud organization ID
+    - `environment_name`: the name of the environment (defaults to qs for
+      quickstart)
+    - `iapUserDomain`: the root domain of the GCP Org that the Backstage users
+      will be in
+    - `iapSupportEmail`: support contact for the IAP brand
+    - `project.billing_account_id`: the billing account ID
+    - `project.name`: the prefix for the display name of the project, the full
+      name will be `<project.name>-<environment_name>`
+    - Either `project.folder_id` **OR** `project.org_id`
+        - `project.folder_id`: the Google Cloud folder ID
+        - `project.org_id`: the Google Cloud organization ID
 
-2. Authorize `gcloud`
+2.  Authorize `gcloud`
 
     ```bash
     gcloud auth login --activate --no-launch-browser --quiet --update-adc
@@ -243,8 +238,10 @@ will be `<project.name>-<environment_name>`
 
     ```bash
     PROJECT_ID=$(grep environment_project_id \
-    ${BACKSTAGE_QS_BASE_DIR}/backstage-qs.auto.tfvars | awk -F"=" '{print $2}' | xargs)
+    ${BACKSTAGE_QS_BASE_DIR}/backstage-qs.auto.tfvars |
+    awk -F"=" '{print $2}' | xargs)
     ```
+
 #### Cleaning up a Terraform managed project
 
 1.  Destroy the project
@@ -263,9 +260,9 @@ will be `<project.name>-<environment_name>`
 
 ### Re-using an Existing Project
 
-In situations where you have run this quickstart before and then cleaned-up
-the resources but are re-using the project, it might be neccasary to restore
-the endpoints from a deleted state first.
+In situations where you have run this quickstart before and then cleaned-up the
+resources but are re-using the project, it might be neccasary to restore the
+endpoints from a deleted state first.
 
 ```bash
 BACKSTAGE_QS_PREFIX=$(grep environment_name \
@@ -285,4 +282,5 @@ ${BACKSTAGE_QS_PREFIX}.endpoints.${BACKSTAGE_QS_PROJECT_ID}.cloud.goog \
 [cloud-shell-features]: https://cloud.google.com/shell/docs/features
 [enable-billing]: https://cloud.google.com/billing/docs/how-to/modify-project
 [iap]: https://cloud.google.com/security/products/iap
-[project-selector]: https://console.cloud.google.com/projectselector2/home/dashboard
+[project-selector]:
+    https://console.cloud.google.com/projectselector2/home/dashboard
