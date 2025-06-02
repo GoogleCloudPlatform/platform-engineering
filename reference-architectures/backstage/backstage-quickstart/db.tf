@@ -31,6 +31,7 @@ resource "google_sql_database_instance" "instance" {
         psc_enabled               = true
         allowed_consumer_projects = [var.environment_project_id]
       }
+      ssl_mode = "ENCRYPTED_ONLY"
     }
   }
   timeouts {
@@ -38,9 +39,21 @@ resource "google_sql_database_instance" "instance" {
     update = "30m"
     delete = "30m"
   }
-
 }
 
+resource "google_sql_database" "database" {
+  name     = "backstage"
+  instance = google_sql_database_instance.instance.name
+}
+
+resource "google_sql_user" "iam_service_account_user" {
+  # Note: for Postgres only, GCP requires omitting the ".gserviceaccount.com" suffix
+  # from the service account email due to length limits on database usernames.
+  
+  name     = trimsuffix(google_service_account.workloadSa.email, ".gserviceaccount.com")
+  instance = google_sql_database_instance.instance.name
+  type     = "CLOUD_IAM_SERVICE_ACCOUNT"
+}
 
 resource "null_resource" "sqlIamDelay" {
   provisioner "local-exec" {
