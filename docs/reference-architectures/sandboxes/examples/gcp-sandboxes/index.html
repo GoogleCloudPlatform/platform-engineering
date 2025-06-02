@@ -8,25 +8,25 @@
       
       
       
-        <link rel="canonical" href="https://googlecloudplatform.github.io/platform-engineering/reference-architectures/backstage/backstage-quickstart/docs/backstage-quickstart-architecture/">
+        <link rel="canonical" href="https://googlecloudplatform.github.io/platform-engineering/reference-architectures/sandboxes/examples/gcp-sandboxes/">
       
       
-        <link rel="prev" href="../../">
+        <link rel="prev" href="../cli/">
       
       
-        <link rel="next" href="../../../../cloud_deploy_flow/">
+        <link rel="next" href="../../sandbox-modules/">
       
       
-      <link rel="icon" href="../../../../../assets/images/favicon.png">
+      <link rel="icon" href="../../../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.50">
     
     
       
-        <title>TODO - Platform Engineering on Google Cloud</title>
+        <title>Overview - Platform Engineering on Google Cloud</title>
       
     
     
-      <link rel="stylesheet" href="../../../../../assets/stylesheets/main.a40c8224.min.css">
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.a40c8224.min.css">
       
       
   
@@ -53,9 +53,9 @@
       
     
     
-      <link rel="stylesheet" href="../../../../../stylesheets/extra.css">
+      <link rel="stylesheet" href="../../../../stylesheets/extra.css">
     
-    <script>__md_scope=new URL("../../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
   
@@ -84,7 +84,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#todo" class="md-skip">
+        <a href="#overview" class="md-skip">
           Skip to content
         </a>
       
@@ -100,7 +100,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../../../../.." title="Platform Engineering on Google Cloud" class="md-header__button md-logo" aria-label="Platform Engineering on Google Cloud" data-md-component="logo">
+    <a href="../../../.." title="Platform Engineering on Google Cloud" class="md-header__button md-logo" aria-label="Platform Engineering on Google Cloud" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -120,7 +120,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              TODO
+              Overview
             
           </span>
         </div>
@@ -207,7 +207,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../../../../.." title="Platform Engineering on Google Cloud" class="md-nav__button md-logo" aria-label="Platform Engineering on Google Cloud" data-md-component="logo">
+    <a href="../../../.." title="Platform Engineering on Google Cloud" class="md-nav__button md-logo" aria-label="Platform Engineering on Google Cloud" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -237,7 +237,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../.." class="md-nav__link">
+      <a href="../../../.." class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -257,7 +257,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../../code-of-conduct/" class="md-nav__link">
+      <a href="../../../../code-of-conduct/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -277,7 +277,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../../contributing/" class="md-nav__link">
+      <a href="../../../../contributing/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -369,7 +369,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../automated-password-rotation/" class="md-nav__link">
+      <a href="../../../automated-password-rotation/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -395,19 +395,17 @@
                 
   
   
-    
   
   
-  
     
     
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" >
         
           
           <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
@@ -421,7 +419,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_2">
             <span class="md-nav__icon md-icon"></span>
             Backstage
@@ -435,7 +433,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../" class="md-nav__link">
+      <a href="../../../backstage/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -453,19 +451,17 @@
                 
   
   
-    
   
   
-  
     
     
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2_2" >
         
           
           <label class="md-nav__link" for="__nav_4_2_2" id="__nav_4_2_2_label" tabindex="0">
@@ -479,7 +475,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_2_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_2_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_2_2">
             <span class="md-nav__icon md-icon"></span>
             Backstage quickstart
@@ -493,7 +489,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../" class="md-nav__link">
+      <a href="../../../backstage/backstage-quickstart/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -502,82 +498,6 @@
   
 
       </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-    
-  
-  
-  
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2_2_2" checked>
-        
-          
-          <label class="md-nav__link" for="__nav_4_2_2_2" id="__nav_4_2_2_2_label" tabindex="0">
-            
-  
-  <span class="md-ellipsis">
-    Docs
-  </span>
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_4_2_2_2_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_4_2_2_2">
-            <span class="md-nav__icon md-icon"></span>
-            Docs
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        
-  
-  <span class="md-ellipsis">
-    TODO
-  </span>
-  
-
-      </a>
-      
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
     </li>
   
 
@@ -641,7 +561,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../cloud_deploy_flow/" class="md-nav__link">
+      <a href="../../../cloud_deploy_flow/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -732,7 +652,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../cloud_deploy_flow/CloudFunctions/cloudDeployApprovals/" class="md-nav__link">
+      <a href="../../../cloud_deploy_flow/CloudFunctions/cloudDeployApprovals/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -796,7 +716,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../cloud_deploy_flow/CloudFunctions/cloudDeployInteractions/" class="md-nav__link">
+      <a href="../../../cloud_deploy_flow/CloudFunctions/cloudDeployInteractions/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -860,7 +780,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../cloud_deploy_flow/CloudFunctions/cloudDeployOperations/" class="md-nav__link">
+      <a href="../../../cloud_deploy_flow/CloudFunctions/cloudDeployOperations/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -924,7 +844,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../cloud_deploy_flow/CloudFunctions/createRelease/" class="md-nav__link">
+      <a href="../../../cloud_deploy_flow/CloudFunctions/createRelease/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -996,7 +916,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../cloud_deploy_flow/CloudRun/" class="md-nav__link">
+      <a href="../../../cloud_deploy_flow/CloudRun/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1060,7 +980,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../cloud_deploy_flow/WebsiteDemo/" class="md-nav__link">
+      <a href="../../../cloud_deploy_flow/WebsiteDemo/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1132,7 +1052,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../github-runners-gke/" class="md-nav__link">
+      <a href="../../../github-runners-gke/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1141,6 +1061,411 @@
   
 
       </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Sandboxes
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_5">
+            <span class="md-nav__icon md-icon"></span>
+            Sandboxes
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Sandbox Projects Reference Architecure
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4_5_2" id="__nav_4_5_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Examples
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_5_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            Examples
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_5_2_1" id="__nav_4_5_2_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Cli
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_4_5_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_5_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            Cli
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cli/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Example Command Line Interface
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5_2_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4_5_2_2" id="__nav_4_5_2_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Gcp sandboxes
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_4_5_2_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_5_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            Gcp sandboxes
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Overview
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Overview
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Architecture
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#before-you-begin" class="md-nav__link">
+    <span class="md-ellipsis">
+      Before you begin
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Before you begin">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#preparing-the-sandboxes-folder" class="md-nav__link">
+    <span class="md-ellipsis">
+      Preparing the Sandboxes Folder
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deploying-the-reference-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deploying the reference architecture
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#creating-a-sandbox" class="md-nav__link">
+    <span class="md-ellipsis">
+      Creating a sandbox
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      Next steps
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_5_3" id="__nav_4_5_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Sandbox modules
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            Sandbox modules
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sandbox-modules/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Sandbox Projects
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -1181,6 +1506,74 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Architecture
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#before-you-begin" class="md-nav__link">
+    <span class="md-ellipsis">
+      Before you begin
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Before you begin">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#preparing-the-sandboxes-folder" class="md-nav__link">
+    <span class="md-ellipsis">
+      Preparing the Sandboxes Folder
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deploying-the-reference-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deploying the reference architecture
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#creating-a-sandbox" class="md-nav__link">
+    <span class="md-ellipsis">
+      Creating a sandbox
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      Next steps
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1197,7 +1590,113 @@
   
 
 
-<h1 id="todo">TODO<a class="headerlink" href="#todo" title="Permanent link">&para;</a></h1>
+<h1 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h1>
+<p>This directory contains Terraform configuration files that let you deploy the
+system project. This example is a good entry point for testing the reference
+architecture and learning how it can be incorportated into your own
+infrastructure as code processes.</p>
+<h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
+<p><img alt="architecture-per-project" src="../../resources/high-level-arch.png" /></p>
+<p>For an explanation of the components of the sandboxes reference architecture and
+the interaction flow, read the
+<a href="../../#architecture">main Architecture section</a>.</p>
+<h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
+<p>In this section you prepare a folder for deployment.</p>
+<ol>
+<li>Open the <a href="https://console.cloud.google.com">Cloud Console</a></li>
+<li>
+<p>Activate <a href="https://console.cloud.google.com/?cloudshell=true">Cloud Shell</a> \
+    At the bottom of the Cloud Console, a <a href="https://cloud.google.com/shell/docs/features">Cloud Shell</a>
+    session starts and displays a command-line prompt.</p>
+</li>
+<li>
+<p>In Cloud Shell, clone this repository</p>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/GoogleCloudPlatform/platform-engineering.git
+</span></code></pre></div>
+</li>
+<li>
+<p>Export variables for the working directories</p>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">SANDBOXES_DIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="s2">/reference-architectures/examples/gcp-sandboxes&quot;</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">SANDBOXES_CLI</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="s2">/reference-architectures/examples/cli&quot;</span>
+</span></code></pre></div>
+</li>
+</ol>
+<h3 id="preparing-the-sandboxes-folder">Preparing the Sandboxes Folder<a class="headerlink" href="#preparing-the-sandboxes-folder" title="Permanent link">&para;</a></h3>
+<p>In this section you prepare your environment for deploying the system project.</p>
+<ol>
+<li>
+<p>Go to the <a href="https://console.cloud.google.com/cloud-resource-manage">Manage Resources</a> page in the Cloud Console in
+    the IAM &amp; Admin menu.</p>
+</li>
+<li>
+<p>Click <em>Create folder</em>, then choose Folder.</p>
+</li>
+<li>
+<p>Enter a name for your folder. This folder will be used to contain the system
+    and sandbox projects.</p>
+</li>
+<li>
+<p>Click <em>Create</em></p>
+</li>
+<li>
+<p>Copy the folder ID from the Manage resources page, you will need this value
+    later for use as Terraform variable.</p>
+</li>
+</ol>
+<h3 id="deploying-the-reference-architecture">Deploying the reference architecture<a class="headerlink" href="#deploying-the-reference-architecture" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p>Set the project ID and region in the corresponding Terraform environment
+    variables</p>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">TF_VAR_billing_account</span><span class="o">=</span><span class="s2">&quot;&lt;your billing account id&gt;&quot;</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">TF_VAR_sandboxes_folder</span><span class="o">=</span><span class="s2">&quot;folders/&lt;folder id from step 5&gt;&quot;</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">TF_VAR_system_project_name</span><span class="o">=</span><span class="s2">&quot;&lt;name for the system project&gt;&quot;</span>
+</span></code></pre></div>
+</li>
+<li>
+<p>Change directory into the Terraform example directory and initialize
+    Terraform.</p>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SANDBOXES_DIR</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>terraform<span class="w"> </span>init
+</span></code></pre></div>
+</li>
+<li>
+<p>Apply the configuration. Answer <code>yes</code> when prompted, after reviewing the
+    resources that Terraform intends to create.</p>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>terraform<span class="w"> </span>apply
+</span></code></pre></div>
+</li>
+</ol>
+<h3 id="creating-a-sandbox">Creating a sandbox<a class="headerlink" href="#creating-a-sandbox" title="Permanent link">&para;</a></h3>
+<p>Now that the system project has been deployed, create a sandbox using the
+example cli.</p>
+<ol>
+<li>
+<p>Change directory into the example command-line tool directory</p>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SANDBOXES_DIR</span><span class="si">}</span><span class="s2">&quot;</span>
+</span></code></pre></div>
+</li>
+<li>
+<p>Install there required Python libraries</p>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</span></code></pre></div>
+</li>
+<li>
+<p>Create a Sandbox using the cli</p>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>python<span class="w"> </span>./sandbox.py<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>--system<span class="o">=</span><span class="s2">&quot;&lt;name of your system project&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>--project_id<span class="o">=</span><span class="s2">&quot;&lt;name of the sandbox to create&gt;&quot;</span>
+</span></code></pre></div>
+</li>
+</ol>
+<h2 id="next-steps">Next steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
+<p>Your sandboxes infrastructure is ready, you may continue to use the example cli
+to create and delete sandboxes. At this point it is recommended that you:</p>
+<ul>
+<li>Review the <a href="../../sandbox-modules/">detailed object and operating model</a></li>
+<li>Adapt the CLI to meet your organization's requirements</li>
+</ul>
+<!-- LINKS: https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
 
 
@@ -1259,10 +1758,10 @@ Copyright &copy; 2019-2025 Google LLC<br>
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "../../../../..", "features": ["content.code.copy", "content.code.annotate", "navigation.top", "navigation.tracking"], "search": "../../../../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../../../..", "features": ["content.code.copy", "content.code.annotate", "navigation.top", "navigation.tracking"], "search": "../../../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../../../../../assets/javascripts/bundle.60a45f97.min.js"></script>
+      <script src="../../../../assets/javascripts/bundle.60a45f97.min.js"></script>
       
     
   </body>
