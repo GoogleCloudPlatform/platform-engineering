@@ -1,0 +1,88 @@
+# Python
+*.pyc
+__pycache__/
+.venv/
+*.egg-info/
+
+# Docker
+*.dockerignore
+
+# OS Specific
+.DS_Store
+Thumbs.db
+
+# Terraform
+**/.terraform/
+**/*.tfstate
+**/*.tfstate.backup
+**/**/terraform/.terraform
+quickstart-multi-zone-deploy/terraform/terraform.tfstate
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*.tfvars
+*.tfvars.json
+.terraformrc
+terraform-provider-*
+
+# Kubernetes
+.kube/
+*.yaml.orig
+
+# Cloud Build
+.cloudbuild/
+
+# IDE Specific
+.idea/
+*.iml
+*.swp
+*.swo
+.vscode/
+
+# Logs
+*.log
+
+# Dependencies
+/node_modules
+/vendor
+
+# Other
+*.zip
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+*.tar
+*.bak
+*.swp
+*.swo
+
+# Local .terraform directories
+**/.terraform/*
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+
+# Crash log files
+crash.log
+crash.*.log
+
+*.tfvars
+*.tfvars.json
+
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Ignore transient lock info files created by terraform apply
+.terraform.tfstate.lock.info
+terraform/.terraform.lock.hcl
+terraform.lock.hcl
+
+
+
+# Ignore CLI configuration files
+.terraformrc
+terraform.rc
