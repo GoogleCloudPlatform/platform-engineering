@@ -11,7 +11,7 @@ infrastructure as code processes.
 
 For an explanation of the components of the sandboxes reference architecture and
 the interaction flow, read the
-[main Architecture section](../README.md#architecture).
+[main Architecture section](../../README.md#architecture).
 
 ## Before you begin
 
