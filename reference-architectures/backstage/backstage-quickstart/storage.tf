@@ -14,7 +14,7 @@
 
 
 resource "google_storage_bucket" "backstageTechDocsBucket" {
-  name                        = "${var.backstage_tech_docs_bucket}-${var.project_id_suffix}"
+  name                        = "${var.backstage_tech_docs_bucket}-${var.environment_project_id}"
   project                     = var.environment_project_id
   location                    = var.backstage_tech_docs_bucket_location
   storage_class               = "STANDARD"

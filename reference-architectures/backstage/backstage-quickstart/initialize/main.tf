@@ -34,7 +34,6 @@ locals {
     environment_name        = "${var.environment_name}"
     iap_user_domain         = "${var.iap_user_domain}"
     environment_project_id  = "${google_project.environment.project_id}"
-    project_id_suffix       = "${random_string.project_id_suffix.result}"
     iap_support_email       = "${var.iap_support_email}"
   EOT
 }
