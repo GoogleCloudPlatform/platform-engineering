@@ -1,0 +1,16 @@
+apiVersion: deploy.cloud.google.com/v1
+kind: Target
+metadata:
+  name: blue-target
+description: blue cluster
+gke:
+  cluster: projects/pemulti11/locations/us-central1-b/clusters/gke-west-2
+---
+apiVersion: deploy.cloud.google.com/v1
+kind: Target
+metadata:
+  name: green-target
+description: green cluster
+requireApproval: true
+gke:
+  cluster: projects/pemulti11/locations/us-central1-a/clusters/gke-west-1
