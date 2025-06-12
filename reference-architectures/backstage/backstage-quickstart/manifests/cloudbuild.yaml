@@ -2,7 +2,7 @@
 substitutions:
   _BACKSTAGE_APP_NAME: 'backstage-quickstart'
   _LOCATION: 'us-central1'
-  _ARTIFACT_REGISTRY_REPO: 'backstage'
+  _ARTIFACT_REGISTRY_REPO: 'backstage-qs'
   _IMAGE_NAME: 'backstage-quickstart'
 
 steps:
