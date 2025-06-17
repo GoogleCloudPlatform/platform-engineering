@@ -32,6 +32,6 @@ resource "google_compute_managed_ssl_certificate" "backstageCert" {
   name = "backstage-qs-cert"
 
   managed {
-    domains = [backstageExternalUrl]
+    domains = [local.backstageExternalUrl]
   }
 }

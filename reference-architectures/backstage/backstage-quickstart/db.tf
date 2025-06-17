@@ -63,3 +63,23 @@ resource "null_resource" "sqlIamDelay" {
     "before" = "${google_sql_database_instance.instance.id}"
   }
 }
+
+data "template_file" "app_config_production" {
+  template = "${file("./manifests/app-config.production.yaml")}"
+  vars = {
+    POSTGRES_HOST = google_sql_database_instance.instance.dns_name
+    POSTGRES_PORT = 5432
+    POSTGRES_DB = "backstage"
+    POSTGRES_USER = trimsuffix(google_service_account.workloadSa.email, ".gserviceaccount.com")
+  }
+}
+
+resource "null_resource" "local" {
+  # triggers {
+  #   template = "${data.template_file.test.rendered}"
+  # }
+
+  provisioner "local-exec" {
+    command = "echo \"${data.template_file.app_config_production.rendered}\" > ./manifests/app-config.production.yaml.rendered"
+  }
+}
