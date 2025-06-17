@@ -27,3 +27,11 @@ resource "google_endpoints_service" "backstageQsEndpoint" {
   project      = var.environment_project_id
   service_name = local.backstageExternalUrl
 }
+
+resource "google_compute_managed_ssl_certificate" "backstageCert" {
+  name = "backstage-qs-cert"
+
+  managed {
+    domains = [backstageExternalUrl]
+  }
+}
