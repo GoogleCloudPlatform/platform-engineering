@@ -28,30 +28,27 @@ steps:
     waitFor: ['Scaffold']
     timeout: 1200s
 
-  # Step 3: Build the application to create production artifacts
+  # Step 3: Prepare the runtime config file
+  - name: 'gcr.io/cloud-builders/gcloud'
+    id: 'Prepare Config'
+    dir: '${_BACKSTAGE_APP_NAME}'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "Copying rendered production YAML"
+        cp /workspace/app-config.production.yaml.rendered app-config.production.yaml
+    waitFor: ['Install Dependencies']
+
+  # Step 4: Build the application to create production artifacts
   - name: 'node:20'
     id: 'Build App'
     dir: '${_BACKSTAGE_APP_NAME}'
     entrypoint: 'yarn'
-    args: ['build:backend'] # 'yarn build' handles TypeScript compilation and everything else
+    args: ['build:backend', '--config', '../../app-config.yaml', '--config', '../../app-config.production.yaml'] # 'yarn build' handles TypeScript compilation and everything else
     # no need for yarn tsc
-    waitFor: ['Install Dependencies']
+    waitFor: ['Prepare Config']
     timeout: 1200s
-
-  # Nedd to paramatize a config file here so that it will rely on ENVARS
-  # Then create k8s secrets for those ENVARS
-
-  # Step 4: Prepare the runtime config file
-  #- name: 'gcr.io/cloud-builders/gcloud'
-  #  id: 'Prepare Config'
-  #  dir: '${_BACKSTAGE_APP_NAME}'
-  #  entrypoint: 'bash'
-  #  args:
-  #    - '-c'
-  #    - |
-  #      echo "Copying example production YAML"
-  #      cp app-config.production.yaml.example app-config.production.yaml
-  #  waitFor: ['Install Dependencies']
 
   # Step 5: Build the Docker container
   - name: 'gcr.io/cloud-builders/docker'
@@ -65,7 +62,7 @@ steps:
       - '${_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/${_IMAGE_NAME}:${BUILD_ID}'
       - '--file=packages/backend/Dockerfile'
       - '.'
-    waitFor: ['Build App'] #, 'Prepare Config']
+    waitFor: ['Build App', 'Prepare Config']
 
   # Step 6: Push the container image to Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'

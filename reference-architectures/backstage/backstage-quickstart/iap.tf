@@ -28,3 +28,48 @@ resource "google_iap_client" "backstageIapClient" {
   display_name = var.backstage_iap_display_name
   brand        = google_iap_brand.backstageIapBrand.name
 }
+
+resource "local_file" "route_https_yaml" {
+  content = templatefile(
+    "${path.module}/manifests/templates/http-route-service.tftpl.yaml",
+    {
+      gateway_name    = local.gateway_name
+      hostname        = local.backstageExternalUrl
+      http_route_name = "backstage-https"
+      namespace       = "backstage"
+      service_name    = "backstage"
+      service_port    = 80
+    }
+  )
+  filename = "./manifests/k8s/http-route-service.yaml"
+}
+
+###############################################################################
+# IAP Policy
+###############################################################################
+
+resource "local_file" "iap_secret_yaml" {
+  content = templatefile(
+    "${path.module}/manifests/templates/oauth-secret.tftpl.yaml",
+    {
+      name             = "backstage-oauth"
+      namespace        = "backstage"
+      secret           = base64encode(google_iap_client.backstageIapClient.secret)
+    }
+  )
+  filename = "./manifests/k8s/oauth-secret.yaml"
+}
+
+resource "local_file" "policy_iap_backstage_yaml" {
+  content = templatefile(
+    "${path.module}/manifests/templates/gcp-backend-policy-iap-service.tftpl.yaml",
+    {
+      oauth_client_id          = google_iap_client.backstageIapClient.client_id
+      oauth_client_secret_name = "backstage-oauth"
+      policy_name              = "backstage"
+      service_name             = "backstage"
+      namespace                = "backstage"
+    }
+  )
+  filename = "./manifests/k8s/gcp-backend-policy-iap-service.yaml"
+}

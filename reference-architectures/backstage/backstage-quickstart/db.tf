@@ -49,7 +49,7 @@ resource "google_sql_database" "database" {
 resource "google_sql_user" "iam_service_account_user" {
   # Note: for Postgres only, GCP requires omitting the ".gserviceaccount.com" suffix
   # from the service account email due to length limits on database usernames.
-  
+
   name     = trimsuffix(google_service_account.workloadSa.email, ".gserviceaccount.com")
   instance = google_sql_database_instance.instance.name
   type     = "CLOUD_IAM_SERVICE_ACCOUNT"
@@ -64,22 +64,15 @@ resource "null_resource" "sqlIamDelay" {
   }
 }
 
-data "template_file" "app_config_production" {
-  template = "${file("./manifests/app-config.production.yaml")}"
-  vars = {
-    POSTGRES_HOST = google_sql_database_instance.instance.dns_name
-    POSTGRES_PORT = 5432
-    POSTGRES_DB = "backstage"
-    POSTGRES_USER = trimsuffix(google_service_account.workloadSa.email, ".gserviceaccount.com")
-  }
-}
-
-resource "null_resource" "local" {
-  # triggers {
-  #   template = "${data.template_file.test.rendered}"
-  # }
-
-  provisioner "local-exec" {
-    command = "echo \"${data.template_file.app_config_production.rendered}\" > ./manifests/app-config.production.yaml.rendered"
-  }
+resource "local_file" "app_config_production_yaml" {
+  content = templatefile(
+    "${path.module}/manifests/templates/app-config.production.tftpl.yaml",
+    {
+      postgres_host = google_sql_database_instance.instance.dns_name
+      postgres_port = 5432
+      postgres_db   = "backstage"
+      postgres_user = trimsuffix(google_service_account.workloadSa.email, ".gserviceaccount.com")
+    }
+  )
+  filename = "${path.module}/manifests/cloudbuild/app-config.production.yaml"
 }
