@@ -1,0 +1,4277 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://googlecloudplatform.github.io/platform-engineering/reference-architectures/accelerating-migrations/">
+      
+      
+        <link rel="prev" href="../../contributing/">
+      
+      
+        <link rel="next" href="../automated-password-rotation/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.50">
+    
+    
+      
+        <title>Accelerate migrations through platform engineering golden paths - Platform Engineering on Google Cloud</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.a40c8224.min.css">
+      
+      
+  
+  
+    
+    
+  
+  
+  <style>:root{--md-admonition-icon--info:url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M224 256a128 128 0 1 0 0-256 128 128 0 1 0 0 256m-45.7 48C79.8 304 0 383.8 0 482.3 0 498.7 13.3 512 29.7 512h388.6c1.8 0 3.5-.2 5.3-.5-76.3-55.1-99.8-141-103.1-200.2-16.1-4.8-33.1-7.3-50.7-7.3h-91.4zm308.8-78.3-120 48C358 277.4 352 286.2 352 296c0 63.3 25.9 168.8 134.8 214.2 5.9 2.5 12.6 2.5 18.5 0C614.1 464.8 640 359.3 640 296c0-9.8-6-18.6-15.1-22.3l-120-48c-5.7-2.3-12.1-2.3-17.8 0M591.4 312c-3.9 50.7-27.2 116.7-95.4 149.7V273.9z"/></svg>');}</style>
+
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-DMWFJ8NNHF"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-DMWFJ8NNHF",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-DMWFJ8NNHF",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#accelerate-migrations-through-platform-engineering-golden-paths" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Platform Engineering on Google Cloud" class="md-header__button md-logo" aria-label="Platform Engineering on Google Cloud" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Platform Engineering on Google Cloud
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Accelerate migrations through platform engineering golden paths
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/GoogleCloudPlatform/platform-engineering" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Platform Engineering on Google Cloud" class="md-nav__button md-logo" aria-label="Platform Engineering on Google Cloud" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Platform Engineering on Google Cloud
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/GoogleCloudPlatform/platform-engineering" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Platform Engineering on Google Cloud
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code-of-conduct/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Code of Conduct
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    How to Contribute
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Reference architectures
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Reference architectures
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_1" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4_1" id="__nav_4_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Accelerating migrations
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_1">
+            <span class="md-nav__icon md-icon"></span>
+            Accelerating migrations
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Accelerate migrations through platform engineering golden paths
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Accelerate migrations through platform engineering golden paths
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#application-onboarding-and-migration-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      Application onboarding and migration process
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Application onboarding and migration process">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#intake-the-onboarding-and-migration-request" class="md-nav__link">
+    <span class="md-ellipsis">
+      Intake the onboarding and migration request
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Intake the onboarding and migration request">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#plan-application-onboarding-and-migration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Plan application onboarding and migration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#assess-the-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      Assess the application
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Assess the application">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#review-the-application-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      Review the application design
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#review-application-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      Review application dependencies
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#review-cicd-processes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Review CI/CD processes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#review-data-persistence-and-data-management-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Review data persistence and data management requirements
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#review-finops-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Review FinOps requirements
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#review-compliance-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Review compliance requirements
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#review-the-application-team-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      Review the application team practices
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#assess-application-refactoring-and-the-idp" class="md-nav__link">
+    <span class="md-ellipsis">
+      Assess application refactoring and the IDP
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#finalize-the-application-onboarding-and-migration-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      Finalize the application onboarding and migration plan
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set-up-the-idp" class="md-nav__link">
+    <span class="md-ellipsis">
+      Set up the IDP
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Set up the IDP">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enhance-the-idp" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enhance the IDP
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configure-the-idp" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configure the IDP
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onboard-and-migrate-the-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      Onboard and migrate the application
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Onboard and migrate the application">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#refactor-the-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      Refactor the application
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configure-cicd-workflows" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configure CI/CD workflows
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configure CI/CD workflows">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configure-cicd-workflows-to-deploy-the-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configure CI/CD workflows to deploy the application
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#migrate-deployable-artifacts-from-the-source-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Migrate deployable artifacts from the source environment
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deploy-the-application-in-the-development-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deploy the application in the development environment
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#promote-from-development-to-staging" class="md-nav__link">
+    <span class="md-ellipsis">
+      Promote from development to staging
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#perform-acceptance-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Perform acceptance testing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#migrate-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      Migrate data
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#promote-from-staging-to-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      Promote from staging to production
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#perform-the-cutover" class="md-nav__link">
+    <span class="md-ellipsis">
+      Perform the cutover
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optimize-the-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optimize the application
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Optimize the application">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#establish-your-optimization-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Establish your optimization requirements
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#optimize-the-onboarding-and-migration-process-and-the-idp" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optimize the onboarding and migration process and the IDP
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Optimize the onboarding and migration process and the IDP">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#establish-your-optimization-requirements-for-the-idp" class="md-nav__link">
+    <span class="md-ellipsis">
+      Establish your optimization requirements for the IDP
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#application-onboarding-and-migration-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Application onboarding and migration example
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Application onboarding and migration example">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#intake-the-onboarding-and-migration-request-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Intake the onboarding and migration request (example)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Intake the onboarding and migration request (example)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#plan-application-onboarding-and-migration-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Plan application onboarding and migration (example)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#assess-the-application-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Assess the application (example)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Assess the application (example)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#review-the-application-design-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Review the application design (example)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#review-application-dependencies-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Review application dependencies (example)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#review-cicd-processes-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Review CI/CD processes (example)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#review-data-persistence-and-data-management-requirements-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Review data persistence and data management requirements (example)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#review-finops-requirements-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Review FinOps requirements (example)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#review-compliance-requirements-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Review compliance requirements (example)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#review-the-applications-team-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      Review the application's team practices
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#assess-application-refactoring-and-the-idp-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Assess application refactoring and the IDP (example)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#finalize-the-application-onboarding-and-migration-plan-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Finalize the application onboarding and migration plan (example)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set-up-the-idp-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Set up the IDP (example)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Set up the IDP (example)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enhance-the-idp-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enhance the IDP (example)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configure-the-idp-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configure the IDP (example)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onboard-and-migrate-the-application-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Onboard and migrate the application (example)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Onboard and migrate the application (example)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#refactor-the-application-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Refactor the application (example)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configure-cicd-workflows-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configure CI/CD workflows (example)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#promote-the-application-from-development-to-staging" class="md-nav__link">
+    <span class="md-ellipsis">
+      Promote the application from development to staging
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#perform-acceptance-testing-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Perform acceptance testing (example)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#migrate-data-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Migrate data (example)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#promote-from-staging-to-production-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Promote from staging to production (example)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#perform-the-cutover-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Perform the cutover (example)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optimize-the-application-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optimize the application (example)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      What's next
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What's next">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#contributors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Contributors
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Automated password rotation
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            Automated password rotation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../automated-password-rotation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Backstage
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            Backstage
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../backstage/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Backstage on Google Cloud
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_3_2" id="__nav_4_3_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Backstage quickstart
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            Backstage quickstart
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../backstage/backstage-quickstart/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Backstage on Google Cloud Quickstart
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Cloud deploy flow
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            Cloud deploy flow
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud_deploy_flow/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Platform Engineering Deployment Demo
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_2" id="__nav_4_4_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    CloudFunctions
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            CloudFunctions
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_2_1" id="__nav_4_4_2_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    cloudDeployApprovals
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_4_4_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            cloudDeployApprovals
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud_deploy_flow/CloudFunctions/cloudDeployApprovals/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Cloud Deployment Approvals with Pub/Sub
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_2_2" id="__nav_4_4_2_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    cloudDeployInteractions
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_4_4_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            cloudDeployInteractions
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud_deploy_flow/CloudFunctions/cloudDeployInteractions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Cloud Deploy Interactions with Pub/Sub
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_2_3" id="__nav_4_4_2_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    cloudDeployOperations
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_4_4_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            cloudDeployOperations
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud_deploy_flow/CloudFunctions/cloudDeployOperations/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Cloud Deploy Operations Function
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_2_4" id="__nav_4_4_2_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    createRelease
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_4_4_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            createRelease
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud_deploy_flow/CloudFunctions/createRelease/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Example Cloud Run Function
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_3" id="__nav_4_4_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    CloudRun
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            CloudRun
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud_deploy_flow/CloudRun/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Random Date Service
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_4" id="__nav_4_4_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    WebsiteDemo
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            WebsiteDemo
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud_deploy_flow/WebsiteDemo/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pub/Sub Local Demo
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Github runners gke
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_5">
+            <span class="md-nav__icon md-icon"></span>
+            Github runners gke
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../github-runners-gke/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Reference Guide: Deploy and use GitHub Actions Runners on GKE
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_6" id="__nav_4_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Sandboxes
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_6">
+            <span class="md-nav__icon md-icon"></span>
+            Sandboxes
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sandboxes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Sandbox Projects Reference Architecure
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_6_2" id="__nav_4_6_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Examples
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            Examples
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_6_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_6_2_1" id="__nav_4_6_2_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Cli
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_4_6_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_6_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            Cli
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sandboxes/examples/cli/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Example Command Line Interface
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_6_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_6_2_2" id="__nav_4_6_2_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Gcp sandboxes
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_4_6_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_6_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            Gcp sandboxes
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sandboxes/examples/gcp-sandboxes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_6_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_6_3" id="__nav_4_6_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Sandbox modules
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_6_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_6_3">
+            <span class="md-nav__icon md-icon"></span>
+            Sandbox modules
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sandboxes/sandbox-modules/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Sandbox Projects
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#application-onboarding-and-migration-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      Application onboarding and migration process
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Application onboarding and migration process">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#intake-the-onboarding-and-migration-request" class="md-nav__link">
+    <span class="md-ellipsis">
+      Intake the onboarding and migration request
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Intake the onboarding and migration request">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#plan-application-onboarding-and-migration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Plan application onboarding and migration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#assess-the-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      Assess the application
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Assess the application">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#review-the-application-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      Review the application design
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#review-application-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      Review application dependencies
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#review-cicd-processes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Review CI/CD processes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#review-data-persistence-and-data-management-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Review data persistence and data management requirements
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#review-finops-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Review FinOps requirements
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#review-compliance-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Review compliance requirements
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#review-the-application-team-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      Review the application team practices
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#assess-application-refactoring-and-the-idp" class="md-nav__link">
+    <span class="md-ellipsis">
+      Assess application refactoring and the IDP
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#finalize-the-application-onboarding-and-migration-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      Finalize the application onboarding and migration plan
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set-up-the-idp" class="md-nav__link">
+    <span class="md-ellipsis">
+      Set up the IDP
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Set up the IDP">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enhance-the-idp" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enhance the IDP
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configure-the-idp" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configure the IDP
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onboard-and-migrate-the-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      Onboard and migrate the application
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Onboard and migrate the application">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#refactor-the-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      Refactor the application
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configure-cicd-workflows" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configure CI/CD workflows
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configure CI/CD workflows">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configure-cicd-workflows-to-deploy-the-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configure CI/CD workflows to deploy the application
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#migrate-deployable-artifacts-from-the-source-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Migrate deployable artifacts from the source environment
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deploy-the-application-in-the-development-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deploy the application in the development environment
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#promote-from-development-to-staging" class="md-nav__link">
+    <span class="md-ellipsis">
+      Promote from development to staging
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#perform-acceptance-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Perform acceptance testing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#migrate-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      Migrate data
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#promote-from-staging-to-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      Promote from staging to production
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#perform-the-cutover" class="md-nav__link">
+    <span class="md-ellipsis">
+      Perform the cutover
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optimize-the-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optimize the application
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Optimize the application">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#establish-your-optimization-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Establish your optimization requirements
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#optimize-the-onboarding-and-migration-process-and-the-idp" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optimize the onboarding and migration process and the IDP
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Optimize the onboarding and migration process and the IDP">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#establish-your-optimization-requirements-for-the-idp" class="md-nav__link">
+    <span class="md-ellipsis">
+      Establish your optimization requirements for the IDP
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#application-onboarding-and-migration-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Application onboarding and migration example
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Application onboarding and migration example">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#intake-the-onboarding-and-migration-request-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Intake the onboarding and migration request (example)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Intake the onboarding and migration request (example)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#plan-application-onboarding-and-migration-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Plan application onboarding and migration (example)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#assess-the-application-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Assess the application (example)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Assess the application (example)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#review-the-application-design-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Review the application design (example)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#review-application-dependencies-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Review application dependencies (example)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#review-cicd-processes-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Review CI/CD processes (example)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#review-data-persistence-and-data-management-requirements-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Review data persistence and data management requirements (example)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#review-finops-requirements-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Review FinOps requirements (example)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#review-compliance-requirements-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Review compliance requirements (example)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#review-the-applications-team-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      Review the application's team practices
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#assess-application-refactoring-and-the-idp-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Assess application refactoring and the IDP (example)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#finalize-the-application-onboarding-and-migration-plan-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Finalize the application onboarding and migration plan (example)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set-up-the-idp-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Set up the IDP (example)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Set up the IDP (example)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enhance-the-idp-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enhance the IDP (example)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configure-the-idp-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configure the IDP (example)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onboard-and-migrate-the-application-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Onboard and migrate the application (example)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Onboard and migrate the application (example)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#refactor-the-application-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Refactor the application (example)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configure-cicd-workflows-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configure CI/CD workflows (example)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#promote-the-application-from-development-to-staging" class="md-nav__link">
+    <span class="md-ellipsis">
+      Promote the application from development to staging
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#perform-acceptance-testing-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Perform acceptance testing (example)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#migrate-data-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Migrate data (example)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#promote-from-staging-to-production-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Promote from staging to production (example)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#perform-the-cutover-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Perform the cutover (example)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optimize-the-application-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optimize the application (example)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      What's next
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What's next">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#contributors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Contributors
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="accelerate-migrations-through-platform-engineering-golden-paths">Accelerate migrations through platform engineering golden paths<a class="headerlink" href="#accelerate-migrations-through-platform-engineering-golden-paths" title="Permanent link">&para;</a></h1>
+<p>This document helps you adopt
+<a href="https://cloud.google.com/blog/products/application-development/golden-paths-for-engineering-execution-consistency">platform engineering</a>
+by designing a process to onboard and migrate your existing applications to use
+your internal developer platform (IDP). It also provides guidance to help you
+evaluate the opportunity to design a platform engineering process, and to
+explore how it might function. Google Cloud provides tools, products, guidance,
+and professional services to help you adopt platform engineering in your
+environments.</p>
+<p>This document is aimed at the following personas:</p>
+<ul>
+<li><strong>Application developers</strong>, to help them understand how to refactor and
+  modernize applications to onboard and migrate them on the IDP.</li>
+<li><strong>Application operator</strong>, to help them understand how to integrate the
+  application with the IDP's observability mechanisms.</li>
+<li><strong>Platform administrators</strong>, to highlight possible platform enhancements to
+  ease onboarding and migration of applications.</li>
+<li><strong>Database administrators</strong>, to help them migrate from self-managed databases
+  to managed database services.</li>
+<li><strong>Security specialists</strong>, to outline possible security challenges and benefit
+  from IDP's security solutions.</li>
+</ul>
+<p>The
+<a href="https://tag-app-delivery.cncf.io/whitepapers/platforms/">Cloud Native Computing Foundation</a>
+defines a <em>golden path</em> as an integrated bundle of templates and documentation
+for rapid project development. Designing and developing golden paths can help
+facilitate the onboarding and the migration of existing applications to your
+IDP. When you use a golden path, your development and operations teams can take
+advantage of benefits like the following:</p>
+<ul>
+<li>Streamlined, self-service development and deployment processes.</li>
+<li>Ready-to-use infrastructure, and templates for your projects.</li>
+<li>Observability instrumentation.</li>
+<li>Extensive reference documentation.</li>
+</ul>
+<p>Onboarding and migrating existing applications to the IDP can let you experience
+the benefits of adopting platform engineering gradually and incrementally in
+your organization, without spending effort on large scale migration projects.</p>
+<p>To migrate applications and onboard them to the IDP, we recommend that you
+design an <em>application onboarding and migration process</em>. This document
+describes a reference application onboarding and migration process. We recommend
+that you tailor the process to your requirements and your IDP.</p>
+<p>If you're migrating your applications from your on-premises environment or from
+another cloud provider to Google Cloud, the application onboarding and migration
+process can help you to accelerate your migration. In that scenario, the teams
+that are managing the migration can refer to well-established golden paths,
+instead of having to design their own migration processes and project templates.</p>
+<h2 id="application-onboarding-and-migration-process">Application onboarding and migration process<a class="headerlink" href="#application-onboarding-and-migration-process" title="Permanent link">&para;</a></h2>
+<p>The goal of the application onboarding and migration process is to get an
+application on the IDP. After you onboard and migrate the application to the
+IDP, your teams can benefit from using the IDP. When you use an IDP, you can
+focus on providing business value for the application, rather than spending
+effort on ad-hoc processes and operations.</p>
+<p>To manage the complexity of the application onboarding and migration process, we
+recommend that you design the process in the following phases:</p>
+<ol>
+<li>Intake the application onboarding and migration request.</li>
+<li>Assess the application to onboard and migrate.</li>
+<li>Set up and eventually extend the IDP to accommodate the needs of the
+   application to onboard and migrate.</li>
+<li>Onboard and migrate the application.</li>
+<li>Optimize the application.</li>
+</ol>
+<p>The high-level structure of this process matches the
+<a href="https://cloud.google.com/architecture/migration-to-gcp-getting-started#the_migration_path">Google Cloud migration path</a>.
+In this case, you follow the migration path to onboard and migrate existing
+applications on the IDP.</p>
+<p>To ensure that the application onboarding and migration is on the right track,
+we recommend that you design validation checkpoints for each phase of the
+process, rather than having a single acceptance testing task. Having validation
+checkpoints for each phase helps you to promptly detect issues as they arise,
+rather than when you are close to the end of the migration.</p>
+<p>Even when following a phased process, onboarding and migrating complex
+applications to the IDP might require a significant effort, and it might pose
+risks. To manage the effort and the risks of onboarding and migrating complex
+applications to the IDP, you can follow the onboarding and migration process
+iteratively, by migrating parts of the application on each iteration. For
+example, if an application is composed of multiple components, you can onboard
+and migrate one component for each iteration of the process.</p>
+<p>To reduce toil, we recommend that you thoroughly document the application
+onboarding and migration process, and make it as self-service as possible, in
+line with platform-engineering principles.</p>
+<p>In this document, we assume that the onboarding and migration process involves
+three teams:</p>
+<ul>
+<li><strong>Application onboarding and migration team</strong>: the team that's responsible for
+  onboarding and migrating the application on the IDP.</li>
+<li><strong>Application development and operations team</strong>: the team that's responsible
+  for developing and operating the application.</li>
+<li><strong>IDP team</strong>: the team that's responsible for developing and operating the
+  IDP.</li>
+</ul>
+<p>The following sections describe each phase of the application onboarding and
+migration process.</p>
+<h3 id="intake-the-onboarding-and-migration-request">Intake the onboarding and migration request<a class="headerlink" href="#intake-the-onboarding-and-migration-request" title="Permanent link">&para;</a></h3>
+<p>The first phase of the application onboarding and migration process is to intake
+the request to onboard and migrate the application. The request process is the
+following:</p>
+<ol>
+<li>The application onboarding and migration team files the onboarding and
+   migration request.</li>
+<li>The IDP receives the request, and it recommends existing golden paths.</li>
+<li>If the IDP can't suggest an existing golden path, the IDP forwards the
+   request to the team that manages the IDP for further evaluation.</li>
+</ol>
+<p>We recommend that you keep this phase as light as possible by using a form or a
+guided, self-service process. For example, you can include migration guidance in
+the IDP documentation so that development teams can review it and prepare for
+the migration. You can also implement automated checks in your IDP to give
+initial feedback to development teams about potential migration blockers and
+issues.</p>
+<p>To assist and offer consultation to the teams that filed or intend to file an
+application onboarding and migration request, we recommend that the team that
+manages the IDP establish communication channels to offer assistance to other
+teams. For example, the team that manages the IDP might set up dedicated
+discussion groups, chat rooms, and office hours where they can offer help and
+answer questions about the IDP. To help with onboarding and migration of complex
+applications and to facilitate communications, you can also attach a member of
+the team that manages the IDP to the application team while the migration is in
+progress.</p>
+<h4 id="plan-application-onboarding-and-migration">Plan application onboarding and migration<a class="headerlink" href="#plan-application-onboarding-and-migration" title="Permanent link">&para;</a></h4>
+<p>As part of this phase, we recommend that the application onboarding and
+migration team starts drafting an onboarding and migration plan, even if the
+team doesn't have all of the data points to fully define it. When the team
+progresses through the assessment phase, they will gather information to
+finalize and validate the plan.</p>
+<p>To manage the complexity of the migration plan, we recommend that you decompose
+it across the following sub-tasks:</p>
+<ul>
+<li>Define the timelines for the onboarding and migration process, and any
+  intermediate milestones, according to the requirements of the application
+  onboarding and migration. For example, you might develop a countdown plan that
+  lists all of the tasks that are required to complete the application
+  onboarding and migration, along with responsibilities and estimated duration.</li>
+<li>Define a responsibility assignment (RACI) matrix to clearly outline who is
+  responsible for each phase and task that composes the onboarding and migration
+  project.</li>
+<li>Monitor the onboarding and migration process, to gather data so that you can
+  optimize the process. For example, you might gather data about how much time
+  you spend on each phase and on each task of the onboarding and migration
+  process. You might also gather data about the most common blockers and issues
+  that you experience during the process.</li>
+</ul>
+<p>Developing a comprehensive onboarding and migration plan is crucial to the
+success of the application onboarding and migration process. Having a plan helps
+you to define clear deadlines, assign responsibilities, and deal with
+unanticipated issues.</p>
+<h3 id="assess-the-application">Assess the application<a class="headerlink" href="#assess-the-application" title="Permanent link">&para;</a></h3>
+<p>The second phase of the application onboarding and migration process is to
+follow up on the intake request by assessing the application to onboard and
+migrate to the IDP. The goal of this assessment phase is to produce the
+following artifacts:</p>
+<ul>
+<li>Data about the architecture of the application and its deployment and
+  operational processes.</li>
+<li>Plans to migrate the application and onboard it to the IDP.</li>
+</ul>
+<p>These outputs of the assessment phase help you to plan and complete the
+migration. The outputs also help you to scope the enhancements that the IDP
+needs to support the application, and to increase the velocity of future
+migrations.</p>
+<p>To manage the complexity of the assessment phase, we recommend that you
+decompose it into the following steps:</p>
+<ol>
+<li>Review the application design.</li>
+<li>Review application dependencies.</li>
+<li>Review continuous integration and continuous deployment (CI/CD) processes.</li>
+<li>Review data persistence and data management requirements.</li>
+<li>Review <a href="https://cloud.google.com/learn/what-is-finops">FinOps</a> requirements.</li>
+<li>Review compliance requirements.</li>
+<li>Review the application team practices.</li>
+<li>Assess application refactoring and the IDP.</li>
+<li>Finalize the application onboarding and migration plan.</li>
+</ol>
+<p>The preceding steps are described in the following sections. For more
+information about assessing applications and defining migration plans, see
+<a href="https://cloud.google.com/architecture/migration-to-gcp-assessing-and-discovering-your-workloads">Migrate to Google Cloud: Assess and discover your workloads</a>.</p>
+<h4 id="review-the-application-design">Review the application design<a class="headerlink" href="#review-the-application-design" title="Permanent link">&para;</a></h4>
+<p>To gather a comprehensive understanding about the design of the application, we
+recommend that you complete a thorough assessment of the following aspects of
+the application:</p>
+<ul>
+<li><strong>Application source code</strong>:<ul>
+<li>Ensure that the source code of the application is available, and that you
+  can access it.</li>
+<li>Gather information about how many repositories you're using to store the
+  source code of the application and the structure of the repositories.</li>
+<li>Review the deployment descriptors that you're using for the application.</li>
+<li>Review any code that's responsible for handling provisioning and
+  configuration of the necessary infrastructure.</li>
+</ul>
+</li>
+<li><strong>Deployable artifacts</strong>: Gather information about the deployable artifacts
+  that you're using to package and deploy your application, such as container
+  images, packages, and the repositories that you're using to store them.</li>
+<li><strong>Configuration injection</strong>: Assess how you're injecting configuration inside
+  deployable artifacts. For example, gather information about how you're
+  distributing environment- and deployment-specific configuration to your
+  application.</li>
+<li><strong>Security requirements</strong>: Collect data about the security requirements and
+  processes that you have in place for the application, such as vulnerability
+  scanning, binary authorization, bills of materials verification, attestation,
+  and secret management.</li>
+<li><strong>Identity and access management</strong>: Gather information about how your
+  application handles identity and access management, and the roles and
+  permissions that your application assumes for its users.</li>
+<li><strong>Observability requirements</strong>:<ul>
+<li>Assess your application's observability requirements, in terms of
+  monitoring, logging, tracing and alerting.</li>
+<li>Gather information about any service level objectives (SLOs) that are in
+  place for the application.</li>
+</ul>
+</li>
+<li><strong>Availability and reliability requirements</strong>:<ul>
+<li>Gather information about the availability and reliability requirements of
+  the application.</li>
+<li>Define the
+  <a href="https://cloud.google.com/architecture/migration-to-google-cloud-best-practices#assess_the_failure_modes_that_your_workloads_support">failure modes</a>
+  that the application supports.</li>
+</ul>
+</li>
+<li><strong>Network and connectivity requirements</strong>:<ul>
+<li>Assess the network requirements for your application, such as IP address
+  space, DNS names, load balancing and failover mechanisms.</li>
+<li>Gather information about any connectivity requirements to other
+  environments, such as on-premises and third-party ones.</li>
+<li>Gather information about any other services that your application might
+  need, such as API gateways and service meshes.</li>
+</ul>
+</li>
+<li><strong>Statefulness</strong>: Develop a comprehensive understanding of how the application
+  handles stateful data, if any, and where the application stores data. For
+  example, gather information about persistent stateful data, such as data
+  stored in databases, object storage services, persistent disks, and transient
+  data like caches.</li>
+<li><strong>Runtime environment requirements</strong>: Gather information about the runtime
+  requirements of the application, such as any dependency the application needs
+  to run. For example, your application might need certain libraries, or have
+  platform or API dependencies.</li>
+<li><strong>Development tools and environments</strong>. Assess the development tools and
+  environments that developers use to support and evolve your application, such
+  as integrated development environments (IDEs) along with any IDE extensions,
+  the configuration of their development workstations, and any development
+  environment they use to support their work.</li>
+<li><strong>Multi-tenancy requirements</strong>. Gather information about any multi-tenancy
+  requirements for the application.</li>
+</ul>
+<p>Understanding the application architecture helps you to design and implement an
+effective onboarding and migration process for your application. It also helps
+you anticipate issues and potential problems that might arise during the
+migration. For example, if the architecture of your application to onboard and
+migrate to the IDP isn't compatible with your IDP, you might need to spend
+additional effort to refactor the application and enhance the IDP.</p>
+<ul>
+<li>
+<h4 id="review-application-dependencies">Review application dependencies<a class="headerlink" href="#review-application-dependencies" title="Permanent link">&para;</a></h4>
+</li>
+</ul>
+<p>The application to onboard and migrate to the IDP might have dependencies on
+systems and data that are outside the scope of the application. To understand
+these dependencies, we recommend that you gather information about any reliance
+of your application on external systems and data, such as databases, datasets,
+and APIs. After you gather information, you classify the dependencies in order
+of importance and criticality. For example, your application might need access
+to a database to store persistent data, and to external APIs to integrate with
+to provide critical functionality to users, while it might have an optional
+dependency on a caching system.</p>
+<p>Understanding the dependencies of your application on external systems and data
+is crucial to plan for continued access to these dependencies during and after
+the migration.</p>
+<h4 id="review-cicd-processes">Review CI/CD processes<a class="headerlink" href="#review-cicd-processes" title="Permanent link">&para;</a></h4>
+<p>After you review the application design and its dependencies, we recommend that
+you refine the assessment about your application's deployable artifacts by
+reviewing your application's CI/CD processes. These processes usually let you
+build the artifacts to deploy the application and let you deploy them in your
+runtime environments. For example, you refine the assessment by answering
+questions about these CI/CD processes, such as the following:</p>
+<ul>
+<li>Which systems are you using as part of the CI/CD workflows to build and deploy
+  your application?</li>
+<li>Where do you store the deployable artifacts that you build for the
+  application?</li>
+<li>How frequently do you deploy the application?</li>
+<li>What are your deployment processes like? For example, are you using any
+  advanced deployment methodology, such as canary deployments, or blue-green
+  deployments?</li>
+<li>Do you need to migrate the deployable artifacts that you previously built for
+  the application?</li>
+</ul>
+<p>Understanding how the application's CI/CD processes work helps you evaluate
+whether your IDP can support these CI/CD processes as is, or if you need to
+enhance your IDP to support them. For example, if your application has a
+business-critical requirement on a canary deployment process and your IDP
+doesn't support it, you might need to factor in additional effort to enhance the
+IDP.</p>
+<h4 id="review-data-persistence-and-data-management-requirements">Review data persistence and data management requirements<a class="headerlink" href="#review-data-persistence-and-data-management-requirements" title="Permanent link">&para;</a></h4>
+<p>By completing the previous tasks of the assessment phase, you gathered
+information about the statefulness of the application and about the systems that
+the application uses to store persistent and transient data. In this section,
+you refine the assessment to develop a deeper understanding of the systems that
+the application uses to store stateful data. We recommend that you gather
+information on data persistence and data management requirements of your
+application. For example, you refine the assessment by answering questions such
+as the following:</p>
+<ul>
+<li>Which systems does the application use to store persistent data, such as
+  databases, object storage systems, and persistent disks?</li>
+<li>Does the application use any system to store transient data, such as caches,
+  in-memory databases, and temporary data disks?</li>
+<li>How much persistent and transient data does the application produce?</li>
+<li>Do you need to migrate any data when you onboard and migrate the application
+  to the IDP?</li>
+<li>Does the application depend on any data transformation workflows, such as
+  <a href="https://en.wikipedia.org/wiki/Extract,_transform,_load">extract, transform, and load (ETL)</a>
+  jobs?</li>
+</ul>
+<p>Understanding your application's data persistence and data management
+requirements helps you to ensure that your IDP and your production environment
+can effectively support the application. This understanding can also help you
+determine whether you need to enhance the IDP.</p>
+<h4 id="review-finops-requirements">Review FinOps requirements<a class="headerlink" href="#review-finops-requirements" title="Permanent link">&para;</a></h4>
+<p>As part of the assessment of your application, we recommend that you gather data
+about the FinOps requirements of your application, such as budget control and
+cost management, and evaluate whether your IDP supports them. For example, the
+application might require certain mechanisms to control spending and manage
+costs, eventually sending alerts. The application might also require mechanisms
+to completely stop spending when it reaches a certain budget limit.</p>
+<p>Understanding your application's FinOps requirements helps you to ensure that
+you keep your application costs under control. It also helps you to establish
+proper cost attribution and cost optimization practices.</p>
+<h4 id="review-compliance-requirements">Review compliance requirements<a class="headerlink" href="#review-compliance-requirements" title="Permanent link">&para;</a></h4>
+<p>The application to onboard and migrate to the IDP and its runtime environment
+might have to meet compliance requirements, especially in regulated industries.
+We recommend that you assess the compliance requirements of the application, and
+evaluate if the IDP already supports them. For example, the application might
+require isolation from other workloads, or it might have data locality
+requirements.</p>
+<p>Understanding your application's compliance requirements helps you to scope the
+necessary refactoring and enhancements for your application and for the IDP.</p>
+<h4 id="review-the-application-team-practices">Review the application team practices<a class="headerlink" href="#review-the-application-team-practices" title="Permanent link">&para;</a></h4>
+<p>After you review the application, we recommend that you gather information about
+team practices and the methodologies for developing and operating the
+application. For example, the team might already have adopted DevOps principles,
+they might be already implementing Site Reliability Engineering (SRE), or they
+might be already familiar with platform engineering and with the IDP.</p>
+<p>By gathering information about the team that develops and operates the
+application to migrate, you gain insights about the experience and the maturity
+of that team. You also learn whether there's a need to spend effort to train
+team members to proficiently use the IDP.</p>
+<h4 id="assess-application-refactoring-and-the-idp">Assess application refactoring and the IDP<a class="headerlink" href="#assess-application-refactoring-and-the-idp" title="Permanent link">&para;</a></h4>
+<p>After you gather information about the application, its development and
+operation teams, and its requirements, you evaluate the following:</p>
+<ul>
+<li>Whether the application will work as-is if migrated and onboarded to the IDP.</li>
+<li>Whether the IDP can support the application to onboard and migrate.</li>
+</ul>
+<p>The goal of this task is to answer the following questions:</p>
+<ol>
+<li>Does the application need any refactoring to onboard and migrate it to the
+   IDP?</li>
+<li>Are there any new services or processes that the IDP should offer to migrate
+   the application?</li>
+<li>Does the IDP meet the compliance and regulatory requirements that the
+   application requires?</li>
+</ol>
+<p>By answering these questions, you focus on evaluating potential onboarding and
+migration blockers. For example, you might experience the following onboarding
+and migration blockers:</p>
+<ul>
+<li>If the application doesn't meet the observability or configurability
+  requirements of the IDP, you might need to enhance the application to meet
+  those requirements. For example, you might need to refactor the application to
+  expose a set of metrics on a given endpoint, or to accept configuration
+  injection as supported by the IDP.</li>
+<li>If the application relies on dependencies that suffer from known security
+  vulnerabilities, you might need to spend effort to update vulnerable
+  dependencies or to mitigate the vulnerabilities.</li>
+<li>If the application has a critical dependency on a service that the IDP doesn't
+  offer, you might need to refactor the application to avoid that dependency, or
+  you might consider extending the IDP to offer that service.</li>
+<li>If the application depends on a self-managed service that the IDP also offers
+  as a managed service, you might need to refactor the application to migrate
+  from the self-managed service to the managed service.</li>
+</ul>
+<p>The application development and operations team is responsible for the
+application refactoring tasks.</p>
+<p>When you scope the eventual enhancements that the IDP needs to support the
+application, we recommend that you frame these enhancements in the broader
+vision that you have for the IDP, and not as a standalone exercise. We also
+recommend that you consider your IDP as a product for which you should develop a
+path to success. For example, if you're considering adding a new service to the
+IDP, we recommend that you evaluate how that service fits in the path to success
+for your IDP, in addition to the technical feasibility of the initiative.</p>
+<p>By assessing the refactoring effort that's required to onboard and migrate the
+application, you develop a comprehensive understanding of the tasks that you
+need to complete to refactor the application and how you need to enhance the IDP
+to support the application.</p>
+<h4 id="finalize-the-application-onboarding-and-migration-plan">Finalize the application onboarding and migration plan<a class="headerlink" href="#finalize-the-application-onboarding-and-migration-plan" title="Permanent link">&para;</a></h4>
+<p>To complete the assessment phase, you finalize the application onboarding and
+migration plan with consideration of the data that you gathered. To finalize the
+plan, you do the following:</p>
+<ul>
+<li>Develop a rollback strategy for each task to recover from unanticipated issues
+  that might arise during the application onboarding and migration.</li>
+<li>Define criteria to safely retire the environment where the application runs
+  before you onboard and migrate it to the IDP. For example, you might require
+  that the application works as expected after onboarding and migrating it to
+  the IDP before you retire the old environment.</li>
+<li>Validate the migration plan to help you avoid unanticipated issues. For more
+  information about validating a migration plan, see
+  <a href="https://cloud.google.com/architecture/migration-to-google-cloud-best-practices">Migrate to Google Cloud: Best practices for validating a migration plan</a>.</li>
+</ul>
+<h3 id="set-up-the-idp">Set up the IDP<a class="headerlink" href="#set-up-the-idp" title="Permanent link">&para;</a></h3>
+<p>After you complete the assessment phase, you use its outputs to:</p>
+<ol>
+<li>Enhance the IDP by adding missing features and services.</li>
+<li>Configure the IDP to support the application.</li>
+</ol>
+<h4 id="enhance-the-idp">Enhance the IDP<a class="headerlink" href="#enhance-the-idp" title="Permanent link">&para;</a></h4>
+<p>During the assessment phase, you scope any enhancements to the IDP that it needs
+to support the application and how those enhancements fit in your plans for the
+IDP. By completing this task, you design and implement the enhancements. For
+example, you might need to enhance the IDP as follows:</p>
+<ul>
+<li>Add services to the IDP, in case the application has critical dependencies on
+  such services, and you can't refactor the application. For example, if the
+  application needs an in-memory caching service and the IDP doesn't offer that
+  service yet, you can add a data store like Cloud Memorystore to the IDP's
+  portfolio of services.</li>
+<li>Meet the application's compliance requirements. For example, if the
+  application requires that its data must reside in certain geographic regions
+  and the IDP doesn't support deploying resources in those regions, you need to
+  enhance the IDP to support those regions.</li>
+<li>Support further configurability and observability to cover the application's
+  requirements. For example, if the application requires monitoring certain
+  metrics, and the IDP doesn't support those metrics, you might enhance the
+  configuration injection and observability services that the IDP provides.</li>
+</ul>
+<p>By enhancing the IDP to support the application, you unblock the migration. You
+also help streamline processes for onboarding and migration projects for other
+applications that might need those IDP enhancements.</p>
+<h4 id="configure-the-idp">Configure the IDP<a class="headerlink" href="#configure-the-idp" title="Permanent link">&para;</a></h4>
+<p>After you enhance the IDP, if needed, you configure it to provide the resources
+that the application needs. For example, you configure the following IDP
+services for the application, or a subset of services:</p>
+<ul>
+<li>Foundational services, such as
+  <a href="https://cloud.google.com/resource-manager/docs/cloud-platform-resource-hierarchy">Google Cloud folders and projects</a>,
+  Identity and access management (IAM), network connectivity, Virtual Private
+  Cloud (VPC), and DNS zones and records.</li>
+<li>Compute resources, such as Google Kubernetes Engine clusters, and Cloud Run
+  services.</li>
+<li>Data management resources, such as Cloud SQL databases and DataFlow jobs.</li>
+<li>Application-level services, such as API gateways, Cloud Service Mesh, and
+  Cloud Storage buckets.</li>
+<li>Application delivery services, such as source code repositories, and Artifact
+  Registry repositories.</li>
+<li>AI/ML services, such as Vertex AI.</li>
+<li>Messaging and event processing services, such as Cloud Pub/Sub and Eventarc.</li>
+<li>Instrument observability services, such as Cloud Operations Suite.</li>
+<li>Security and secret management services, such as Cloud Key Management Service
+  and Secret Manager.</li>
+<li>Cost management and FinOps services, such as Cloud Billing.</li>
+</ul>
+<p>By configuring the IDP, you prepare it to host the application that you want to
+onboard and migrate.</p>
+<h3 id="onboard-and-migrate-the-application">Onboard and migrate the application<a class="headerlink" href="#onboard-and-migrate-the-application" title="Permanent link">&para;</a></h3>
+<p>In this phase, you onboard and migrate the application to the IDP by completing
+the following tasks:</p>
+<ol>
+<li>Refactor the application to apply the changes that are necessary to onboard
+   and migrate it on the IDP.</li>
+<li>Configure CI/CD workflows for the application and deploy the application in
+   the development environment.</li>
+<li>Promote the application from the development environment to the staging
+   environment.</li>
+<li>Perform acceptance testing.</li>
+<li>Migrate data from the source environment to the production environment.</li>
+<li>Promote the application from the staging environment to the production
+   environment and ensure the application's operational readiness.</li>
+<li>Perform the cutover from the source environment.</li>
+</ol>
+<p>By completing the preceding tasks, you onboard and migrate the application to
+the IDP. The following sections describe these tasks in more detail.</p>
+<h4 id="refactor-the-application">Refactor the application<a class="headerlink" href="#refactor-the-application" title="Permanent link">&para;</a></h4>
+<p>In the assessment phase, you scoped the refactoring that your application needs
+in order to onboard and migrate it to the IDP. By completing this task, you
+design and implement the refactoring. For example, you might need to refactor
+your application in the following ways in order to meet the IDP's requirements:</p>
+<ul>
+<li>Support the IDP's configuration mechanisms. For example, the IDP might
+  distribute configuration to applications using environment variables or
+  templated configuration files.</li>
+<li>Refactor the existing application observability mechanisms, or implement them
+  if there are none, to meet the IDP's observability requirements. For example,
+  the IDP might require that applications expose a defined set of metrics to
+  observe.</li>
+<li>Update the application's dependencies that suffer from known vulnerabilities.
+  For example, you might need to update operating system packages and software
+  libraries that suffer from known vulnerabilities.</li>
+<li>Avoid dependencies on services that the IDP doesn't offer. For example, if the
+  application depends on an object storage service that the IDP doesn't support,
+  you might need to refactor the application to migrate to a supported object
+  storage service, such as Cloud Storage.</li>
+<li>Migrate from self-managed services to IDP services. For example, if your
+  application depends on a self-managed database, you might refactor it to use a
+  database service that the IDP offers, such as Cloud SQL.</li>
+</ul>
+<p>By refactoring the application, you prepare it to onboard and migrate it on the
+IDP.</p>
+<h4 id="configure-cicd-workflows">Configure CI/CD workflows<a class="headerlink" href="#configure-cicd-workflows" title="Permanent link">&para;</a></h4>
+<p>After you refactor the application, you do the following:</p>
+<ol>
+<li>Configure CI/CD workflows to deploy the application.</li>
+<li>Optionally migrate deployable artifacts from the source environment.</li>
+<li>Deploy the application in the development environment.</li>
+</ol>
+<h5 id="configure-cicd-workflows-to-deploy-the-application">Configure CI/CD workflows to deploy the application<a class="headerlink" href="#configure-cicd-workflows-to-deploy-the-application" title="Permanent link">&para;</a></h5>
+<p>To build deployable artifacts and deploy them in your runtime environments, we
+recommend that you avoid manual processes. Instead of manual processes,
+configure CI/CD workflows by using the application delivery services that the
+IDP provides and store deployable artifacts in IDP-managed artifact
+repositories. For example, you can configure CI/CD workflows by using the
+following methods:</p>
+<ol>
+<li>Configure Cloud Build to
+   <a href="https://cloud.google.com/build/docs/building/build-containers">build container images and store them in Artifact Registry</a>.</li>
+<li>Configure a
+   <a href="https://cloud.google.com/deploy/docs/overview">Cloud Deploy pipeline to automate delivery of your application</a>.</li>
+</ol>
+<p>When you build the CI/CD workflows for your environment, consider how many
+runtime environments the IDP supports. For example, the IDP might support
+different runtime environments that are isolated from each other such as the
+following:</p>
+<ul>
+<li><strong>Development environment</strong>: for development and testing.</li>
+<li><strong>Staging environment</strong>: for validation and acceptance testing.</li>
+<li><strong>Production environment</strong>: for your production workloads.</li>
+</ul>
+<p>If the IDP supports multiple runtime environments for the application, you need
+to configure the CI/CD workflows for the application to support promoting the
+application's deployable artifact. You should plan for promoting the application
+from development to staging, and then from staging to production.</p>
+<p>When you promote the application from one environment to the next environment,
+we recommend that you avoid rebuilding the application's deployable artifacts.
+Rebuilding creates new artifacts, which means that you would be deploying
+something different than what you tested and validated.</p>
+<h5 id="migrate-deployable-artifacts-from-the-source-environment">Migrate deployable artifacts from the source environment<a class="headerlink" href="#migrate-deployable-artifacts-from-the-source-environment" title="Permanent link">&para;</a></h5>
+<p>If you need to support rolling back to previous versions of the application, you
+can migrate previous versions of the deployable artifacts that you built for the
+application from the source environment to an IDP-managed artifact repository.
+For example, if your application is containerized, you can migrate the container
+images that you built to deploy the application
+<a href="https://cloud.google.com/artifact-registry/docs/docker/migrate-external-containers">to Artifact Registry</a>.</p>
+<h5 id="deploy-the-application-in-the-development-environment">Deploy the application in the development environment<a class="headerlink" href="#deploy-the-application-in-the-development-environment" title="Permanent link">&para;</a></h5>
+<p>After configuring CI/CD workflows to build deployable artifacts for the
+application and to promote them from one environment to another, you deploy the
+application in the development environment using the CI/CD workflows that you
+configured.</p>
+<p>By using CI/CD workflows to build deployable artifacts and deploy the
+application, you avoid manual processes that are less repeatable and more prone
+to errors. You also validate that the CI/CD workflows work as expected.</p>
+<h4 id="promote-from-development-to-staging">Promote from development to staging<a class="headerlink" href="#promote-from-development-to-staging" title="Permanent link">&para;</a></h4>
+<p>To promote your application from the development environment to the staging
+environment, you do the following:</p>
+<ol>
+<li>Test the application and verify that it works as expected.</li>
+<li>Fix any unanticipated issues.</li>
+<li>Promote the application from the development environment to the staging
+   environment.</li>
+</ol>
+<p>By promoting the application from the development environment to the staging
+environment, you accomplish the following:</p>
+<ul>
+<li>Complete a first set of validation tasks.</li>
+<li>Polish the application by fixing unanticipated issues.</li>
+<li>Enable your teams for broader and deeper functional and non-functional testing
+  of the application in the staging environment.</li>
+</ul>
+<h4 id="perform-acceptance-testing">Perform acceptance testing<a class="headerlink" href="#perform-acceptance-testing" title="Permanent link">&para;</a></h4>
+<p>After you promote the application to your staging environment, you perform
+extensive acceptance testing for both functional and non-functional
+requirements. When you perform acceptance testing, we recommend that you
+validate that the user journeys and the business processes that the application
+implements are working properly in situations that resemble real-world usage
+scenarios. For example, when you perform acceptance testing, you can do the
+following:</p>
+<ul>
+<li>Evaluate whether the application works on data that's similar in scope and
+  size to production data. For example, you can periodically populate your
+  staging environment with data from the production environment.</li>
+<li>Ensure that the application can handle production-like traffic. For example,
+  you can mirror production traffic and direct it to the application in the
+  staging environment.</li>
+<li>Validate that the application works as designed under degraded conditions. For
+  example, in your staging environment you can artificially cause outages and
+  break connectivity to other systems and evaluate whether the application
+  respects its failure mode. This testing lets you verify that the application
+  recovers after you terminate the outage, and that it restores connectivity.</li>
+<li>Verify that the application, the staging environment, and the production
+  environment meet your compliance requirements, such as locality restrictions,
+  licensing, and auditability.</li>
+</ul>
+<p>Acceptance testing helps you ensure that the application works as expected in an
+environment that resembles the production environment, and helps you identify
+unanticipated issues.</p>
+<h4 id="migrate-data">Migrate data<a class="headerlink" href="#migrate-data" title="Permanent link">&para;</a></h4>
+<p>After you complete acceptance testing for the application, you migrate data from
+the source environment to IDP-managed services such as the following:</p>
+<ul>
+<li>Migrate data from databases in the source environment to IDP-managed
+  databases.</li>
+<li>Migrate data from object storage services to IDP-managed object storage
+  services.</li>
+</ul>
+<p>To migrate data from your source environment to IDP-managed services, you can
+choose approaches like the following, depending on your requirements:</p>
+<ul>
+<li><strong>Scheduled maintenance</strong>: Also called <em>one-time migration</em> or <em>offline
+  migration</em>, with this approach you migrate data during scheduled maintenance
+  when your application can afford the downtime represented by a planned
+  cut-over window.</li>
+<li><strong>Continuous replication</strong>: Also called <em>continuous migration</em> or <em>online
+  migration</em>, continuous replication builds the scheduled maintenance approach
+  to reduce the cut-over window size. The size reduction is possible because you
+  provide a continuous replication mechanism after the initial data copy and
+  validation.</li>
+<li><strong>Y (writing and reading)</strong>: Also called <em>parallel migration</em>, this approach
+  is suitable for applications that cannot afford the downtime that's
+  represented by a cut-over window, even if small. By following this approach,
+  you refactor the application to write data to both the source environment and
+  to IDP-managed services. Then, when you're ready to migrate, you switch to
+  reading data from IDP-managed services.</li>
+<li><strong>Data-access microservice</strong>: This approach builds on the Y (writing and
+  reading) approach by centralizing data read and write operations in a scalable
+  microservice.</li>
+</ul>
+<p>Each of the preceding approaches focuses on solving specific issues, and there's
+no approach that's inherently better than the others. For more information about
+migrating data to Google Cloud and choosing the best data migration approach for
+your application, see
+<a href="https://cloud.google.com/architecture/migration-to-google-cloud-transferring-your-large-datasets">Migrate to Google Cloud: Transfer your large datasets</a>.</p>
+<p>I your data is stored in services managed by other cloud providers, see the
+following resources:</p>
+<ul>
+<li><a href="https://cloud.google.com/architecture/migration-from-aws-get-started">Migrate from AWS to Google Cloud: Get started</a></li>
+<li>Migrate from Azure to Google Cloud: Get started</li>
+</ul>
+<p>Migrating data from one environment to another is a complex task. If you think
+that the data migration is too complex to handle it as part of the application
+onboarding and migration process, you might consider migrating data as part of a
+dedicated migration project.</p>
+<h4 id="promote-from-staging-to-production">Promote from staging to production<a class="headerlink" href="#promote-from-staging-to-production" title="Permanent link">&para;</a></h4>
+<p>After you complete data migration and acceptance testing, you promote the
+application to the production environment. To complete this task, you do the
+following:</p>
+<ol>
+<li>Promote the application from the staging environment to the production
+   environment. The process is similar to when you promoted the application from
+   the development environment to the staging environment: you use the
+   IDP-managed CI/CD workflows that you configured for the application to
+   promote it from the staging environment to the production environment.</li>
+<li>Ensure the application's operational readiness. For example, to help you
+   avoid performance issues if the application requires a cache, ensure that the
+   cache is properly initialized.</li>
+<li>Fix any unanticipated issues.</li>
+</ol>
+<p>When you check the application's operational readiness before you promote it
+from the staging environment to the production environment, you ensure that the
+application is ready for the production environment.</p>
+<h4 id="perform-the-cutover">Perform the cutover<a class="headerlink" href="#perform-the-cutover" title="Permanent link">&para;</a></h4>
+<p>After you promote the application to the production environment and ensure that
+it works as expected, you configure the production environment to gradually
+route requests for the application to the newly promoted application release.
+For example, you can implement a
+<a href="https://cloud.google.com/deploy/docs/deployment-strategies/canary">canary deployment strategy that uses Cloud Deploy</a>.</p>
+<p>After you validate that the application continues to work as expected while the
+number of requests to the newly promoted application increases, you do the
+following:</p>
+<ol>
+<li>Configure your production environment to route all of the requests to your
+   newly promoted application.</li>
+<li>Retire the application in the source environment.</li>
+</ol>
+<p>Before you retire the application in the source environment, we recommend that
+you prepare backups and a rollback plan. Doing so will help you handle
+unanticipated issues that might force you to go back to using the source
+environment.</p>
+<h3 id="optimize-the-application">Optimize the application<a class="headerlink" href="#optimize-the-application" title="Permanent link">&para;</a></h3>
+<p>Optimization is the last phase of the onboarding and migration process. In this
+phase, you iterate on optimization tasks until your target environment meets
+your optimization requirements. For each iteration, you do the following:</p>
+<ol>
+<li>Assess your current environment, teams, and optimization loop.</li>
+<li>Establish your optimization requirements and goals.</li>
+<li>Optimize your environment and your teams.</li>
+<li>Tune the optimization loop.</li>
+</ol>
+<p>You repeat the preceding sequence until you achieve your optimization goals.</p>
+<p>For more information about optimizing your Google Cloud environment, see
+<a href="https://cloud.google.com/architecture/migration-to-google-cloud-optimizing-your-environment">Migrate to Google Cloud: Optimize your environment</a>
+and
+<a href="https://cloud.google.com/architecture/framework/performance-optimization">Google Cloud Architecture Framework: Performance optimization</a>.</p>
+<p>The following sections integrate the considerations in Migrate to Google Cloud:
+Optimize your environment.</p>
+<h4 id="establish-your-optimization-requirements">Establish your optimization requirements<a class="headerlink" href="#establish-your-optimization-requirements" title="Permanent link">&para;</a></h4>
+<p>Optimization requirements help you to narrow the scope of the current
+optimization iteration. To establish your optimization requirements for the
+application, start by considering the following aspects:</p>
+<ul>
+<li><strong>Security, privacy, and compliance</strong>: help you enhance the security posture
+  of your environment.</li>
+<li><strong>Reliability</strong>: help you improve the availability, scalability, and
+  resilience of your environment.</li>
+<li><strong>Cost optimization</strong>: help you to optimize the resource consumption and
+  resulting cost of your environment.</li>
+<li><strong>Operational efficiency</strong>: help you maintain and operate your environment
+  efficiently.</li>
+<li><strong>Performance optimization</strong>: help you optimize the performance of the
+  workloads that are deployed in your environment.</li>
+</ul>
+<p>For each aspect, we recommend that you establish your optimization requirements
+for the application. Then, you set measurable optimization goals to meet those
+requirements. For more information about optimization requirements and goals,
+see
+<a href="https://cloud.google.com/architecture/migration-to-google-cloud-optimizing-your-environment#establish_your_optimization_requirements_and_goals">Establish your optimization requirements and goals</a>.</p>
+<p>After you realize the optimization requirements for the application, you
+completed the onboarding and migration process for the application.</p>
+<h2 id="optimize-the-onboarding-and-migration-process-and-the-idp">Optimize the onboarding and migration process and the IDP<a class="headerlink" href="#optimize-the-onboarding-and-migration-process-and-the-idp" title="Permanent link">&para;</a></h2>
+<p>After you onboard and migrate the application, you use the data that you
+gathered about the process and about the IDP to refine and optimize the process.
+Similarly to the optimization phase for your application, you complete the tasks
+that are described in the optimization phase, but with a focus on the onboarding
+and migration process and on the IDP.</p>
+<h3 id="establish-your-optimization-requirements-for-the-idp">Establish your optimization requirements for the IDP<a class="headerlink" href="#establish-your-optimization-requirements-for-the-idp" title="Permanent link">&para;</a></h3>
+<p>To narrow down the scope to optimize the onboarding and migration process, and
+the IDP, you establish optimization requirements according to data you gather
+while running through the process. For example, during the onboarding and
+migration of an application, you might face unanticipated issues that involve
+the process and the IDP, such as:</p>
+<ul>
+<li>Missing documentation about the process</li>
+<li>Missing data to complete tasks</li>
+<li>Tasks that take too much time to complete</li>
+<li>Unclear responsibility mapping</li>
+<li>Suboptimal information sharing</li>
+<li>Lack of stakeholder engagement</li>
+<li>IDP not supporting one or more application use cases</li>
+<li>IDP lacking support for one or more services</li>
+<li>IDP lacking support for the application's multi-tenancy requirements</li>
+<li>IDP not working as expected and documented</li>
+<li>Absence of golden paths to for the application</li>
+</ul>
+<p>To address the issues that arise while you're onboarding and migrating an
+application, you establish optimization requirements. For example, you might
+establish the following optimization requirements to address the example issues
+described above:</p>
+<ul>
+<li>Refine the documentation about the IDP and the onboarding and migration
+  process to include any missing information about the process and its tasks.</li>
+<li>Simplify the onboarding and migration process to remove unnecessary tasks, and
+  automate as many tasks as possible.</li>
+<li>Validate that the process accounts for a responsibility assignment that fully
+  covers the application, the IDP, and the process itself.</li>
+<li>Reduce adoption friction by temporarily assigning members of the IDP team to
+  application teams to act as IDP adoption coaches and consultants.</li>
+<li>Refine existing golden paths, or create new ones to cover the application
+  onboarding and migration.</li>
+<li>Reduce adoption friction by implementing a tiered onboarding and migration
+  process. Each tier would have a different set of requirements according to the
+  tier. For example, a higher tier would have more stringent requirements than a
+  lower tier.</li>
+</ul>
+<p>After establishing optimization requirements, you set measurable optimization
+goals to meet those requirements. For more information about optimization
+requirements and goals, see
+<a href="https://cloud.google.com/architecture/migration-to-google-cloud-optimizing-your-environment#establish_your_optimization_requirements_and_goals">Establish your optimization requirements and goals</a>.</p>
+<h2 id="application-onboarding-and-migration-example">Application onboarding and migration example<a class="headerlink" href="#application-onboarding-and-migration-example" title="Permanent link">&para;</a></h2>
+<p>In this section, you explore how the onboarding and migration process looks like
+for an example. The example that we describe in this section doesn't represent a
+real production application.</p>
+<p>To reduce the scope of the example, we focus the example on the following
+environments:</p>
+<ul>
+<li>Source environment: Amazon Elastic Kubernetes Service (Amazon EKS)</li>
+<li>Target environment: GKE</li>
+</ul>
+<p>This document focuses on the onboarding and migration process. For more
+information about migrating from Amazon EKS to GKE, see
+<a href="https://cloud.google.com/architecture/migrate-amazon-eks-to-gke">Migrate from AWS to Google Cloud: Migrate from Amazon EKS to GKE</a>.</p>
+<p>To onboard and migrate the application on the IDP, you follow the
+<a href="#application-onboarding-and-migration-process">onboarding and migration process</a>.</p>
+<h3 id="intake-the-onboarding-and-migration-request-example">Intake the onboarding and migration request (example)<a class="headerlink" href="#intake-the-onboarding-and-migration-request-example" title="Permanent link">&para;</a></h3>
+<p>In this example, the application onboarding and migration team files a request
+to onboard and migrate the application on the IDP. To fully present the
+onboarding and migration process, we assume that IDP cannot find an existing
+golden path to suggest to onboard and migrate the application, so it forwards
+the request to the team that manages the IDP for further evaluation.</p>
+<h4 id="plan-application-onboarding-and-migration-example">Plan application onboarding and migration (example)<a class="headerlink" href="#plan-application-onboarding-and-migration-example" title="Permanent link">&para;</a></h4>
+<p>To define timelines and milestones to onboard and migrate the application on the
+IDP, the application onboarding and migration team prepares a countdown plan:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Phase</th>
+<th style="text-align: left;">Task</th>
+<th style="text-align: left;">Countdown [days]</th>
+<th style="text-align: left;">Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Assess the application</td>
+<td style="text-align: left;">Review the application design</td>
+<td style="text-align: left;">-27</td>
+<td style="text-align: left;">Not started</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Review application dependencies</td>
+<td style="text-align: left;">-23</td>
+<td style="text-align: left;">Not started</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Review CI/CD processes</td>
+<td style="text-align: left;">-21</td>
+<td style="text-align: left;">Not started</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Review data persistence and data management requirements</td>
+<td style="text-align: left;">-21</td>
+<td style="text-align: left;">Not started</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Review FinOps requirements</td>
+<td style="text-align: left;">-20</td>
+<td style="text-align: left;">Not started</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Review compliance requirements</td>
+<td style="text-align: left;">-20</td>
+<td style="text-align: left;">Not started</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Review the application's team practices</td>
+<td style="text-align: left;">-19</td>
+<td style="text-align: left;">Not started</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Assess application refactoring and the IDP</td>
+<td style="text-align: left;">-19</td>
+<td style="text-align: left;">Not started</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Finalize the application onboarding and migration plan</td>
+<td style="text-align: left;">-18</td>
+<td style="text-align: left;">Not started</td>
+</tr>
+<tr>
+<td style="text-align: left;">Set up the IDP</td>
+<td style="text-align: left;">Enhance the IDP</td>
+<td style="text-align: left;">N/A</td>
+<td style="text-align: left;">Not necessary</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Configure the IDP</td>
+<td style="text-align: left;">-17</td>
+<td style="text-align: left;">Not started</td>
+</tr>
+<tr>
+<td style="text-align: left;">Onboard and migrate the application</td>
+<td style="text-align: left;">Refactor the application</td>
+<td style="text-align: left;">-15</td>
+<td style="text-align: left;">Not started</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Configure CI/CD workflows</td>
+<td style="text-align: left;">-9</td>
+<td style="text-align: left;">Not started</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Promote from development to staging</td>
+<td style="text-align: left;">-6</td>
+<td style="text-align: left;">Not started</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Perform acceptance testing</td>
+<td style="text-align: left;">-5</td>
+<td style="text-align: left;">Not started</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Migrate data</td>
+<td style="text-align: left;">-3</td>
+<td style="text-align: left;">Not started</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Promote from staging to production</td>
+<td style="text-align: left;">-1</td>
+<td style="text-align: left;">Not started</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Perform the cutover</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">Not started</td>
+</tr>
+<tr>
+<td style="text-align: left;">Optimize the application</td>
+<td style="text-align: left;">Assess your current environment, teams, and optimization loop</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">Not started</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Establish your optimization requirements and goals</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">Not started</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Optimize your environment and your teams</td>
+<td style="text-align: left;">3</td>
+<td style="text-align: left;">Not started</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Tune the optimization loop</td>
+<td style="text-align: left;">5</td>
+<td style="text-align: left;">Not started</td>
+</tr>
+</tbody>
+</table>
+<p>To clearly outline responsibility assignments, the application onboarding and
+migration team defines the following RACI matrix for each phase and task of the
+process:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Phase</th>
+<th style="text-align: left;">Task</th>
+<th style="text-align: left;">Application onboarding and migration team</th>
+<th style="text-align: left;">Application development and operations team</th>
+<th style="text-align: left;">IDP team</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Assess the application</td>
+<td style="text-align: left;">Review the application design</td>
+<td style="text-align: left;">Responsible</td>
+<td style="text-align: left;">Accountable</td>
+<td style="text-align: left;">Informed</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Review application dependencies</td>
+<td style="text-align: left;">Responsible</td>
+<td style="text-align: left;">Accountable</td>
+<td style="text-align: left;">Informed</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Review CI/CD processes</td>
+<td style="text-align: left;">Responsible</td>
+<td style="text-align: left;">Accountable</td>
+<td style="text-align: left;">Informed</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Review data persistence and data management requirements</td>
+<td style="text-align: left;">Responsible</td>
+<td style="text-align: left;">Accountable</td>
+<td style="text-align: left;">Informed</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Review FinOps requirements</td>
+<td style="text-align: left;">Responsible</td>
+<td style="text-align: left;">Accountable</td>
+<td style="text-align: left;">Informed</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Review compliance requirements</td>
+<td style="text-align: left;">Responsible</td>
+<td style="text-align: left;">Accountable</td>
+<td style="text-align: left;">Informed</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Review the application's team practices</td>
+<td style="text-align: left;">Responsible</td>
+<td style="text-align: left;">Accountable</td>
+<td style="text-align: left;">Informed</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Assess application refactoring and the IDP</td>
+<td style="text-align: left;">Responsible</td>
+<td style="text-align: left;">Accountable</td>
+<td style="text-align: left;">Consulted</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Plan application onboarding and migration</td>
+<td style="text-align: left;">Responsible</td>
+<td style="text-align: left;">Accountable</td>
+<td style="text-align: left;">Consulted</td>
+</tr>
+<tr>
+<td style="text-align: left;">Set up the IDP</td>
+<td style="text-align: left;">Enhance the IDP</td>
+<td style="text-align: left;">Accountable</td>
+<td style="text-align: left;">Consulted</td>
+<td style="text-align: left;">Responsible</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Configure the IDP</td>
+<td style="text-align: left;">Responsible, Accountable</td>
+<td style="text-align: left;">Consulted</td>
+<td style="text-align: left;">Consulted</td>
+</tr>
+<tr>
+<td style="text-align: left;">Onboard and migrate the application</td>
+<td style="text-align: left;">Refactor the application</td>
+<td style="text-align: left;">Accountable</td>
+<td style="text-align: left;">Responsible</td>
+<td style="text-align: left;">Consulted</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Configure CI/CD workflows</td>
+<td style="text-align: left;">Responsible, Accountable</td>
+<td style="text-align: left;">Consulted</td>
+<td style="text-align: left;">Consulted</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Promote from development to staging</td>
+<td style="text-align: left;">Responsible, Accountable</td>
+<td style="text-align: left;">Consulted</td>
+<td style="text-align: left;">Informed</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Perform acceptance testing</td>
+<td style="text-align: left;">Responsible, Accountable</td>
+<td style="text-align: left;">Consulted</td>
+<td style="text-align: left;">Informed</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Migrate data</td>
+<td style="text-align: left;">Responsible, Accountable</td>
+<td style="text-align: left;">Consulted</td>
+<td style="text-align: left;">Consulted</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Promote from staging to production</td>
+<td style="text-align: left;">Responsible, Accountable</td>
+<td style="text-align: left;">Consulted</td>
+<td style="text-align: left;">Informed</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Perform the cutover</td>
+<td style="text-align: left;">Responsible, Accountable</td>
+<td style="text-align: left;">Consulted</td>
+<td style="text-align: left;">Informed</td>
+</tr>
+<tr>
+<td style="text-align: left;">Optimize the application</td>
+<td style="text-align: left;">Assess your current environment, teams, and optimization loop</td>
+<td style="text-align: left;">Informed</td>
+<td style="text-align: left;">Responsible, Accountable</td>
+<td style="text-align: left;">Informed</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Establish your optimization requirements and goals</td>
+<td style="text-align: left;">Informed</td>
+<td style="text-align: left;">Responsible, Accountable</td>
+<td style="text-align: left;">Informed</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Optimize your environment and your teams</td>
+<td style="text-align: left;">Informed</td>
+<td style="text-align: left;">Responsible, Accountable</td>
+<td style="text-align: left;">Informed</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Tune the optimization loop</td>
+<td style="text-align: left;">Informed</td>
+<td style="text-align: left;">Responsible, Accountable</td>
+<td style="text-align: left;">Informed</td>
+</tr>
+</tbody>
+</table>
+<h3 id="assess-the-application-example">Assess the application (example)<a class="headerlink" href="#assess-the-application-example" title="Permanent link">&para;</a></h3>
+<p>In the assessment phase, the application onboarding and migration team assesses
+the application by completing the assessment phase tasks.</p>
+<h4 id="review-the-application-design-example">Review the application design (example)<a class="headerlink" href="#review-the-application-design-example" title="Permanent link">&para;</a></h4>
+<p>The application onboarding and migration team reviews the application design,
+and gathers the following information:</p>
+<ol>
+<li><strong>Application source code</strong>. The application source code is available on the
+   company source code management and hosting solution.</li>
+<li><strong>Deployable artifacts</strong>. The application is fully containerized using a
+   single Open Container Initiative (OCI) container image. The container image
+   uses Debian as a base image.</li>
+<li><strong>Configuration injection</strong>. The application supports injecting configuration
+   using environment variables and configuration files. Environment variables
+   take precedence over configuration files. The application reads runtime- and
+   environment-specific configuration from a Kubernetes ConfigMap.</li>
+<li><strong>Security requirements</strong>. Container images need to be scanned for
+   vulnerabilities. Also, container images need to be verified for authenticity
+   and bills of materials. The application requires periodic secret rotation.
+   The application doesn't allow direct access to its production runtime
+   environment.</li>
+<li><strong>Identity and access management</strong>. The application requires a dedicated
+   service account with the minimum set of permissions to work correctly.</li>
+<li><strong>Observability requirements</strong>. The application logs messages to stout and
+   stderr streams, and exposes metrics and tracing in OpenTelemetry format. The
+   application requires SLO monitoring for uptime and request error rates.</li>
+<li><strong>Availability and reliability requirements</strong>. The application is not
+   business critical, and can afford two hours of downtime at maximum. The
+   application is designed to shed load under degraded conditions, and is
+   capable of automated recovery after a loss of connectivity.</li>
+<li>
+<p><strong>Network and connectivity requirements</strong>. The application needs:</p>
+<ul>
+<li>A /28 IPv4 subnet to account for multiple instances of the application.</li>
+<li>A DNS name for each instance of the application.</li>
+<li>Connectivity to its data storage systems.</li>
+<li>Load balancing across several application instances.</li>
+</ul>
+<p>The application doesn't require any specific service mesh configuration.</p>
+</li>
+<li>
+<p><strong>Statefulness</strong>. The application stores persistent data on Amazon Relational
+   Database Service (Amazon RDS) for PostgreSQL and on Amazon Simple Storage
+   Service (Amazon S3).</p>
+</li>
+<li><strong>Runtime environment requirements</strong>. The application doesn't depend on any
+    preview Kubernetes features, and doesn't need dependencies outside what is
+    packaged in its container image.</li>
+<li><strong>Development tools and environments</strong>. The application doesn't have any
+    dependency on specific IDEs or development hardware.</li>
+<li><strong>Multi-tenancy requirements</strong>. The application doesn't have any
+    multi-tenancy requirements.</li>
+</ol>
+<h4 id="review-application-dependencies-example">Review application dependencies (example)<a class="headerlink" href="#review-application-dependencies-example" title="Permanent link">&para;</a></h4>
+<p>The application onboarding and migration team reviews dependencies on systems
+that are outside the scope of the application, and gathers the following
+information:</p>
+<ul>
+<li><strong>Internal corporate APIs</strong>. The application queries two corporate APIs
+  through the IDP API gateway.</li>
+</ul>
+<h4 id="review-cicd-processes-example">Review CI/CD processes (example)<a class="headerlink" href="#review-cicd-processes-example" title="Permanent link">&para;</a></h4>
+<p>The application onboarding and migration team reviews the application's CI/CD
+processes, and gathers the following information:</p>
+<ul>
+<li>A GitHub Action builds deployable artifacts for the application, and stores
+  artifacts in an Amazon Elastic Container Repository (Amazon ECR).</li>
+<li>There is no CD process. To deploy a new version of the application, the
+  application development and operations team manually runs a scripted workflow
+  to deploy the application on Amazon EKS.</li>
+<li>There is no deployment schedule. The application development and operations
+  team runs the deployment workflow on demand. In the last two years, the team
+  deployed the application twice a month, on average.</li>
+<li>The deployment process doesn't implement any advanced deployment methodology.</li>
+<li>There is no need to migrate deployable artifacts that the CI process built for
+  previous versions of the application.</li>
+</ul>
+<h4 id="review-data-persistence-and-data-management-requirements-example">Review data persistence and data management requirements (example)<a class="headerlink" href="#review-data-persistence-and-data-management-requirements-example" title="Permanent link">&para;</a></h4>
+<p>The application onboarding and migration team reviews data persistence and data
+management requirements, and gathers the following information:</p>
+<ul>
+<li><strong>Amazon RDS for PostgreSQL</strong>. The application stores and reads data from
+  three PostgreSQL databases that reside on a single, high-availability Amazon
+  RDS for PostgreSQL instance. The application uses standard PostgreSQL
+  features.</li>
+<li><strong>Amazon S3</strong>. The application stores and reads objects in two Amazon S3
+  buckets.</li>
+</ul>
+<p>The application onboarding and migration team is also tasked to migrate data
+from Amazon RDS for PostgreSQL and Amazon S3 to database and object storage
+services offered by the IDP. In this example, the IDP offers Cloud SQL for
+PostgreSQL as a database service, and Cloud Storage as an object storage
+service.</p>
+<p>As part of this application dependency review, the application onboarding and
+migration team assesses the application's Amazon RDS database and the Amazon S3
+buckets. For simplicity, we omit details about those assessments from this
+example. For more information about assessing Amazon RDS and Amazon S3, see the
+<em>Assess the source environment</em> sections in the following documents:</p>
+<ul>
+<li><a href="https://cloud.google.com/architecture/migrate-aws-rds-aurora-to-postgresql">Migrate from AWS to Google Cloud: Migrate from Amazon RDS and Amazon Aurora for PostgreSQL to Cloud SQL and AlloyDB for PostgreSQL</a></li>
+<li><a href="https://cloud.google.com/architecture/migrate-amazon-s3-to-cloud-storage">Migrate from AWS to Google Cloud: Migrate from Amazon S3 to Cloud Storage</a></li>
+</ul>
+<h4 id="review-finops-requirements-example">Review FinOps requirements (example)<a class="headerlink" href="#review-finops-requirements-example" title="Permanent link">&para;</a></h4>
+<p>The application onboarding and migration team reviews FinOps requirements, and
+gathers the following information:</p>
+<ul>
+<li>The application must not exceed ten thousands USD of maximum aggregated
+  spending per month.</li>
+</ul>
+<h4 id="review-compliance-requirements-example">Review compliance requirements (example)<a class="headerlink" href="#review-compliance-requirements-example" title="Permanent link">&para;</a></h4>
+<p>The application onboarding and migration team reviews compliance requirements,
+and gathers the following information:</p>
+<ul>
+<li>The application doesn't need to meet any compliance requirements to regulate
+  data residency and network traffic.</li>
+</ul>
+<h4 id="review-the-applications-team-practices">Review the application's team practices<a class="headerlink" href="#review-the-applications-team-practices" title="Permanent link">&para;</a></h4>
+<p>The application onboarding and migration team reviews development and
+operational practices that the application development and operations team has
+in place, and gathers the following information:</p>
+<ul>
+<li>The team started following an agile development methodology one year ago.</li>
+<li>The team is exploring SRE practices, but didn't implement anything in that
+  regard yet.</li>
+<li>The team doesn't have any prior experience with the IDP.</li>
+</ul>
+<p>The application onboarding and migration team suggests the following:</p>
+<ul>
+<li>Train the application development and operations team on basic platform
+  engineering concepts.</li>
+<li>Train the team on the architecture of the IDP, how to use the IDP effectively.</li>
+<li>Consult with the IDP team to assess potential changes to development and
+  operational processes after migrating the application on the IDP.</li>
+</ul>
+<h4 id="assess-application-refactoring-and-the-idp-example">Assess application refactoring and the IDP (example)<a class="headerlink" href="#assess-application-refactoring-and-the-idp-example" title="Permanent link">&para;</a></h4>
+<p>After reviewing the application and its related CI/CD process, the team
+application onboarding and migration team assesses the refactoring that the
+application needs to onboard and migrate it on the IDP, scopes the following
+refactoring tasks:</p>
+<ul>
+<li>Support reading objects from objects and writing objects to the IDP's object
+  storage service. In this example, the IDP offers Cloud Storage as an object
+  storage service. For more information about refactoring workloads when
+  migrating from Amazon S3 to Cloud Storage, see the
+  <a href="https://cloud.google.com/architecture/migrate-amazon-s3-to-cloud-storage#migrate-data-and-workloads-from-amazon-s3-to-cloud-storage"><em>Migrate data and workloads from Amazon S3 to Cloud Storage</em> section</a>
+  in Migrate from AWS to Google Cloud: Migrate from Amazon S3 to Cloud Storage.</li>
+<li>Update the application configuration to use Cloud SQL for PostgreSQL instead
+  of Amazon RDS for PostgreSQL.</li>
+<li>Support exporting the metrics that the IDP needs to support observability for
+  the application.</li>
+<li>Update the application dependencies to versions that are not impacted by known
+  vulnerabilities.</li>
+</ul>
+<p>The application onboarding and migration team evaluates the IDP against the
+application's requirements, and concludes that:</p>
+<ul>
+<li>The IDP's current set of services is capable of supporting the application, so
+  there is no need to extend the IDP to offer additional services.</li>
+<li>The IDP meets the application's compliance and regulatory requirements.</li>
+</ul>
+<h4 id="finalize-the-application-onboarding-and-migration-plan-example">Finalize the application onboarding and migration plan (example)<a class="headerlink" href="#finalize-the-application-onboarding-and-migration-plan-example" title="Permanent link">&para;</a></h4>
+<p>After completing the application review, the application onboarding and
+migration team refines the onboarding and migration plan, and validates it in
+collaboration with technical and non-technical stakeholders.</p>
+<h3 id="set-up-the-idp-example">Set up the IDP (example)<a class="headerlink" href="#set-up-the-idp-example" title="Permanent link">&para;</a></h3>
+<p>After you assess the application and plan the onboarding and migration process,
+you set up the IDP.</p>
+<h4 id="enhance-the-idp-example">Enhance the IDP (example)<a class="headerlink" href="#enhance-the-idp-example" title="Permanent link">&para;</a></h4>
+<p>The IDP team doesn't need to enhance the IDP to onboard and migrate the
+application because:</p>
+<ul>
+<li>The IDP already offers all the services that the application needs.</li>
+<li>The IDP meets the application's compliance and regulatory requirements.</li>
+<li>The IDP meets the application's configurability and observability
+  requirements.</li>
+</ul>
+<h4 id="configure-the-idp-example">Configure the IDP (example)<a class="headerlink" href="#configure-the-idp-example" title="Permanent link">&para;</a></h4>
+<p>The application onboarding and migration team configures the runtime
+environments for the application using the IDP: a development environment, a
+staging environment, and a production environment. For each environment, the
+application onboarding and migration team completes the following tasks:</p>
+<ol>
+<li>
+<p>Configures foundational services:</p>
+<ol>
+<li>Creates a new Google Cloud project.</li>
+<li>Configures IAM roles and service accounts.</li>
+<li>Configures a VPC and a subnet.</li>
+<li>Creates DNS records in the DNS zone.</li>
+</ol>
+</li>
+<li>
+<p>Provisions and configures a GKE cluster for the application.</p>
+</li>
+<li>Provisions and configures a Cloud SQL for PostgreSQL instance.</li>
+<li>Provisions and configures two Cloud Storage buckets.</li>
+<li>Provisions and configures an Artifact Registry repository for container
+   images.</li>
+<li>Instruments Cloud Operations Suite to observe the application.</li>
+<li>Configures Cloud Billing budget and budget alerts for the application.</li>
+</ol>
+<h3 id="onboard-and-migrate-the-application-example">Onboard and migrate the application (example)<a class="headerlink" href="#onboard-and-migrate-the-application-example" title="Permanent link">&para;</a></h3>
+<p>To onboard and migrate the application, the application development and
+operations team refactors the application and then the application onboarding
+and migration team proceeds with the onboarding and migration process.</p>
+<h4 id="refactor-the-application-example">Refactor the application (example)<a class="headerlink" href="#refactor-the-application-example" title="Permanent link">&para;</a></h4>
+<p>The application development and operations team refactors the application as
+follows:</p>
+<ol>
+<li>Refactors the application to read from and write objects to Cloud Storage,
+   instead of Amazon S3.</li>
+<li>Updates the application configuration to use the Cloud SQL for PostgreSQL,
+   instance instead of the Amazon RDS for PostgreSQL instance.</li>
+<li>Exposes the metrics that the IDP needs to observe the application.</li>
+<li>Update application dependencies that are affected by known vulnerabilities.</li>
+</ol>
+<h4 id="configure-cicd-workflows-example">Configure CI/CD workflows (example)<a class="headerlink" href="#configure-cicd-workflows-example" title="Permanent link">&para;</a></h4>
+<p>To configure CI/CD workflows, the application onboarding and migration team does
+the following:</p>
+<ol>
+<li>Refactors the application CI workflow to push container images to the
+   Artifact Registry repository, in addition to Amazon ECR.</li>
+<li>Implements a Cloud Deploy pipeline to automatically deploy the application,
+   and promote it across runtime environments.</li>
+<li>Deploys the application in the development environment using the Cloud Deploy
+   pipeline.</li>
+</ol>
+<h4 id="promote-the-application-from-development-to-staging">Promote the application from development to staging<a class="headerlink" href="#promote-the-application-from-development-to-staging" title="Permanent link">&para;</a></h4>
+<p>After deploying the application in the development environment, the application
+onboarding and migration team:</p>
+<ol>
+<li>Tests the application, and verifies that it works as expected.</li>
+<li>Promotes the application from the development environment to the staging
+   environment.</li>
+</ol>
+<h4 id="perform-acceptance-testing-example">Perform acceptance testing (example)<a class="headerlink" href="#perform-acceptance-testing-example" title="Permanent link">&para;</a></h4>
+<p>After promoting the application from the development environment to the staging
+environment, the application onboarding and migration team performs acceptance
+testing.</p>
+<p>To perform acceptance testing to validate the application's real-world user
+journeys and business processes, the application onboarding and migration team
+consults with the application development and operations team.</p>
+<p>The application onboarding and migration team performs acceptance testing as
+follows:</p>
+<ol>
+<li>Ensures that the application works as expected when dealing with amounts of
+   data and traffic that are similar to production ones.</li>
+<li>
+<p>Validates that the application works as designed under degraded conditions,
+   and that it recovers once the issues are resolved. The application onboarding
+   and migration team tests the following scenarios:</p>
+<ul>
+<li>Loss of connectivity to the database</li>
+<li>Loss of connectivity to the object storage</li>
+<li>Degradation of the CI/CD pipeline that blocks deployments</li>
+<li>Tentative exploitation of short-lived credentials, such as access tokens</li>
+<li>Excessive application load</li>
+</ul>
+</li>
+<li>
+<p>Verifies that observability and alerting for the application are correctly
+   configured.</p>
+</li>
+</ol>
+<h4 id="migrate-data-example">Migrate data (example)<a class="headerlink" href="#migrate-data-example" title="Permanent link">&para;</a></h4>
+<p>After completing acceptance testing for the application, the application
+onboarding and migration team migrates data from the source environment to the
+Google Cloud environment as follows:</p>
+<ol>
+<li>Migrate data from Amazon RDS for PostgreSQL to Cloud SQL for PostgreSQL.</li>
+<li>Migrate data from Amazon S3 to Cloud Storage.</li>
+</ol>
+<p>For simplicity, this document doesn't describe the details of migrating from
+Amazon RDS and Amazon S3 to Google Cloud. For more information about migrating
+from Amazon RDS and Amazon S3 to Google Cloud, see:</p>
+<ul>
+<li><a href="https://cloud.google.com/architecture/migrate-amazon-s3-to-cloud-storage"><strong>Migrate from AWS to Google Cloud: Migrate from Amazon S3 to Cloud Storage</strong></a></li>
+<li><a href="https://cloud.google.com/architecture/migrate-aws-rds-aurora-to-postgresql">Migrate from AWS to Google Cloud: Migrate from Amazon RDS and Amazon Aurora for PostgreSQL to Cloud SQL and AlloyDB for PostgreSQL</a></li>
+</ul>
+<h4 id="promote-from-staging-to-production-example">Promote from staging to production (example)<a class="headerlink" href="#promote-from-staging-to-production-example" title="Permanent link">&para;</a></h4>
+<p>After performing acceptance testing and after migrating data to the Google Cloud
+environment, the application onboarding and migration team:</p>
+<ol>
+<li>Promotes the application from the staging environment to the production
+   environment using the Cloud Deploy pipeline.</li>
+<li>
+<p>Ensures the application's operational readiness by verifying that the
+   application:</p>
+</li>
+<li>
+<p>Correctly connects to the Cloud SQL for PostgreSQL instance</p>
+<ul>
+<li>Has access to the Cloud Storage buckets</li>
+<li>Exposes endpoints through Cloud Load Balancing</li>
+</ul>
+</li>
+</ol>
+<h4 id="perform-the-cutover-example">Perform the cutover (example)<a class="headerlink" href="#perform-the-cutover-example" title="Permanent link">&para;</a></h4>
+<p>After promoting the application to the production environment, and ensuring that
+the application is operationally ready, the application onboarding and migration
+team:</p>
+<ol>
+<li>Configures the production environment to gradually route requests to the
+   application in 5% increments, until all the requests are routed to the Google
+   Cloud environment.</li>
+<li>Refactors the CI workflow to push container images to Artifact Registry only.</li>
+<li>Takes backups to ensure that a rollback is possible, in case of unanticipated
+   issues.</li>
+<li>Retires the application in the source environment.</li>
+</ol>
+<h3 id="optimize-the-application-example">Optimize the application (example)<a class="headerlink" href="#optimize-the-application-example" title="Permanent link">&para;</a></h3>
+<p>After performing the cutover, the application development and operations team
+takes over the maintenance of the application, and establishes the following
+optimization requirements:</p>
+<ul>
+<li>Refine the CD process by adopting a canary deployment methodology.</li>
+<li>
+<p>Reduce the application's operational costs by:</p>
+<ul>
+<li>Tuning the configuration of the GKE cluster</li>
+<li>Enabling the Cloud Storage Autoclass feature</li>
+</ul>
+</li>
+</ul>
+<p>After establishing optimization requirements, the application development and
+operations team completes
+<a href="#optimize-the-application">the rest of the tasks of the optimization phase</a>.</p>
+<h2 id="whats-next">What's next<a class="headerlink" href="#whats-next" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Learn how to
+  <a href="https://cloud.google.com/architecture/migrate-amazon-eks-to-gke">Migrate from Amazon EKS to Google Kubernetes Engine (GKE)</a>.</li>
+<li>Learn when to
+  <a href="https://cloud.google.com/architecture/migration-to-gcp-getting-started#finding_help">find help for your migrations</a>.</li>
+</ul>
+<h3 id="contributors">Contributors<a class="headerlink" href="#contributors" title="Permanent link">&para;</a></h3>
+<p>Authors:</p>
+<ul>
+<li><a href="https://www.linkedin.com/in/ferrarimark">Marco Ferrari</a> | Cloud Solutions
+  Architect</li>
+<li><a href="https://www.linkedin.com/in/paul-revello">Paul Revello</a> | Cloud Solutions
+  Architect</li>
+</ul>
+<p>Other contributors:</p>
+<ul>
+<li><a href="https://www.linkedin.com/in/benjamingood">Ben Good</a> | Solutions Architect</li>
+<li><a href="https://www.linkedin.com/in/shobhit-gupta-3b1a5078">Shobhit Gupta</a> |
+  Solutions Architect</li>
+<li>James Brookbank | Solutions Architect</li>
+</ul>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      The projects contained in this repository are maintained by the Google Cloud Solutions Architects team.<br>
+Copyright &copy; 2019-2025 Google LLC<br>
+<a href='https://cloud.google.com/'><img src='https://googlecloudplatform.github.io/platform-engineering/common/images/cloud.svg' width='240' height='160'/></a>
+
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["content.code.copy", "content.code.annotate", "navigation.top", "navigation.tracking"], "search": "../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.60a45f97.min.js"></script>
+      
+    
+  </body>
+</html>
