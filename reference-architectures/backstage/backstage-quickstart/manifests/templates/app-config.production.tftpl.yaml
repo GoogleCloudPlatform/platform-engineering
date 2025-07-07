@@ -1,12 +1,18 @@
-database:
-  client: pg
-  connection:
-    host: ${postgres_host}
-    port: ${postgres_port}
-    database: ${postgres_db}
-    #user: backstage-qs-workload@backstage-453421.iam[this is just to show that the IAM account is trimmed when we authenticate to the cloudsql via IAM]
-    user: ${postgres_user}
-    ssl:
-      rejectUnauthorized: false
-options:
-requestTimeout: 60000
+app:
+  baseUrl: https://${endpoint_url}
+
+backend:
+  baseUrl: https://${endpoint_url}
+  listen:
+    port: 7007
+  database:
+    client: pg
+    connection:
+      host: ${POSTGRES_HOST}
+      port: ${POSTGRES_PORT}
+      database: ${POSTGRES_DB}
+      user: ${POSTGRES_USER}
+      # ssl:
+      #   rejectUnauthorized: false
+      options:
+      requestTimeout: 60000

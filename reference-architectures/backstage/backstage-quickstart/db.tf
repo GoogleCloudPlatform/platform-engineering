@@ -68,10 +68,7 @@ resource "local_file" "app_config_production_yaml" {
   content = templatefile(
     "${path.module}/manifests/templates/app-config.production.tftpl.yaml",
     {
-      postgres_host = google_sql_database_instance.instance.dns_name
-      postgres_port = 5432
-      postgres_db   = "backstage"
-      postgres_user = trimsuffix(google_service_account.workloadSa.email, ".gserviceaccount.com")
+      endpoint_url = local.backstageExternalUrl
     }
   )
   filename = "${path.module}/manifests/cloudbuild/app-config.production.yaml"
