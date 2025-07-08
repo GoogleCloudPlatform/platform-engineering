@@ -44,6 +44,7 @@ variable "backstage_hosting_project_services" {
   default = [
     "cloudresourcemanager.googleapis.com",
     "artifactregistry.googleapis.com",
+    "cloudbuild.googleapis.com",
     "compute.googleapis.com",
     "container.googleapis.com",
     "autoscaling.googleapis.com",

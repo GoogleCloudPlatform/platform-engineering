@@ -39,7 +39,7 @@ resource "local_file" "deployment_yaml" {
   content = templatefile(
     "${path.module}/manifests/templates/deployment.tftpl.yaml",
     {
-      cloud_sql_name = google_sql_database_instance.instance.dns_name
+      cloud_sql_name = google_sql_database_instance.instance.name
       deployment_name       = "backstage"
       namespace             = "backstage"
       postgres_port         = 5432
