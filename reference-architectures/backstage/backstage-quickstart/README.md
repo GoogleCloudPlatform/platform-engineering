@@ -103,7 +103,7 @@ Management API are enabled.
 1.  Enable Service Usage API and Service Management API
 
     ```bash
-    gcloud services enable serviceusage.googleapis.com \
+    gcloud services enable serviceusage.googleapis.com
     gcloud services enable servicemanagement.googleapis.com
     ```
 

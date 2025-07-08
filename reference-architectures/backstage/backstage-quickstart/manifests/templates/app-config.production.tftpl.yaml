@@ -8,10 +8,10 @@ backend:
   database:
     client: pg
     connection:
-      host: ${POSTGRES_HOST}
-      port: ${POSTGRES_PORT}
-      database: ${POSTGRES_DB}
-      user: ${POSTGRES_USER}
+      host: $${POSTGRES_HOST}
+      port: $${POSTGRES_PORT}
+      database: $${POSTGRES_DB}
+      user: $${POSTGRES_USER}
       # ssl:
       #   rejectUnauthorized: false
       options:

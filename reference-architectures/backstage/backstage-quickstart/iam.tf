@@ -112,7 +112,7 @@ resource "google_project_iam_member" "cloudStorageBinding" {
   member  = "serviceAccount:${google_service_account.workloadSa.email}"
 }
 
-resource "local_file" "route_https_yaml" {
+resource "local_file" "service_account_yaml" {
   content = templatefile(
     "${path.module}/manifests/templates/service-account.tftpl.yaml",
     {

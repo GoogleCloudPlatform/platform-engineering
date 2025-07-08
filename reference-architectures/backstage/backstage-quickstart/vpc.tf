@@ -110,7 +110,7 @@ resource "google_compute_forwarding_rule" "cloudSqlPscForwardingRule" {
 # Firewall rule required to support IAM logins to Cloud SQL
 # https://cloud.google.com/sql/docs/postgres/iam-logins
 resource "google_compute_firewall" "cloud_sql_auth" {
-  name = "cloudsql_auth"
+  name = "cloudsql-auth"
   network = google_compute_network.backstageHostingVpc.id
   
   allow {
