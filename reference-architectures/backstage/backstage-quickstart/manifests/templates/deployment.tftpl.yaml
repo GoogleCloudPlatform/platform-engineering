@@ -42,7 +42,7 @@ spec:
           resources:
             requests:
               memory: "2Gi"
-              cpu:    "1"
+              cpu: "1"
         - name: backstage
           image: CONTAINER_IMAGE
           imagePullPolicy: IfNotPresent
@@ -50,11 +50,11 @@ spec:
             - name: http
               containerPort: 7007
           env:
-          - name: POSTGRES_USER
-            value: "${postgres_user}"
-          - name: POSTGRES_HOST
-            value: "127.0.0.1"
-          - name: POSTGRES_PORT
-            value: "${postgres_port}"
-          - name: POSTGRES_DB
-            value: "${postgres_db}"
+            - name: POSTGRES_USER
+              value: "${postgres_user}"
+            - name: POSTGRES_HOST
+              value: "127.0.0.1"
+            - name: POSTGRES_PORT
+              value: "${postgres_port}"
+            - name: POSTGRES_DB
+              value: "${postgres_db}"

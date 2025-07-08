@@ -26,10 +26,10 @@ resource "local_file" "service_yaml" {
   content = templatefile(
     "${path.module}/manifests/templates/service.tftpl.yaml",
     {
-      deployment_name   = "backstage"
-      namespace         = "backstage"
-      service_name      = "backstage"
-      service_port      = 80
+      deployment_name = "backstage"
+      namespace       = "backstage"
+      service_name    = "backstage"
+      service_port    = 80
     }
   )
   filename = "./manifests/k8s/service.yaml"
@@ -39,13 +39,13 @@ resource "local_file" "deployment_yaml" {
   content = templatefile(
     "${path.module}/manifests/templates/deployment.tftpl.yaml",
     {
-      cloud_sql_name = google_sql_database_instance.instance.name
-      deployment_name       = "backstage"
-      namespace             = "backstage"
-      postgres_port         = 5432
-      postgres_db           = "backstage"
-      postgres_user         = trimsuffix(google_service_account.workloadSa.email, ".gserviceaccount.com")
-      service_account_name  = "ksa-backstage"
+      cloud_sql_name       = google_sql_database_instance.instance.name
+      deployment_name      = "backstage"
+      namespace            = "backstage"
+      postgres_port        = 5432
+      postgres_db          = "backstage"
+      postgres_user        = trimsuffix(google_service_account.workloadSa.email, ".gserviceaccount.com")
+      service_account_name = "ksa-backstage"
     }
   )
   filename = "./manifests/k8s/deployment.yaml"

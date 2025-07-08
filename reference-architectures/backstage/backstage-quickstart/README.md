@@ -120,28 +120,29 @@ Management API are enabled.
     This will take a while to create all of the required resources, figure
     somewhere between 15 and 20 minutes.
 
-3. Build the container image for Backstage
+3.  Build the container image for Backstage
 
     ```bash
     cd manifests/cloudbuild
     gcloud builds submit .
     ```
 
-    The output of that command will include a fully qualified image path
-    similar to: `us-central1-docker.pkg.dev/[your_project]/backstage-qs/backstage-quickstart:d747db2a-deef-4783-8a0e-3b36e568f6fc`
+    The output of that command will include a fully qualified image path similar
+    to:
+    `us-central1-docker.pkg.dev/[your_project]/backstage-qs/backstage-quickstart:d747db2a-deef-4783-8a0e-3b36e568f6fc`
     Using that value create a new environment variable.
 
     ```bash
     export IMAGE_PATH="<your_image_path>"
     ```
 
-4. Configure Cloud SQL postgres user for password authentication.
+4.  Configure Cloud SQL postgres user for password authentication.
 
     ```bash
     gcloud sql users set-password postgres --instance=backstage-qs --prompt-for-password
     ```
 
-5. Grant the backstage workload service account create database permissions.
+5.  Grant the backstage workload service account create database permissions.
 
     a. In the Cloud Console, navigate to `SQL`
 
@@ -149,7 +150,8 @@ Management API are enabled.
 
     c. In the left menu select `Cloud SQL Studio`
 
-    d. Choose the `postgres` database and login with the `postgres` user and password you created in step 4.
+    d. Choose the `postgres` database and login with the `postgres` user and
+    password you created in step 4.
 
     e. Run the following sql commands, to grant create database permissions
 
@@ -157,7 +159,7 @@ Management API are enabled.
     ALTER USER "backstage-qs-workload@[your_project_id].iam" CREATEDB
     ```
 
-6. Deploy the Kubernetes manifests
+6.  Deploy the Kubernetes manifests
 
     ```bash
     cd ../k8s
@@ -166,7 +168,8 @@ Management API are enabled.
     kubectl apply -f .
     ```
 
-7. In a browser navigate to you backstage endpoint. The url will be similar to `https://qs.endpoints.[your_project_id].cloud.goog`
+7.  In a browser navigate to you backstage endpoint. The URL will be similar to
+    `https://qs.endpoints.[your_project_id].cloud.goog`
 
 ## Cleanup
 

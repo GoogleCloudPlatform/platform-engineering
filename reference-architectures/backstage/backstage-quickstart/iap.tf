@@ -52,9 +52,9 @@ resource "local_file" "iap_secret_yaml" {
   content = templatefile(
     "${path.module}/manifests/templates/oauth-secret.tftpl.yaml",
     {
-      name             = "backstage-oauth"
-      namespace        = "backstage"
-      secret           = base64encode(google_iap_client.backstageIapClient.secret)
+      name      = "backstage-oauth"
+      namespace = "backstage"
+      secret    = base64encode(google_iap_client.backstageIapClient.secret)
     }
   )
   filename = "./manifests/k8s/oauth-secret.yaml"

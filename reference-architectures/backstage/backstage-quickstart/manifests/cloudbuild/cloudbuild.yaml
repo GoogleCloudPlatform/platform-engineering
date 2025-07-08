@@ -1,89 +1,95 @@
 # --- Substitution Variables ---
 substitutions:
-  _BACKSTAGE_APP_NAME: 'backstage-quickstart'
-  _LOCATION: 'us-central1'
-  _ARTIFACT_REGISTRY_REPO: 'backstage-qs'
-  _IMAGE_NAME: 'backstage-quickstart'
+  _BACKSTAGE_APP_NAME: "backstage-quickstart"
+  _LOCATION: "us-central1"
+  _ARTIFACT_REGISTRY_REPO: "backstage-qs"
+  _IMAGE_NAME: "backstage-quickstart"
 
 steps:
   # Step 1: Scaffold the Backstage application into a subdirectory
-  - name: 'node:20'
-    id: 'Scaffold'
-    entrypoint: 'bash'
+  - name: "node:20"
+    id: "Scaffold"
+    entrypoint: "bash"
     args:
-      - '-c'
+      - "-c"
       # Use printf to provide the app name to the interactive prompt.
       - 'printf "${_BACKSTAGE_APP_NAME}\n" | npx @backstage/create-app@latest --skip-install'
     timeout: 1200s
 
   # Step 2: Run 'yarn install', overriding the default CI environment variable
-  - name: 'node:20'
-    id: 'Install Dependencies'
-    dir: '${_BACKSTAGE_APP_NAME}'
-    entrypoint: 'bash'
+  - name: "node:20"
+    id: "Install Dependencies"
+    dir: "${_BACKSTAGE_APP_NAME}"
+    entrypoint: "bash"
     args:
-      - '-c'
+      - "-c"
       # Set CI=false to allow yarn to create the lockfile in a CI environment
-      - 'CI=false yarn install'
-      - 'yarn --cwd packages/backend add pg'
-    waitFor: ['Scaffold']
+      - "CI=false yarn install"
+      - "yarn --cwd packages/backend add pg"
+    waitFor: ["Scaffold"]
     timeout: 1200s
 
-  - name: 'node:20'
-    id: 'Install pg backend'
-    dir: '${_BACKSTAGE_APP_NAME}'
-    entrypoint: 'bash'
+  - name: "node:20"
+    id: "Install pg backend"
+    dir: "${_BACKSTAGE_APP_NAME}"
+    entrypoint: "bash"
     args:
-      - '-c'
+      - "-c"
       # Set CI=false to allow yarn to create the lockfile in a CI environment
-      - 'CI=false yarn --cwd packages/backend add pg'
-    waitFor: ['Install Dependencies']
+      - "CI=false yarn --cwd packages/backend add pg"
+    waitFor: ["Install Dependencies"]
     timeout: 1200s
 
   # Step 3: Prepare the runtime config file
-  - name: 'gcr.io/cloud-builders/gcloud'
-    id: 'Prepare Config'
-    dir: '${_BACKSTAGE_APP_NAME}'
-    entrypoint: 'bash'
+  - name: "gcr.io/cloud-builders/gcloud"
+    id: "Prepare Config"
+    dir: "${_BACKSTAGE_APP_NAME}"
+    entrypoint: "bash"
     args:
-      - '-c'
+      - "-c"
       - |
         cp /workspace/app-config.production.yaml app-config.production.yaml
-    waitFor: ['Install pg backend']
+    waitFor: ["Install pg backend"]
 
   # Step 4: Build the application to create production artifacts
-  - name: 'node:20'
-    id: 'Build App'
-    dir: '${_BACKSTAGE_APP_NAME}'
-    entrypoint: 'yarn'
-    args: ['build:backend', '--config', '../../app-config.yaml', '--config', '../../app-config.production.yaml'] # 'yarn build' handles TypeScript compilation and everything else
+  - name: "node:20"
+    id: "Build App"
+    dir: "${_BACKSTAGE_APP_NAME}"
+    entrypoint: "yarn"
+    args: [
+        "build:backend",
+        "--config",
+        "../../app-config.yaml",
+        "--config",
+        "../../app-config.production.yaml",
+      ] # 'yarn build' handles TypeScript compilation and everything else
     # no need for yarn tsc
-    waitFor: ['Prepare Config']
+    waitFor: ["Prepare Config"]
     timeout: 1200s
 
   # Step 5: Build the Docker container
-  - name: 'gcr.io/cloud-builders/docker'
-    id: 'Create Container'
-    dir: '${_BACKSTAGE_APP_NAME}'
+  - name: "gcr.io/cloud-builders/docker"
+    id: "Create Container"
+    dir: "${_BACKSTAGE_APP_NAME}"
     env:
-      - 'DOCKER_BUILDKIT=1'
+      - "DOCKER_BUILDKIT=1"
     args:
-      - 'build'
-      - '-t'
-      - '${_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/${_IMAGE_NAME}:${BUILD_ID}'
-      - '--file=packages/backend/Dockerfile'
-      - '.'
-    waitFor: ['Build App', 'Prepare Config']
+      - "build"
+      - "-t"
+      - "${_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/${_IMAGE_NAME}:${BUILD_ID}"
+      - "--file=packages/backend/Dockerfile"
+      - "."
+    waitFor: ["Build App", "Prepare Config"]
 
   # Step 6: Push the container image to Artifact Registry
-  - name: 'gcr.io/cloud-builders/docker'
-    id: 'Push'
-    dir: '${_BACKSTAGE_APP_NAME}'
+  - name: "gcr.io/cloud-builders/docker"
+    id: "Push"
+    dir: "${_BACKSTAGE_APP_NAME}"
     args:
-      - 'push'
-      - '${_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/${_IMAGE_NAME}:${BUILD_ID}'
-    waitFor: ['Create Container']
+      - "push"
+      - "${_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/${_IMAGE_NAME}:${BUILD_ID}"
+    waitFor: ["Create Container"]
 
 # --- Final Image Output ---
 images:
-  - '${_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/${_IMAGE_NAME}:${BUILD_ID}'
+  - "${_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/${_IMAGE_NAME}:${BUILD_ID}"

@@ -13,7 +13,7 @@
 # limitations under the License.
 
 locals {
-  gateway_name                = "external-https"
+  gateway_name = "external-https"
 }
 
 resource "google_compute_network" "backstageHostingVpc" {
@@ -110,15 +110,15 @@ resource "google_compute_forwarding_rule" "cloudSqlPscForwardingRule" {
 # Firewall rule required to support IAM logins to Cloud SQL
 # https://cloud.google.com/sql/docs/postgres/iam-logins
 resource "google_compute_firewall" "cloud_sql_auth" {
-  name = "cloudsql-auth"
+  name    = "cloudsql-auth"
   network = google_compute_network.backstageHostingVpc.id
-  
+
   allow {
-    protocol  = "tcp"
-    ports     = ["443", "3307"]
+    protocol = "tcp"
+    ports    = ["443", "3307"]
   }
-  direction = "EGRESS"
-  destination_ranges = ["34.126.0.0/18"]
+  direction               = "EGRESS"
+  destination_ranges      = ["34.126.0.0/18"]
   target_service_accounts = [google_service_account.workloadSa.email]
 }
 
