@@ -1911,7 +1911,7 @@ password you created in step 4.</p>
 <p>Deploy the Kubernetes manifests</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nb">cd</span><span class="w"> </span>../k8s
 </span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>sed<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;s%CONTAINER_IMAGE%</span><span class="si">${</span><span class="nv">IMAGE_PATH</span><span class="si">}</span><span class="s2">%g&quot;</span><span class="w"> </span>deployment.yaml
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>gcloud<span class="w"> </span>container<span class="w"> </span>clusters<span class="w"> </span>get-credentials<span class="w"> </span>backstage-qs<span class="w"> </span>--region<span class="w"> </span>us-central1<span class="w"> </span>--dns-enpoint
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>gcloud<span class="w"> </span>container<span class="w"> </span>clusters<span class="w"> </span>get-credentials<span class="w"> </span>backstage-qs<span class="w"> </span>--region<span class="w"> </span>us-central1<span class="w"> </span>--dns-endpoint
 </span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>.
 </span></code></pre></div>
 </li>
