@@ -118,7 +118,7 @@ Management API are enabled.
       --support_email="${IAP_SUPPORT_EMAIL}$"
     ```
 
-2.  Create the resources
+3.  Create the resources
 
     ```bash
     cd ${BACKSTAGE_QS_BASE_DIR} && \
@@ -131,7 +131,7 @@ Management API are enabled.
     This will take a while to create all of the required resources, figure
     somewhere between 15 and 20 minutes.
 
-3.  Build the container image for Backstage
+4.  Build the container image for Backstage
 
     ```bash
     cd manifests/cloudbuild
@@ -147,13 +147,13 @@ Management API are enabled.
     export IMAGE_PATH="<your_image_path>"
     ```
 
-4.  Configure Cloud SQL postgres user for password authentication.
+5.  Configure Cloud SQL postgres user for password authentication.
 
     ```bash
     gcloud sql users set-password postgres --instance=backstage-qs --prompt-for-password
     ```
 
-5.  Grant the backstage workload service account create database permissions.
+6.  Grant the backstage workload service account create database permissions.
 
     a. In the Cloud Console, navigate to `SQL`
 
@@ -170,7 +170,7 @@ Management API are enabled.
     ALTER USER "backstage-qs-workload@[your_project_id].iam" CREATEDB
     ```
 
-6.  Deploy the Kubernetes manifests
+7.  Deploy the Kubernetes manifests
 
     ```bash
     cd ../k8s
@@ -179,7 +179,7 @@ Management API are enabled.
     kubectl apply -f .
     ```
 
-7.  In a browser navigate to you backstage endpoint. The URL will be similar to
+8.  In a browser navigate to you backstage endpoint. The URL will be similar to
     `https://qs.endpoints.[your_project_id].cloud.goog`
 
 ## Cleanup
