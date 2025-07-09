@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-data "google_project" "backstageProject" { 
+data "google_project" "backstageProject" {
   project_id = var.environment_project_id
 }
 
