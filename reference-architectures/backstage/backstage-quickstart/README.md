@@ -164,7 +164,7 @@ Management API are enabled.
     ```bash
     cd ../k8s
     sed -i "s%CONTAINER_IMAGE%${IMAGE_PATH}%g" deployment.yaml
-    gcloud container clusters get-credentials backstage-qs --region us-central1 --dns-enpoint
+    gcloud container clusters get-credentials backstage-qs --region us-central1 --dns-endpoint
     kubectl apply -f .
     ```
 
