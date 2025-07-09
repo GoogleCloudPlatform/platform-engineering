@@ -103,8 +103,19 @@ Management API are enabled.
 1.  Enable Service Usage API and Service Management API
 
     ```bash
-    gcloud services enable serviceusage.googleapis.com
-    gcloud services enable servicemanagement.googleapis.com
+    gcloud services enable \
+      iap.googleapis.com \
+      serviceusage.googleapis.com \
+      servicemanagement.googleapis.com
+    ```
+
+2.  Create the Identity Aware Proxy brand
+
+    ```bash
+    gcloud iap oauth-brands create \
+      --application_title="IAP Secured Backstage" \
+      --project="${PROJECT_ID}" \
+      --support_email="${IAP_SUPPORT_EMAIL}$"
     ```
 
 2.  Create the resources

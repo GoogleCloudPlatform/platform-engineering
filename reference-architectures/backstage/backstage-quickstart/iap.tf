@@ -12,10 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-resource "google_iap_brand" "backstageIapBrand" {
-  project           = var.environment_project_id
-  support_email     = var.iap_support_email
-  application_title = var.backstage_iap_application_title
+data "google_project" "backstageProject" { 
+  project_id = var.environment_project_id
 }
 
 resource "google_iap_web_iam_member" "backstageIapPolicy" {
@@ -26,7 +24,7 @@ resource "google_iap_web_iam_member" "backstageIapPolicy" {
 
 resource "google_iap_client" "backstageIapClient" {
   display_name = var.backstage_iap_display_name
-  brand        = google_iap_brand.backstageIapBrand.name
+  brand        = "projects/${data.google_project.backstageProject.number}/brand/${data.google_project.backstageProject.number}"
 }
 
 resource "local_file" "route_https_yaml" {

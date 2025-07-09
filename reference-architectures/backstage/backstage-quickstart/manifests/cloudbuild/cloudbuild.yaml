@@ -25,7 +25,6 @@ steps:
       - "-c"
       # Set CI=false to allow yarn to create the lockfile in a CI environment
       - "CI=false yarn install"
-      - "yarn --cwd packages/backend add pg"
     waitFor: ["Scaffold"]
     timeout: 1200s
 
@@ -34,10 +33,11 @@ steps:
     dir: "${_BACKSTAGE_APP_NAME}"
     entrypoint: "bash"
     args:
-      - "-c"
       # Set CI=false to allow yarn to create the lockfile in a CI environment
-      - "CI=false yarn --cwd packages/backend add pg"
-    waitFor: ["Install Dependencies"]
+      - "-c"      
+      - |
+        CI=false yarn --cwd packages/backend add pg
+    waitFor: ["Scaffold"]
     timeout: 1200s
 
   # Step 3: Prepare the runtime config file
