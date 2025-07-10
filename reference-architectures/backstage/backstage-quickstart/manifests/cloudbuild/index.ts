@@ -6,17 +6,17 @@
  * Happy hacking!
  */
 
-import { createBackend } from '@backstage/backend-defaults';
+import {createBackend} from '@backstage/backend-defaults';
 
 //Custom auth resolver
-import { createBackendModule } from '@backstage/backend-plugin-api';
-import { gcpIapAuthenticator } from '@backstage/plugin-auth-backend-module-gcp-iap-provider';
+import {createBackendModule} from '@backstage/backend-plugin-api';
+import {gcpIapAuthenticator} from '@backstage/plugin-auth-backend-module-gcp-iap-provider';
 import {
   authProvidersExtensionPoint,
   createProxyAuthProviderFactory,
 } from '@backstage/plugin-auth-node';
 
-import { stringifyEntityRef } from '@backstage/catalog-model';
+import {stringifyEntityRef} from '@backstage/catalog-model';
 
 const backend = createBackend();
 
@@ -35,7 +35,7 @@ backend.add(import('@backstage/plugin-auth-backend'));
 // catalog plugin
 backend.add(import('@backstage/plugin-catalog-backend'));
 backend.add(
-  import('@backstage/plugin-catalog-backend-module-scaffolder-entity-model'),
+  import('@backstage/plugin-catalog-backend-module-scaffolder-entity-model')
 );
 
 // See https://backstage.io/docs/features/software-catalog/configuration#subscribing-to-catalog-errors
@@ -45,7 +45,7 @@ backend.add(import('@backstage/plugin-catalog-backend-module-logs'));
 backend.add(import('@backstage/plugin-permission-backend'));
 // See https://backstage.io/docs/permissions/getting-started for how to create your own permission policy
 backend.add(
-  import('@backstage/plugin-permission-backend-module-allow-all-policy'),
+  import('@backstage/plugin-permission-backend-module-allow-all-policy')
 );
 
 // search plugin
@@ -68,8 +68,8 @@ const customAuthResolver = createBackendModule({
   moduleId: 'custom-auth-provider',
   register(reg) {
     reg.registerInit({
-      deps: { providers: authProvidersExtensionPoint },
-      async init({ providers }) {
+      deps: {providers: authProvidersExtensionPoint},
+      async init({providers}) {
         providers.registerProvider({
           providerId: 'gcpIap',
           factory: createProxyAuthProviderFactory({
@@ -77,8 +77,12 @@ const customAuthResolver = createBackendModule({
             async signInResolver(info, ctx) {
               console.log(info);
               //const { profile: { email } } = info;
-              const { result: { iapToken : { email } } } = info;
-              console.log(email)
+              const {
+                result: {
+                  iapToken: {email},
+                },
+              } = info;
+              console.log(email);
               const userEntity = stringifyEntityRef({
                 kind: 'User',
                 //name: userId,

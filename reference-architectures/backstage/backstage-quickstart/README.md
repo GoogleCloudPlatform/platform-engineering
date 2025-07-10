@@ -172,13 +172,16 @@ Management API are enabled.
     ALTER USER "backstage-qs-workload@[your_project_id].iam" CREATEDB
     ```
 
-7.  Capture the IAP audience 
+7.  Capture the IAP audience
 
     a. In the Cloud Console, navigate to `Security` > `Identity-Aware Proxy`
 
-    b. Choose `Get JWT audience code` from the three dot menu on the right side of your Backend Service.
+    b. Choose `Get JWT audience code` from the three dot menu on the right side
+    of your Backend Service.
 
-    c. The value will be in the format of: `/projects/<your_project_number>/global/backendServices/<numeric_id>`. Using that value create a new environment variable.
+    c. The value will be in the format of:
+    `/projects/<your_project_number>/global/backendServices/<numeric_id>`. Using
+    that value create a new environment variable.
 
     ```bash
     export IAP_AUDIENCE_VALUE="<your_iap_audience_value>"
