@@ -34,7 +34,7 @@ steps:
     entrypoint: "bash"
     args:
       # Set CI=false to allow yarn to create the lockfile in a CI environment
-      - "-c"      
+      - "-c"
       - |
         CI=false yarn --cwd packages/backend add pg
     waitFor: ["Scaffold"]
