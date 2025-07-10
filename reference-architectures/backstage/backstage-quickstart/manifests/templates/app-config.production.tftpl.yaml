@@ -16,3 +16,19 @@ backend:
       #   rejectUnauthorized: false
       options:
       requestTimeout: 60000
+
+auth:
+  environment: production
+  providers:
+    gcpIap:
+      audience: $${IAP_AUDIENCE}
+      #jwtHeader: 'x-goog-iap-jwt-assertion' # Optional: Only if you are using a custom header for the IAP JWT
+      # signIn:
+      #   resolvers:
+      #     # See https://backstage.io/docs/auth/google/gcp-iap-auth#resolvers for more resolvers
+      #     - resolver: emailMatchingUserEntityProfileEmail
+      #     - resolver: emailMatchingUserEntityAnnotation
+
+catalog:
+  rules:
+    - allow: [Component, System, API, Resource, Location, Template, User, Group]

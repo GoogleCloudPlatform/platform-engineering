@@ -58,3 +58,5 @@ spec:
               value: "${postgres_port}"
             - name: POSTGRES_DB
               value: "${postgres_db}"
+            - name: IAP_AUDIENCE
+              value: IAP_AUDIENCE_VALUE

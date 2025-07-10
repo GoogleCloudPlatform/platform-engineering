@@ -147,6 +147,8 @@ Management API are enabled.
     export IMAGE_PATH="<your_image_path>"
     ```
 
+    This will take approximately 10 minutes to build and push the image.
+
 5.  Configure Cloud SQL postgres user for password authentication.
 
     ```bash
@@ -170,16 +172,29 @@ Management API are enabled.
     ALTER USER "backstage-qs-workload@[your_project_id].iam" CREATEDB
     ```
 
-7.  Deploy the Kubernetes manifests
+7.  Capture the IAP audience 
+
+    a. In the Cloud Console, navigate to `Security` > `Identity-Aware Proxy`
+
+    b. Choose `Get JWT audience code` from the three dot menu on the right side of your Backend Service.
+
+    c. The value will be in the format of: `/projects/<your_project_number>/global/backendServices/<numeric_id>`. Using that value create a new environment variable.
+
+    ```bash
+    export IAP_AUDIENCE_VALUE="<your_iap_audience_value>"
+    ```
+
+8.  Deploy the Kubernetes manifests
 
     ```bash
     cd ../k8s
     sed -i "s%CONTAINER_IMAGE%${IMAGE_PATH}%g" deployment.yaml
+    sed -i "s%IAP_AUDIENCE_VALUE%${IAP_AUDIENCE_VALUE}%g" deployment.yaml
     gcloud container clusters get-credentials backstage-qs --region us-central1 --dns-endpoint
     kubectl apply -f .
     ```
 
-8.  In a browser navigate to you backstage endpoint. The URL will be similar to
+9.  In a browser navigate to you backstage endpoint. The URL will be similar to
     `https://qs.endpoints.[your_project_id].cloud.goog`
 
 ## Cleanup

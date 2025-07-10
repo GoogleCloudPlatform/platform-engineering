@@ -29,7 +29,7 @@ steps:
     timeout: 1200s
 
   - name: "node:20"
-    id: "Install pg backend"
+    id: "Install Plugins"
     dir: "${_BACKSTAGE_APP_NAME}"
     entrypoint: "bash"
     args:
@@ -37,7 +37,8 @@ steps:
       - "-c"
       - |
         CI=false yarn --cwd packages/backend add pg
-    waitFor: ["Scaffold"]
+        CI=false yarn --cwd packages/backend add @backstage/plugin-auth-backend-module-gcp-iap-provider
+    waitFor: ["Install Dependencies"]
     timeout: 1200s
 
   # Step 3: Prepare the runtime config file
@@ -49,7 +50,9 @@ steps:
       - "-c"
       - |
         cp /workspace/app-config.production.yaml app-config.production.yaml
-    waitFor: ["Install pg backend"]
+        cp /workspace/index.ts packages/backend/src/index.ts
+        cp /workspace/App.tsx packages/app/src/App.tsx
+    waitFor: ["Install Plugins"]
 
   # Step 4: Build the application to create production artifacts
   - name: "node:20"
