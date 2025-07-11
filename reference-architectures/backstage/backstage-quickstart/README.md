@@ -110,21 +110,25 @@ Management API are enabled.
       --support_email="${IAP_SUPPORT_EMAIL}"
     ```
 
-    Capture the brand name in an environment variable, it will be in the format of: `projects/[your_project_number]/brands/[your_project_number]`.
+    Capture the brand name in an environment variable, it will be in the format
+    of: `projects/[your_project_number]/brands/[your_project_number]`.
 
     ```bash
     export IAP_BRAND=<your_brand_name>
     ```
 
-3.  Using the brand name create the IAP client. 
+3.  Using the brand name create the IAP client.
 
     ```bash
     gcloud iap oauth-clients create \
       ${IAP_BRAND} \
       --display_name="IAP Secured Backstage"
-    ```    
+    ```
 
-    Capture the client_id and client_secret in environment variables. For the client_id we only need the last value of the string, it will be in the format of: `549085115274-ksi3n9n41tp1vif79dda5ofauk0ebes9.apps.googleusercontent.com`
+    Capture the client_id and client_secret in environment variables. For the
+    client_id we only need the last value of the string, it will be in the
+    format of:
+    `549085115274-ksi3n9n41tp1vif79dda5ofauk0ebes9.apps.googleusercontent.com`
 
     ```bash
     export IAP_CLIENT_ID="<your_client_id>"
@@ -141,7 +145,7 @@ Management API are enabled.
     sed -i "s/YOUR_IAP_SECRET/${IAP_SECRET}/g" ${BACKSTAGE_QS_BASE_DIR}/backstage-qs.auto.tfvars
     ```
 
-3.  Create the resources
+5.  Create the resources
 
     ```bash
     cd ${BACKSTAGE_QS_BASE_DIR} && \
@@ -154,7 +158,7 @@ Management API are enabled.
     This will take a while to create all of the required resources, figure
     somewhere between 15 and 20 minutes.
 
-4.  Build the container image for Backstage
+6.  Build the container image for Backstage
 
     ```bash
     cd manifests/cloudbuild
@@ -172,13 +176,13 @@ Management API are enabled.
 
     This will take approximately 10 minutes to build and push the image.
 
-5.  Configure Cloud SQL postgres user for password authentication.
+7.  Configure Cloud SQL postgres user for password authentication.
 
     ```bash
     gcloud sql users set-password postgres --instance=backstage-qs --prompt-for-password
     ```
 
-6.  Grant the backstage workload service account create database permissions.
+8.  Grant the backstage workload service account create database permissions.
 
     a. In the Cloud Console, navigate to `SQL`
 
@@ -195,16 +199,17 @@ Management API are enabled.
     ALTER USER "backstage-qs-workload@[your_project_id].iam" CREATEDB
     ```
 
-7.  Perform an initial deployment of Kubernetes resources.
+9.  Perform an initial deployment of Kubernetes resources.
 
-     ```bash
+    ```bash
     cd ../k8s
     sed -i "s%CONTAINER_IMAGE%${IMAGE_PATH}%g" deployment.yaml
     gcloud container clusters get-credentials backstage-qs --region us-central1 --dns-endpoint
     kubectl apply -f .
     ```
 
-7.  Capture the IAP audience, the Backend Service may take a few minutes to appear.
+10. Capture the IAP audience, the Backend Service may take a few minutes to
+    appear.
 
     a. In the Cloud Console, navigate to `Security` > `Identity-Aware Proxy`
 
@@ -221,14 +226,14 @@ Management API are enabled.
     export IAP_AUDIENCE_VALUE="<your_iap_audience_value>"
     ```
 
-8.  Redeploy the Kubernetes manifests with the IAP audience
+11. Redeploy the Kubernetes manifests with the IAP audience
 
     ```bash
     sed -i "s%IAP_AUDIENCE_VALUE%${IAP_AUDIENCE_VALUE}%g" deployment.yaml
     kubectl apply -f .
     ```
 
-9.  In a browser navigate to you backstage endpoint. The URL will be similar to
+12. In a browser navigate to you backstage endpoint. The URL will be similar to
     `https://qs.endpoints.[your_project_id].cloud.goog`
 
 ## Cleanup
