@@ -12,19 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-data "google_project" "backstageProject" {
-  project_id = var.environment_project_id
-}
+# data "external" "iap_client" {
+#   program = ["bash", "gcloud", "iap", "oauth-clients", "list", var.iap_brand, "--format", "json"]
+# }
 
 resource "google_iap_web_iam_member" "backstageIapPolicy" {
   project = var.environment_project_id
   role    = "roles/iap.httpsResourceAccessor"
   member  = "domain:${var.iap_user_domain}"
-}
-
-resource "google_iap_client" "backstageIapClient" {
-  display_name = var.backstage_iap_display_name
-  brand        = "projects/${data.google_project.backstageProject.number}/brand/${data.google_project.backstageProject.number}"
 }
 
 resource "local_file" "route_https_yaml" {
@@ -52,7 +47,8 @@ resource "local_file" "iap_secret_yaml" {
     {
       name      = "backstage-oauth"
       namespace = "backstage"
-      secret    = base64encode(google_iap_client.backstageIapClient.secret)
+      secret    = base64encode(var.iap_client_secret)
+      //secret    = base64encode(jsondecode(data.external.iap_client.result)[0].secret)
     }
   )
   filename = "./manifests/k8s/oauth-secret.yaml"
@@ -62,7 +58,8 @@ resource "local_file" "policy_iap_backstage_yaml" {
   content = templatefile(
     "${path.module}/manifests/templates/gcp-backend-policy-iap-service.tftpl.yaml",
     {
-      oauth_client_id          = google_iap_client.backstageIapClient.client_id
+      //oauth_client_id          = split("/", jsondecode(data.external.iap_client.result)[0].name)[4]
+      oauth_client_id          = var.iap_client_id
       oauth_client_secret_name = "backstage-oauth"
       policy_name              = "backstage"
       service_name             = "backstage"

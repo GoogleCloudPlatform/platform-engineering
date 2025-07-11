@@ -18,14 +18,20 @@ variable "environment_name" {
   default     = "qs"
 }
 
-variable "iap_support_email" {
-  description = "The email address for the IAP support contact"
-  type        = string
-}
-
 variable "iap_user_domain" {
   description = "The base domain name for the GCP org users accessing Backstage through IAP"
   type        = string
+}
+
+variable "iap_client_id" {
+  description = "The id of the IAP client"
+  type        = string
+}
+
+variable "iap_client_secret" {
+  description = "OAuth secret for the IAP client"
+  type        = string
+  sensitive   = true
 }
 
 variable "environment_project_id" {

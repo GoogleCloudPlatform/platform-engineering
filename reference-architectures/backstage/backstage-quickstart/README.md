@@ -86,15 +86,6 @@ In this section you prepare your project for deployment.
     gcloud storage buckets create gs://${BACKSTAGE_QS_STATE_BUCKET} --project ${PROJECT_ID}
     ```
 
-3.  Set the configuration variables
-
-    ```bash
-    sed -i "s/YOUR_STATE_BUCKET/${BACKSTAGE_QS_STATE_BUCKET}/g" ${BACKSTAGE_QS_BASE_DIR}/backend.tf
-    sed -i "s/YOUR_PROJECT_ID/${PROJECT_ID}/g" ${BACKSTAGE_QS_BASE_DIR}/backstage-qs.auto.tfvars
-    sed -i "s/YOUR_IAP_USER_DOMAIN/${IAP_USER_DOMAIN}/g" ${BACKSTAGE_QS_BASE_DIR}/backstage-qs.auto.tfvars
-    sed -i "s/YOUR_IAP_SUPPORT_EMAIL/${IAP_SUPPORT_EMAIL}/g" ${BACKSTAGE_QS_BASE_DIR}/backstage-qs.auto.tfvars
-    ```
-
 ## Deploy Backstage
 
 Before running Terraform, make sure that the Service Usage API and Service
@@ -104,18 +95,50 @@ Management API are enabled.
 
     ```bash
     gcloud services enable \
+      cloudresourcemanager.googleapis.com \
       iap.googleapis.com \
       serviceusage.googleapis.com \
       servicemanagement.googleapis.com
     ```
 
-2.  Create the Identity Aware Proxy brand
+2.  Setup the Identity Aware Proxy brand
 
     ```bash
     gcloud iap oauth-brands create \
       --application_title="IAP Secured Backstage" \
       --project="${PROJECT_ID}" \
-      --support_email="${IAP_SUPPORT_EMAIL}$"
+      --support_email="${IAP_SUPPORT_EMAIL}"
+    ```
+
+    Capture the brand name in an environment variable, it will be in the format of: `projects/[your_project_number]/brands/[your_project_number]`.
+
+    ```bash
+    export IAP_BRAND=<your_brand_name>
+    ```
+
+3.  Using the brand name create the IAP client. 
+
+    ```bash
+    gcloud iap oauth-clients create \
+      ${IAP_BRAND} \
+      --display_name="IAP Secured Backstage"
+    ```    
+
+    Capture the client_id and client_secret in environment variables. For the client_id we only need the last value of the string, it will be in the format of: `549085115274-ksi3n9n41tp1vif79dda5ofauk0ebes9.apps.googleusercontent.com`
+
+    ```bash
+    export IAP_CLIENT_ID="<your_client_id>"
+    export IAP_SECRET="<your_iap_secret>"
+    ```
+
+4.  Set the configuration variables
+
+    ```bash
+    sed -i "s/YOUR_STATE_BUCKET/${BACKSTAGE_QS_STATE_BUCKET}/g" ${BACKSTAGE_QS_BASE_DIR}/backend.tf
+    sed -i "s/YOUR_PROJECT_ID/${PROJECT_ID}/g" ${BACKSTAGE_QS_BASE_DIR}/backstage-qs.auto.tfvars
+    sed -i "s/YOUR_IAP_USER_DOMAIN/${IAP_USER_DOMAIN}/g" ${BACKSTAGE_QS_BASE_DIR}/backstage-qs.auto.tfvars
+    sed -i "s/YOUR_IAP_CLIENT_ID/${IAP_CLIENT_ID}/g" ${BACKSTAGE_QS_BASE_DIR}/backstage-qs.auto.tfvars
+    sed -i "s/YOUR_IAP_SECRET/${IAP_SECRET}/g" ${BACKSTAGE_QS_BASE_DIR}/backstage-qs.auto.tfvars
     ```
 
 3.  Create the resources
@@ -172,9 +195,20 @@ Management API are enabled.
     ALTER USER "backstage-qs-workload@[your_project_id].iam" CREATEDB
     ```
 
-7.  Capture the IAP audience
+7.  Perform an initial deployment of Kubernetes resources.
+
+     ```bash
+    cd ../k8s
+    sed -i "s%CONTAINER_IMAGE%${IMAGE_PATH}%g" deployment.yaml
+    gcloud container clusters get-credentials backstage-qs --region us-central1 --dns-endpoint
+    kubectl apply -f .
+    ```
+
+7.  Capture the IAP audience, the Backend Service may take a few minutes to appear.
 
     a. In the Cloud Console, navigate to `Security` > `Identity-Aware Proxy`
+
+    b. Verify the IAP option is set to enabled. If not enable it now.
 
     b. Choose `Get JWT audience code` from the three dot menu on the right side
     of your Backend Service.
@@ -187,13 +221,10 @@ Management API are enabled.
     export IAP_AUDIENCE_VALUE="<your_iap_audience_value>"
     ```
 
-8.  Deploy the Kubernetes manifests
+8.  Redeploy the Kubernetes manifests with the IAP audience
 
     ```bash
-    cd ../k8s
-    sed -i "s%CONTAINER_IMAGE%${IMAGE_PATH}%g" deployment.yaml
     sed -i "s%IAP_AUDIENCE_VALUE%${IAP_AUDIENCE_VALUE}%g" deployment.yaml
-    gcloud container clusters get-credentials backstage-qs --region us-central1 --dns-endpoint
     kubectl apply -f .
     ```
 
