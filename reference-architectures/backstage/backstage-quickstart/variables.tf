@@ -18,14 +18,20 @@ variable "environment_name" {
   default     = "qs"
 }
 
-variable "iap_support_email" {
-  description = "The email address for the IAP support contact"
-  type        = string
-}
-
 variable "iap_user_domain" {
   description = "The base domain name for the GCP org users accessing Backstage through IAP"
   type        = string
+}
+
+variable "iap_client_id" {
+  description = "The id of the IAP client"
+  type        = string
+}
+
+variable "iap_client_secret" {
+  description = "OAuth secret for the IAP client"
+  type        = string
+  sensitive   = true
 }
 
 variable "environment_project_id" {
@@ -42,19 +48,21 @@ variable "backstage_hosting_project_services" {
   description = "Service APIs to enable"
   type        = list(string)
   default = [
-    "cloudresourcemanager.googleapis.com",
     "artifactregistry.googleapis.com",
+    "autoscaling.googleapis.com",
+    "cloudbuild.googleapis.com",
+    "cloudresourcemanager.googleapis.com",
     "compute.googleapis.com",
     "container.googleapis.com",
-    "autoscaling.googleapis.com",
     "containerfilesystem.googleapis.com",
+    "dns.googleapis.com",
+    "iam.googleapis.com",
+    "iap.googleapis.com",
     "logging.googleapis.com",
     "monitoring.googleapis.com",
-    "sqladmin.googleapis.com",
     "secretmanager.googleapis.com",
     "servicenetworking.googleapis.com",
-    "dns.googleapis.com",
-    "iap.googleapis.com"
+    "sqladmin.googleapis.com"
   ]
 }
 

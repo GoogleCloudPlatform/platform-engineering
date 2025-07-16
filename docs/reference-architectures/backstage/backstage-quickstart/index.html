@@ -1849,14 +1849,6 @@ we have linked to some additional documentation.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>gcloud<span class="w"> </span>storage<span class="w"> </span>buckets<span class="w"> </span>create<span class="w"> </span>gs://<span class="si">${</span><span class="nv">BACKSTAGE_QS_STATE_BUCKET</span><span class="si">}</span><span class="w"> </span>--project<span class="w"> </span><span class="si">${</span><span class="nv">PROJECT_ID</span><span class="si">}</span>
 </span></code></pre></div>
 </li>
-<li>
-<p>Set the configuration variables</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>sed<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;s/YOUR_STATE_BUCKET/</span><span class="si">${</span><span class="nv">BACKSTAGE_QS_STATE_BUCKET</span><span class="si">}</span><span class="s2">/g&quot;</span><span class="w"> </span><span class="si">${</span><span class="nv">BACKSTAGE_QS_BASE_DIR</span><span class="si">}</span>/backend.tf
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>sed<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;s/YOUR_PROJECT_ID/</span><span class="si">${</span><span class="nv">PROJECT_ID</span><span class="si">}</span><span class="s2">/g&quot;</span><span class="w"> </span><span class="si">${</span><span class="nv">BACKSTAGE_QS_BASE_DIR</span><span class="si">}</span>/backstage-qs.auto.tfvars
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>sed<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;s/YOUR_IAP_USER_DOMAIN/</span><span class="si">${</span><span class="nv">IAP_USER_DOMAIN</span><span class="si">}</span><span class="s2">/g&quot;</span><span class="w"> </span><span class="si">${</span><span class="nv">BACKSTAGE_QS_BASE_DIR</span><span class="si">}</span>/backstage-qs.auto.tfvars
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>sed<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;s/YOUR_IAP_SUPPORT_EMAIL/</span><span class="si">${</span><span class="nv">IAP_SUPPORT_EMAIL</span><span class="si">}</span><span class="s2">/g&quot;</span><span class="w"> </span><span class="si">${</span><span class="nv">BACKSTAGE_QS_BASE_DIR</span><span class="si">}</span>/backstage-qs.auto.tfvars
-</span></code></pre></div>
-</li>
 </ol>
 <h2 id="deploy-backstage">Deploy Backstage<a class="headerlink" href="#deploy-backstage" title="Permanent link">&para;</a></h2>
 <p>Before running Terraform, make sure that the Service Usage API and Service
@@ -1864,60 +1856,162 @@ Management API are enabled.</p>
 <ol>
 <li>
 <p>Enable Service Usage API and Service Management API</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>gcloud<span class="w"> </span>services<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>serviceusage.googleapis.com<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>gcloud<span class="w"> </span>services<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>servicemanagement.googleapis.com
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>gcloud<span class="w"> </span>services<span class="w"> </span><span class="nb">enable</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span>cloudresourcemanager.googleapis.com<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>iap.googleapis.com<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>serviceusage.googleapis.com<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>servicemanagement.googleapis.com
+</span></code></pre></div>
+</li>
+<li>
+<p>Setup the Identity Aware Proxy brand</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>gcloud<span class="w"> </span>iap<span class="w"> </span>oauth-brands<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>--application_title<span class="o">=</span><span class="s2">&quot;IAP Secured Backstage&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>--project<span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PROJECT_ID</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>--support_email<span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">IAP_SUPPORT_EMAIL</span><span class="si">}</span><span class="s2">&quot;</span>
+</span></code></pre></div>
+<p>Capture the brand name in an environment variable, it will be in the format
+of: <code>projects/[your_project_number]/brands/[your_project_number]</code>.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">IAP_BRAND</span><span class="o">=</span>&lt;your_brand_name&gt;
+</span></code></pre></div>
+</li>
+<li>
+<p>Using the brand name create the IAP client.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>gcloud<span class="w"> </span>iap<span class="w"> </span>oauth-clients<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="si">${</span><span class="nv">IAP_BRAND</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>--display_name<span class="o">=</span><span class="s2">&quot;IAP Secured Backstage&quot;</span>
+</span></code></pre></div>
+<p>Capture the client_id and client_secret in environment variables. For the
+client_id we only need the last value of the string, it will be in the
+format of:
+<code>549085115274-ksi3n9n41tp1vif79dda5ofauk0ebes9.apps.googleusercontent.com</code></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">IAP_CLIENT_ID</span><span class="o">=</span><span class="s2">&quot;&lt;your_client_id&gt;&quot;</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">IAP_SECRET</span><span class="o">=</span><span class="s2">&quot;&lt;your_iap_secret&gt;&quot;</span>
+</span></code></pre></div>
+</li>
+<li>
+<p>Set the configuration variables</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>sed<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;s/YOUR_STATE_BUCKET/</span><span class="si">${</span><span class="nv">BACKSTAGE_QS_STATE_BUCKET</span><span class="si">}</span><span class="s2">/g&quot;</span><span class="w"> </span><span class="si">${</span><span class="nv">BACKSTAGE_QS_BASE_DIR</span><span class="si">}</span>/backend.tf
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>sed<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;s/YOUR_PROJECT_ID/</span><span class="si">${</span><span class="nv">PROJECT_ID</span><span class="si">}</span><span class="s2">/g&quot;</span><span class="w"> </span><span class="si">${</span><span class="nv">BACKSTAGE_QS_BASE_DIR</span><span class="si">}</span>/backstage-qs.auto.tfvars
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>sed<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;s/YOUR_IAP_USER_DOMAIN/</span><span class="si">${</span><span class="nv">IAP_USER_DOMAIN</span><span class="si">}</span><span class="s2">/g&quot;</span><span class="w"> </span><span class="si">${</span><span class="nv">BACKSTAGE_QS_BASE_DIR</span><span class="si">}</span>/backstage-qs.auto.tfvars
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>sed<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;s/YOUR_IAP_SUPPORT_EMAIL/</span><span class="si">${</span><span class="nv">IAP_SUPPORT_EMAIL</span><span class="si">}</span><span class="s2">/g&quot;</span><span class="w"> </span><span class="si">${</span><span class="nv">BACKSTAGE_QS_BASE_DIR</span><span class="si">}</span>/backstage-qs.auto.tfvars
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>sed<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;s/YOUR_IAP_CLIENT_ID/</span><span class="si">${</span><span class="nv">IAP_CLIENT_ID</span><span class="si">}</span><span class="s2">/g&quot;</span><span class="w"> </span><span class="si">${</span><span class="nv">BACKSTAGE_QS_BASE_DIR</span><span class="si">}</span>/backstage-qs.auto.tfvars
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>sed<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;s/YOUR_IAP_SECRET/</span><span class="si">${</span><span class="nv">IAP_SECRET</span><span class="si">}</span><span class="s2">/g&quot;</span><span class="w"> </span><span class="si">${</span><span class="nv">BACKSTAGE_QS_BASE_DIR</span><span class="si">}</span>/backstage-qs.auto.tfvars
 </span></code></pre></div>
 </li>
 <li>
 <p>Create the resources</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nb">cd</span><span class="w"> </span><span class="si">${</span><span class="nv">BACKSTAGE_QS_BASE_DIR</span><span class="si">}</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>terraform<span class="w"> </span>init<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>terraform<span class="w"> </span>plan<span class="w"> </span>-input<span class="o">=</span><span class="nb">false</span><span class="w"> </span>-out<span class="o">=</span>tfplan<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>terraform<span class="w"> </span>apply<span class="w"> </span>-input<span class="o">=</span><span class="nb">false</span><span class="w"> </span>tfplan<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>rm<span class="w"> </span>tfplan
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nb">cd</span><span class="w"> </span><span class="si">${</span><span class="nv">BACKSTAGE_QS_BASE_DIR</span><span class="si">}</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>terraform<span class="w"> </span>init<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>terraform<span class="w"> </span>plan<span class="w"> </span>-input<span class="o">=</span><span class="nb">false</span><span class="w"> </span>-out<span class="o">=</span>tfplan<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>terraform<span class="w"> </span>apply<span class="w"> </span>-input<span class="o">=</span><span class="nb">false</span><span class="w"> </span>tfplan<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>rm<span class="w"> </span>tfplan
 </span></code></pre></div>
+<p>Initial run of the Terraform may result in errors due to they way the API
+services are asyrchonously enabled. Re-running the terraform usually
+resolves the errors.</p>
 <p>This will take a while to create all of the required resources, figure
 somewhere between 15 and 20 minutes.</p>
+</li>
+<li>
+<p>Build the container image for Backstage</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nb">cd</span><span class="w"> </span>manifests/cloudbuild
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>gcloud<span class="w"> </span>builds<span class="w"> </span>submit<span class="w"> </span>.
+</span></code></pre></div>
+<p>The output of that command will include a fully qualified image path similar
+to:
+<code>us-central1-docker.pkg.dev/[your_project]/backstage-qs/backstage-quickstart:d747db2a-deef-4783-8a0e-3b36e568f6fc</code>
+Using that value create a new environment variable.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">IMAGE_PATH</span><span class="o">=</span><span class="s2">&quot;&lt;your_image_path&gt;&quot;</span>
+</span></code></pre></div>
+<p>This will take approximately 10 minutes to build and push the image.</p>
+</li>
+<li>
+<p>Configure Cloud SQL postgres user for password authentication.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>gcloud<span class="w"> </span>sql<span class="w"> </span>users<span class="w"> </span>set-password<span class="w"> </span>postgres<span class="w"> </span>--instance<span class="o">=</span>backstage-qs<span class="w"> </span>--prompt-for-password
+</span></code></pre></div>
+</li>
+<li>
+<p>Grant the backstage workload service account create database permissions.</p>
+<p>a. In the Cloud Console, navigate to <code>SQL</code></p>
+<p>b. Select the database instance</p>
+<p>c. In the left menu select <code>Cloud SQL Studio</code></p>
+<p>d. Choose the <code>postgres</code> database and login with the <code>postgres</code> user and
+password you created in step 4.</p>
+<p>e. Run the following sql commands, to grant create database permissions</p>
+<div class="language-sql highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="k">ALTER</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="ss">&quot;backstage-qs-workload@[your_project_id].iam&quot;</span><span class="w"> </span><span class="k">CREATEDB</span>
+</span></code></pre></div>
+</li>
+<li>
+<p>Perform an initial deployment of Kubernetes resources.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="nb">cd</span><span class="w"> </span>../k8s
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>sed<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;s%CONTAINER_IMAGE%</span><span class="si">${</span><span class="nv">IMAGE_PATH</span><span class="si">}</span><span class="s2">%g&quot;</span><span class="w"> </span>deployment.yaml
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>gcloud<span class="w"> </span>container<span class="w"> </span>clusters<span class="w"> </span>get-credentials<span class="w"> </span>backstage-qs<span class="w"> </span>--region<span class="w"> </span>us-central1<span class="w"> </span>--dns-endpoint
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>.
+</span></code></pre></div>
+</li>
+<li>
+<p>Capture the IAP audience, the Backend Service may take a few minutes to
+    appear.</p>
+<p>a. In the Cloud Console, navigate to <code>Security</code> &gt; <code>Identity-Aware Proxy</code></p>
+<p>b. Verify the IAP option is set to enabled. If not enable it now.</p>
+<p>b. Choose <code>Get JWT audience code</code> from the three dot menu on the right side
+of your Backend Service.</p>
+<p>c. The value will be in the format of:
+<code>/projects/&lt;your_project_number&gt;/global/backendServices/&lt;numeric_id&gt;</code>. Using
+that value create a new environment variable.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">IAP_AUDIENCE_VALUE</span><span class="o">=</span><span class="s2">&quot;&lt;your_iap_audience_value&gt;&quot;</span>
+</span></code></pre></div>
+</li>
+<li>
+<p>Redeploy the Kubernetes manifests with the IAP audience</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>sed<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;s%IAP_AUDIENCE_VALUE%</span><span class="si">${</span><span class="nv">IAP_AUDIENCE_VALUE</span><span class="si">}</span><span class="s2">%g&quot;</span><span class="w"> </span>deployment.yaml
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>.
+</span></code></pre></div>
+</li>
+<li>
+<p>In a browser navigate to you backstage endpoint. The URL will be similar to
+    <code>https://qs.endpoints.[your_project_id].cloud.goog</code></p>
 </li>
 </ol>
 <h2 id="cleanup">Cleanup<a class="headerlink" href="#cleanup" title="Permanent link">&para;</a></h2>
 <ol>
 <li>
 <p>Destroy the resources using Terraform destroy</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">cd</span><span class="w"> </span><span class="si">${</span><span class="nv">BACKSTAGE_QS_BASE_DIR</span><span class="si">}</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>terraform<span class="w"> </span>init<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>terraform<span class="w"> </span>destroy<span class="w"> </span>-auto-approve<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>rm<span class="w"> </span>-rf<span class="w"> </span>.terraform<span class="w"> </span>.terraform.lock.hcl
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="nb">cd</span><span class="w"> </span><span class="si">${</span><span class="nv">BACKSTAGE_QS_BASE_DIR</span><span class="si">}</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>terraform<span class="w"> </span>init<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>terraform<span class="w"> </span>destroy<span class="w"> </span>-auto-approve<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>rm<span class="w"> </span>-rf<span class="w"> </span>.terraform<span class="w"> </span>.terraform.lock.hcl
 </span></code></pre></div>
 </li>
 <li>
 <p>Delete the project</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>gcloud<span class="w"> </span>projects<span class="w"> </span>delete<span class="w"> </span><span class="si">${</span><span class="nv">PROJECT_ID</span><span class="si">}</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>gcloud<span class="w"> </span>projects<span class="w"> </span>delete<span class="w"> </span><span class="si">${</span><span class="nv">PROJECT_ID</span><span class="si">}</span>
 </span></code></pre></div>
 </li>
 <li>
 <p>Remove Terraform files and temporary files</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nb">cd</span><span class="w"> </span><span class="si">${</span><span class="nv">BACKSTAGE_QS_BASE_DIR</span><span class="si">}</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>rm<span class="w"> </span>-rf<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>.terraform<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>.terraform.lock.hcl<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>initialize/.terraform<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>initialize/.terraform.lock.hcl<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>initialize/backend.tf.local<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>initialize/state
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="nb">cd</span><span class="w"> </span><span class="si">${</span><span class="nv">BACKSTAGE_QS_BASE_DIR</span><span class="si">}</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>rm<span class="w"> </span>-rf<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>.terraform<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>.terraform.lock.hcl<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>initialize/.terraform<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>initialize/.terraform.lock.hcl<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>initialize/backend.tf.local<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-21-8"><a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>initialize/state
 </span></code></pre></div>
 </li>
 <li>
 <p>Reset the TF variables file</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nb">cd</span><span class="w"> </span><span class="si">${</span><span class="nv">BACKSTAGE_QS_BASE_DIR</span><span class="si">}</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>cp<span class="w"> </span>backstage-qs-auto.tfvars.local<span class="w"> </span>backstage-qs.auto.tfvars
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="nb">cd</span><span class="w"> </span><span class="si">${</span><span class="nv">BACKSTAGE_QS_BASE_DIR</span><span class="si">}</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>cp<span class="w"> </span>backstage-qs-auto.tfvars.local<span class="w"> </span>backstage-qs.auto.tfvars
 </span></code></pre></div>
 </li>
 <li>
 <p>Remove the environment variables</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>sed<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>-i<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;/^export BACKSTAGE_QS_BASE_DIR=/d&#39;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/.bashrc
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>sed<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>-i<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;/^export BACKSTAGE_QS_BASE_DIR=/d&#39;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/.bashrc
 </span></code></pre></div>
 </li>
 </ol>
@@ -1939,17 +2033,17 @@ permissions.</p>
 <ol>
 <li>
 <p>Set the configuration variables</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>nano<span class="w"> </span><span class="si">${</span><span class="nv">BACKSTAGE_QS_BASE_DIR</span><span class="si">}</span>/initialize/initialize.auto.tfvars
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>nano<span class="w"> </span><span class="si">${</span><span class="nv">BACKSTAGE_QS_BASE_DIR</span><span class="si">}</span>/initialize/initialize.auto.tfvars
 </span></code></pre></div>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nv">environment_name</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;qs&quot;</span>
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="nv">iapUserDomain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="nv">iapSupportEmail</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="nv">project</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">{</span>
-</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">  </span><span class="nv">billing_account_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;XXXXXX-XXXXXX-XXXXXX&quot;</span>
-</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">  </span><span class="nv">folder_id</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;############&quot;</span>
-</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">  </span><span class="nv">name</span><span class="w">               </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;backstage&quot;</span>
-</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="w">  </span><span class="nv">org_id</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;############&quot;</span>
-</span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="o">}</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="nv">environment_name</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;qs&quot;</span>
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="nv">iapUserDomain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="nv">iapSupportEmail</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="nv">project</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">{</span>
+</span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a><span class="w">  </span><span class="nv">billing_account_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;XXXXXX-XXXXXX-XXXXXX&quot;</span>
+</span><span id="__span-25-6"><a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a><span class="w">  </span><span class="nv">folder_id</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;############&quot;</span>
+</span><span id="__span-25-7"><a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a><span class="w">  </span><span class="nv">name</span><span class="w">               </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;backstage&quot;</span>
+</span><span id="__span-25-8"><a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a><span class="w">  </span><span class="nv">org_id</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;############&quot;</span>
+</span><span id="__span-25-9"><a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a><span class="o">}</span>
 </span></code></pre></div>
 <p>Values required :</p>
 <ul>
@@ -1970,25 +2064,25 @@ permissions.</p>
 </li>
 <li>
 <p>Authorize <code>gcloud</code></p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>gcloud<span class="w"> </span>auth<span class="w"> </span>login<span class="w"> </span>--activate<span class="w"> </span>--no-launch-browser<span class="w"> </span>--quiet<span class="w"> </span>--update-adc
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>gcloud<span class="w"> </span>auth<span class="w"> </span>login<span class="w"> </span>--activate<span class="w"> </span>--no-launch-browser<span class="w"> </span>--quiet<span class="w"> </span>--update-adc
 </span></code></pre></div>
 </li>
 <li>
 <p>Create a new project</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="nb">cd</span><span class="w"> </span><span class="si">${</span><span class="nv">BACKSTAGE_QS_BASE_DIR</span><span class="si">}</span>/initialize
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>terraform<span class="w"> </span>init<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>terraform<span class="w"> </span>plan<span class="w"> </span>-input<span class="o">=</span><span class="nb">false</span><span class="w"> </span>-out<span class="o">=</span>tfplan<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>terraform<span class="w"> </span>apply<span class="w"> </span>-input<span class="o">=</span><span class="nb">false</span><span class="w"> </span>tfplan<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>rm<span class="w"> </span>tfplan<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>terraform<span class="w"> </span>init<span class="w"> </span>-force-copy<span class="w"> </span>-migrate-state<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>rm<span class="w"> </span>-rf<span class="w"> </span>state
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="nb">cd</span><span class="w"> </span><span class="si">${</span><span class="nv">BACKSTAGE_QS_BASE_DIR</span><span class="si">}</span>/initialize
+</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>terraform<span class="w"> </span>init<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>terraform<span class="w"> </span>plan<span class="w"> </span>-input<span class="o">=</span><span class="nb">false</span><span class="w"> </span>-out<span class="o">=</span>tfplan<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-27-4"><a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>terraform<span class="w"> </span>apply<span class="w"> </span>-input<span class="o">=</span><span class="nb">false</span><span class="w"> </span>tfplan<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-27-5"><a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>rm<span class="w"> </span>tfplan<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-27-6"><a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a>terraform<span class="w"> </span>init<span class="w"> </span>-force-copy<span class="w"> </span>-migrate-state<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-27-7"><a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a>rm<span class="w"> </span>-rf<span class="w"> </span>state
 </span></code></pre></div>
 </li>
 <li>
 <p>Set the project environment variables in Cloud Shell</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="nv">PROJECT_ID</span><span class="o">=</span><span class="k">$(</span>grep<span class="w"> </span>environment_project_id<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="si">${</span><span class="nv">BACKSTAGE_QS_BASE_DIR</span><span class="si">}</span>/backstage-qs.auto.tfvars<span class="w"> </span><span class="p">|</span>
-</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>awk<span class="w"> </span>-F<span class="s2">&quot;=&quot;</span><span class="w"> </span><span class="s1">&#39;{print $2}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="k">)</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="nv">PROJECT_ID</span><span class="o">=</span><span class="k">$(</span>grep<span class="w"> </span>environment_project_id<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="si">${</span><span class="nv">BACKSTAGE_QS_BASE_DIR</span><span class="si">}</span>/backstage-qs.auto.tfvars<span class="w"> </span><span class="p">|</span>
+</span><span id="__span-28-3"><a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>awk<span class="w"> </span>-F<span class="s2">&quot;=&quot;</span><span class="w"> </span><span class="s1">&#39;{print $2}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="k">)</span>
 </span></code></pre></div>
 </li>
 </ol>
@@ -1996,15 +2090,15 @@ permissions.</p>
 <ol>
 <li>
 <p>Destroy the project</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="nb">cd</span><span class="w"> </span><span class="si">${</span><span class="nv">BACKSTAGE_QS_BASE_DIR</span><span class="si">}</span>/initialize<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="nv">TERRAFORM_BUCKET_NAME</span><span class="o">=</span><span class="k">$(</span>grep<span class="w"> </span>bucket<span class="w"> </span>backend.tf<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span>-F<span class="s2">&quot;=&quot;</span><span class="w"> </span><span class="s1">&#39;{print $2}&#39;</span><span class="w"> </span><span class="p">|</span>
-</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>xargs<span class="k">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>cp<span class="w"> </span>backend.tf.local<span class="w"> </span>backend.tf<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>terraform<span class="w"> </span>init<span class="w"> </span>-force-copy<span class="w"> </span>-lock<span class="o">=</span><span class="nb">false</span><span class="w"> </span>-migrate-state<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>gsutil<span class="w"> </span>-m<span class="w"> </span>rm<span class="w"> </span>-rf<span class="w"> </span>gs://<span class="si">${</span><span class="nv">TERRAFORM_BUCKET_NAME</span><span class="si">}</span>/*<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-18-7"><a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>terraform<span class="w"> </span>init<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-18-8"><a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>terraform<span class="w"> </span>destroy<span class="w"> </span>-auto-approve<span class="w">  </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-18-9"><a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>rm<span class="w"> </span>-rf<span class="w"> </span>.terraform<span class="w"> </span>.terraform.lock.hcl<span class="w"> </span>state/
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="nb">cd</span><span class="w"> </span><span class="si">${</span><span class="nv">BACKSTAGE_QS_BASE_DIR</span><span class="si">}</span>/initialize<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="nv">TERRAFORM_BUCKET_NAME</span><span class="o">=</span><span class="k">$(</span>grep<span class="w"> </span>bucket<span class="w"> </span>backend.tf<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span>-F<span class="s2">&quot;=&quot;</span><span class="w"> </span><span class="s1">&#39;{print $2}&#39;</span><span class="w"> </span><span class="p">|</span>
+</span><span id="__span-29-3"><a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>xargs<span class="k">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-29-4"><a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>cp<span class="w"> </span>backend.tf.local<span class="w"> </span>backend.tf<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-29-5"><a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>terraform<span class="w"> </span>init<span class="w"> </span>-force-copy<span class="w"> </span>-lock<span class="o">=</span><span class="nb">false</span><span class="w"> </span>-migrate-state<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-29-6"><a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>gsutil<span class="w"> </span>-m<span class="w"> </span>rm<span class="w"> </span>-rf<span class="w"> </span>gs://<span class="si">${</span><span class="nv">TERRAFORM_BUCKET_NAME</span><span class="si">}</span>/*<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-29-7"><a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a>terraform<span class="w"> </span>init<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-29-8"><a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a>terraform<span class="w"> </span>destroy<span class="w"> </span>-auto-approve<span class="w">  </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-29-9"><a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a>rm<span class="w"> </span>-rf<span class="w"> </span>.terraform<span class="w"> </span>.terraform.lock.hcl<span class="w"> </span>state/
 </span></code></pre></div>
 </li>
 </ol>
@@ -2012,13 +2106,13 @@ permissions.</p>
 <p>In situations where you have run this quickstart before and then cleaned-up the
 resources but are re-using the project, it might be neccasary to restore the
 endpoints from a deleted state first.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="nv">BACKSTAGE_QS_PREFIX</span><span class="o">=</span><span class="k">$(</span>grep<span class="w"> </span>environment_name<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="si">${</span><span class="nv">BACKSTAGE_QS_BASE_DIR</span><span class="si">}</span>/backstage-qs.auto.tfvars<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span>-F<span class="s2">&quot;=&quot;</span><span class="w"> </span><span class="s1">&#39;{print $2}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="k">)</span>
-</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="nv">BACKSTAGE_QS_PROJECT_ID</span><span class="o">=</span><span class="k">$(</span>grep<span class="w"> </span>environment_project_id<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="si">${</span><span class="nv">BACKSTAGE_QS_BASE_DIR</span><span class="si">}</span>/backstage-qs.auto.tfvars<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span>-F<span class="s2">&quot;=&quot;</span><span class="w"> </span><span class="s1">&#39;{print $2}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="k">)</span>
-</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>gcloud<span class="w"> </span>endpoints<span class="w"> </span>services<span class="w"> </span>undelete<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="si">${</span><span class="nv">BACKSTAGE_QS_PREFIX</span><span class="si">}</span>.endpoints.<span class="si">${</span><span class="nv">BACKSTAGE_QS_PROJECT_ID</span><span class="si">}</span>.cloud.goog<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>--quiet<span class="w"> </span><span class="m">2</span>&gt;/dev/null
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="nv">BACKSTAGE_QS_PREFIX</span><span class="o">=</span><span class="k">$(</span>grep<span class="w"> </span>environment_name<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-30-2"><a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a><span class="si">${</span><span class="nv">BACKSTAGE_QS_BASE_DIR</span><span class="si">}</span>/backstage-qs.auto.tfvars<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span>-F<span class="s2">&quot;=&quot;</span><span class="w"> </span><span class="s1">&#39;{print $2}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="k">)</span>
+</span><span id="__span-30-3"><a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a><span class="nv">BACKSTAGE_QS_PROJECT_ID</span><span class="o">=</span><span class="k">$(</span>grep<span class="w"> </span>environment_project_id<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-30-4"><a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a><span class="si">${</span><span class="nv">BACKSTAGE_QS_BASE_DIR</span><span class="si">}</span>/backstage-qs.auto.tfvars<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span>-F<span class="s2">&quot;=&quot;</span><span class="w"> </span><span class="s1">&#39;{print $2}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="k">)</span>
+</span><span id="__span-30-5"><a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a>gcloud<span class="w"> </span>endpoints<span class="w"> </span>services<span class="w"> </span>undelete<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-30-6"><a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a><span class="si">${</span><span class="nv">BACKSTAGE_QS_PREFIX</span><span class="si">}</span>.endpoints.<span class="si">${</span><span class="nv">BACKSTAGE_QS_PROJECT_ID</span><span class="si">}</span>.cloud.goog<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-30-7"><a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a>--quiet<span class="w"> </span><span class="m">2</span>&gt;/dev/null
 </span></code></pre></div>
 <!-- LINKS: https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 

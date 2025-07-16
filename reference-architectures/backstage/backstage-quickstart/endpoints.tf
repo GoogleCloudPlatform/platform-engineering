@@ -18,7 +18,7 @@ locals {
 
 resource "google_endpoints_service" "backstageQsEndpoint" {
   openapi_config = templatefile(
-    "${path.module}/backstage-qs-endpoint-spec-tftpl.yaml",
+    "${path.module}/manifests/templates/backstage-qs-endpoint-spec-tftpl.yaml",
     {
       endpoint   = local.backstageExternalUrl,
       ip_address = google_compute_global_address.backstageQsEndpointAddress.address
@@ -26,4 +26,12 @@ resource "google_endpoints_service" "backstageQsEndpoint" {
   )
   project      = var.environment_project_id
   service_name = local.backstageExternalUrl
+}
+
+resource "google_compute_managed_ssl_certificate" "backstageCert" {
+  name = "backstage-qs-cert"
+
+  managed {
+    domains = [local.backstageExternalUrl]
+  }
 }

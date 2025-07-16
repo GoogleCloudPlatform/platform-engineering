@@ -12,6 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+locals {
+  gateway_name = "external-https"
+}
 
 resource "google_compute_network" "backstageHostingVpc" {
   project                 = var.environment_project_id
@@ -104,7 +107,40 @@ resource "google_compute_forwarding_rule" "cloudSqlPscForwardingRule" {
   target                = google_sql_database_instance.instance.psc_service_attachment_link
 }
 
+# Firewall rule required to support IAM logins to Cloud SQL
+# https://cloud.google.com/sql/docs/postgres/iam-logins
+resource "google_compute_firewall" "cloud_sql_auth" {
+  name    = "cloudsql-auth"
+  network = google_compute_network.backstageHostingVpc.id
+
+  allow {
+    protocol = "tcp"
+    ports    = ["443", "3307"]
+  }
+  direction               = "EGRESS"
+  destination_ranges      = ["34.126.0.0/18"]
+  target_service_accounts = [google_service_account.workloadSa.email]
+}
+
+
 resource "google_compute_global_address" "backstageQsEndpointAddress" {
   name    = var.backstageqs_endpoint_address_name
   project = var.environment_project_id
+}
+
+resource "local_file" "gateway_external_https_yaml" {
+  depends_on = [
+    google_compute_global_address.backstageQsEndpointAddress
+  ]
+
+  content = templatefile(
+    "${path.module}/manifests/templates/gateway-external-https.tftpl.yaml",
+    {
+      address_name         = google_compute_global_address.backstageQsEndpointAddress.name
+      gateway_name         = local.gateway_name
+      namespace            = "backstage"
+      ssl_certificate_name = google_compute_managed_ssl_certificate.backstageCert.name
+    }
+  )
+  filename = "${path.module}/manifests/k8s/gateway-external-https.yaml"
 }
