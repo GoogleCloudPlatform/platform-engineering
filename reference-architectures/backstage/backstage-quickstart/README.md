@@ -141,6 +141,7 @@ Management API are enabled.
     sed -i "s/YOUR_STATE_BUCKET/${BACKSTAGE_QS_STATE_BUCKET}/g" ${BACKSTAGE_QS_BASE_DIR}/backend.tf
     sed -i "s/YOUR_PROJECT_ID/${PROJECT_ID}/g" ${BACKSTAGE_QS_BASE_DIR}/backstage-qs.auto.tfvars
     sed -i "s/YOUR_IAP_USER_DOMAIN/${IAP_USER_DOMAIN}/g" ${BACKSTAGE_QS_BASE_DIR}/backstage-qs.auto.tfvars
+    sed -i "s/YOUR_IAP_SUPPORT_EMAIL/${IAP_SUPPORT_EMAIL}/g" ${BACKSTAGE_QS_BASE_DIR}/backstage-qs.auto.tfvars
     sed -i "s/YOUR_IAP_CLIENT_ID/${IAP_CLIENT_ID}/g" ${BACKSTAGE_QS_BASE_DIR}/backstage-qs.auto.tfvars
     sed -i "s/YOUR_IAP_SECRET/${IAP_SECRET}/g" ${BACKSTAGE_QS_BASE_DIR}/backstage-qs.auto.tfvars
     ```
@@ -154,6 +155,10 @@ Management API are enabled.
     terraform apply -input=false tfplan && \
     rm tfplan
     ```
+
+    Initial run of the Terraform may result in errors due to they way the API
+    services are asyrchonously enabled. Re-running the terraform usually
+    resolves the errors.
 
     This will take a while to create all of the required resources, figure
     somewhere between 15 and 20 minutes.
