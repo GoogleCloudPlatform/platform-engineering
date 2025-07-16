@@ -2,78 +2,78 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://googlecloudplatform.github.io/platform-engineering/</loc>
-         <lastmod>2025-06-18</lastmod>
+         <lastmod>2025-07-16</lastmod>
     </url>
     <url>
          <loc>https://googlecloudplatform.github.io/platform-engineering/code-of-conduct/</loc>
-         <lastmod>2025-06-18</lastmod>
+         <lastmod>2025-07-16</lastmod>
     </url>
     <url>
          <loc>https://googlecloudplatform.github.io/platform-engineering/contributing/</loc>
-         <lastmod>2025-06-18</lastmod>
+         <lastmod>2025-07-16</lastmod>
     </url>
     <url>
          <loc>https://googlecloudplatform.github.io/platform-engineering/reference-architectures/accelerating-migrations/</loc>
-         <lastmod>2025-06-18</lastmod>
+         <lastmod>2025-07-16</lastmod>
     </url>
     <url>
          <loc>https://googlecloudplatform.github.io/platform-engineering/reference-architectures/automated-password-rotation/</loc>
-         <lastmod>2025-06-18</lastmod>
+         <lastmod>2025-07-16</lastmod>
     </url>
     <url>
          <loc>https://googlecloudplatform.github.io/platform-engineering/reference-architectures/backstage/</loc>
-         <lastmod>2025-06-18</lastmod>
+         <lastmod>2025-07-16</lastmod>
     </url>
     <url>
          <loc>https://googlecloudplatform.github.io/platform-engineering/reference-architectures/backstage/backstage-quickstart/</loc>
-         <lastmod>2025-06-18</lastmod>
+         <lastmod>2025-07-16</lastmod>
     </url>
     <url>
          <loc>https://googlecloudplatform.github.io/platform-engineering/reference-architectures/cloud_deploy_flow/</loc>
-         <lastmod>2025-06-18</lastmod>
+         <lastmod>2025-07-16</lastmod>
     </url>
     <url>
          <loc>https://googlecloudplatform.github.io/platform-engineering/reference-architectures/cloud_deploy_flow/CloudFunctions/cloudDeployApprovals/</loc>
-         <lastmod>2025-06-18</lastmod>
+         <lastmod>2025-07-16</lastmod>
     </url>
     <url>
          <loc>https://googlecloudplatform.github.io/platform-engineering/reference-architectures/cloud_deploy_flow/CloudFunctions/cloudDeployInteractions/</loc>
-         <lastmod>2025-06-18</lastmod>
+         <lastmod>2025-07-16</lastmod>
     </url>
     <url>
          <loc>https://googlecloudplatform.github.io/platform-engineering/reference-architectures/cloud_deploy_flow/CloudFunctions/cloudDeployOperations/</loc>
-         <lastmod>2025-06-18</lastmod>
+         <lastmod>2025-07-16</lastmod>
     </url>
     <url>
          <loc>https://googlecloudplatform.github.io/platform-engineering/reference-architectures/cloud_deploy_flow/CloudFunctions/createRelease/</loc>
-         <lastmod>2025-06-18</lastmod>
+         <lastmod>2025-07-16</lastmod>
     </url>
     <url>
          <loc>https://googlecloudplatform.github.io/platform-engineering/reference-architectures/cloud_deploy_flow/CloudRun/</loc>
-         <lastmod>2025-06-18</lastmod>
+         <lastmod>2025-07-16</lastmod>
     </url>
     <url>
          <loc>https://googlecloudplatform.github.io/platform-engineering/reference-architectures/cloud_deploy_flow/WebsiteDemo/</loc>
-         <lastmod>2025-06-18</lastmod>
+         <lastmod>2025-07-16</lastmod>
     </url>
     <url>
          <loc>https://googlecloudplatform.github.io/platform-engineering/reference-architectures/github-runners-gke/</loc>
-         <lastmod>2025-06-18</lastmod>
+         <lastmod>2025-07-16</lastmod>
     </url>
     <url>
          <loc>https://googlecloudplatform.github.io/platform-engineering/reference-architectures/sandboxes/</loc>
-         <lastmod>2025-06-18</lastmod>
+         <lastmod>2025-07-16</lastmod>
     </url>
     <url>
          <loc>https://googlecloudplatform.github.io/platform-engineering/reference-architectures/sandboxes/examples/cli/</loc>
-         <lastmod>2025-06-18</lastmod>
+         <lastmod>2025-07-16</lastmod>
     </url>
     <url>
          <loc>https://googlecloudplatform.github.io/platform-engineering/reference-architectures/sandboxes/examples/gcp-sandboxes/</loc>
-         <lastmod>2025-06-18</lastmod>
+         <lastmod>2025-07-16</lastmod>
     </url>
     <url>
          <loc>https://googlecloudplatform.github.io/platform-engineering/reference-architectures/sandboxes/sandbox-modules/</loc>
-         <lastmod>2025-06-18</lastmod>
+         <lastmod>2025-07-16</lastmod>
     </url>
 </urlset>

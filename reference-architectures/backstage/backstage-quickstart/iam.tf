@@ -12,6 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+###
+# Hosting Service Account
+###
+
 resource "google_service_account" "hostingSa" {
   project      = var.environment_project_id
   account_id   = var.hosting_sa_id
@@ -58,6 +62,10 @@ resource "time_sleep" "wait_30_seconds" {
   create_duration = "30s"
 }
 
+###
+# Workload Service Account
+###
+
 resource "google_service_account_iam_policy" "workloadIdentity" {
   depends_on         = [google_container_cluster.hostingCluster, time_sleep.wait_30_seconds]
   service_account_id = google_service_account.workloadSa.name
@@ -86,8 +94,32 @@ resource "google_project_iam_member" "cloudSqlBinding" {
   member  = "serviceAccount:${google_service_account.workloadSa.email}"
 }
 
+resource "google_project_iam_member" "cloudSqlClientBinding" {
+  project = var.environment_project_id
+  role    = "roles/cloudsql.client"
+  member  = "serviceAccount:${google_service_account.workloadSa.email}"
+}
+
+resource "google_project_iam_member" "cloudSqlInstanceUserBinding" {
+  project = var.environment_project_id
+  role    = "roles/cloudsql.instanceUser"
+  member  = "serviceAccount:${google_service_account.workloadSa.email}"
+}
+
 resource "google_project_iam_member" "cloudStorageBinding" {
   project = var.environment_project_id
   role    = "roles/storage.objectUser"
   member  = "serviceAccount:${google_service_account.workloadSa.email}"
+}
+
+resource "local_file" "service_account_yaml" {
+  content = templatefile(
+    "${path.module}/manifests/templates/service-account.tftpl.yaml",
+    {
+      service_account_name = "ksa-backstage"
+      namespace            = "backstage"
+      gcp_service_account  = google_service_account.workloadSa.email
+    }
+  )
+  filename = "./manifests/k8s/service-account.yaml"
 }

@@ -28,7 +28,6 @@ resource "google_container_cluster" "hostingCluster" {
     }
   }
 
-
   logging_config {
     enable_components = ["SYSTEM_COMPONENTS", "WORKLOADS"]
   }
@@ -64,5 +63,4 @@ resource "google_container_cluster" "hostingCluster" {
     update = "30m"
     delete = "30m"
   }
-
 }

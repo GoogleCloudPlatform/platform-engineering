@@ -86,15 +86,6 @@ In this section you prepare your project for deployment.
     gcloud storage buckets create gs://${BACKSTAGE_QS_STATE_BUCKET} --project ${PROJECT_ID}
     ```
 
-3.  Set the configuration variables
-
-    ```bash
-    sed -i "s/YOUR_STATE_BUCKET/${BACKSTAGE_QS_STATE_BUCKET}/g" ${BACKSTAGE_QS_BASE_DIR}/backend.tf
-    sed -i "s/YOUR_PROJECT_ID/${PROJECT_ID}/g" ${BACKSTAGE_QS_BASE_DIR}/backstage-qs.auto.tfvars
-    sed -i "s/YOUR_IAP_USER_DOMAIN/${IAP_USER_DOMAIN}/g" ${BACKSTAGE_QS_BASE_DIR}/backstage-qs.auto.tfvars
-    sed -i "s/YOUR_IAP_SUPPORT_EMAIL/${IAP_SUPPORT_EMAIL}/g" ${BACKSTAGE_QS_BASE_DIR}/backstage-qs.auto.tfvars
-    ```
-
 ## Deploy Backstage
 
 Before running Terraform, make sure that the Service Usage API and Service
@@ -103,11 +94,59 @@ Management API are enabled.
 1.  Enable Service Usage API and Service Management API
 
     ```bash
-    gcloud services enable serviceusage.googleapis.com \
-    gcloud services enable servicemanagement.googleapis.com
+    gcloud services enable \
+      cloudresourcemanager.googleapis.com \
+      iap.googleapis.com \
+      serviceusage.googleapis.com \
+      servicemanagement.googleapis.com
     ```
 
-2.  Create the resources
+2.  Setup the Identity Aware Proxy brand
+
+    ```bash
+    gcloud iap oauth-brands create \
+      --application_title="IAP Secured Backstage" \
+      --project="${PROJECT_ID}" \
+      --support_email="${IAP_SUPPORT_EMAIL}"
+    ```
+
+    Capture the brand name in an environment variable, it will be in the format
+    of: `projects/[your_project_number]/brands/[your_project_number]`.
+
+    ```bash
+    export IAP_BRAND=<your_brand_name>
+    ```
+
+3.  Using the brand name create the IAP client.
+
+    ```bash
+    gcloud iap oauth-clients create \
+      ${IAP_BRAND} \
+      --display_name="IAP Secured Backstage"
+    ```
+
+    Capture the client_id and client_secret in environment variables. For the
+    client_id we only need the last value of the string, it will be in the
+    format of:
+    `549085115274-ksi3n9n41tp1vif79dda5ofauk0ebes9.apps.googleusercontent.com`
+
+    ```bash
+    export IAP_CLIENT_ID="<your_client_id>"
+    export IAP_SECRET="<your_iap_secret>"
+    ```
+
+4.  Set the configuration variables
+
+    ```bash
+    sed -i "s/YOUR_STATE_BUCKET/${BACKSTAGE_QS_STATE_BUCKET}/g" ${BACKSTAGE_QS_BASE_DIR}/backend.tf
+    sed -i "s/YOUR_PROJECT_ID/${PROJECT_ID}/g" ${BACKSTAGE_QS_BASE_DIR}/backstage-qs.auto.tfvars
+    sed -i "s/YOUR_IAP_USER_DOMAIN/${IAP_USER_DOMAIN}/g" ${BACKSTAGE_QS_BASE_DIR}/backstage-qs.auto.tfvars
+    sed -i "s/YOUR_IAP_SUPPORT_EMAIL/${IAP_SUPPORT_EMAIL}/g" ${BACKSTAGE_QS_BASE_DIR}/backstage-qs.auto.tfvars
+    sed -i "s/YOUR_IAP_CLIENT_ID/${IAP_CLIENT_ID}/g" ${BACKSTAGE_QS_BASE_DIR}/backstage-qs.auto.tfvars
+    sed -i "s/YOUR_IAP_SECRET/${IAP_SECRET}/g" ${BACKSTAGE_QS_BASE_DIR}/backstage-qs.auto.tfvars
+    ```
+
+5.  Create the resources
 
     ```bash
     cd ${BACKSTAGE_QS_BASE_DIR} && \
@@ -117,8 +156,90 @@ Management API are enabled.
     rm tfplan
     ```
 
+    Initial run of the Terraform may result in errors due to they way the API
+    services are asyrchonously enabled. Re-running the terraform usually
+    resolves the errors.
+
     This will take a while to create all of the required resources, figure
     somewhere between 15 and 20 minutes.
+
+6.  Build the container image for Backstage
+
+    ```bash
+    cd manifests/cloudbuild
+    gcloud builds submit .
+    ```
+
+    The output of that command will include a fully qualified image path similar
+    to:
+    `us-central1-docker.pkg.dev/[your_project]/backstage-qs/backstage-quickstart:d747db2a-deef-4783-8a0e-3b36e568f6fc`
+    Using that value create a new environment variable.
+
+    ```bash
+    export IMAGE_PATH="<your_image_path>"
+    ```
+
+    This will take approximately 10 minutes to build and push the image.
+
+7.  Configure Cloud SQL postgres user for password authentication.
+
+    ```bash
+    gcloud sql users set-password postgres --instance=backstage-qs --prompt-for-password
+    ```
+
+8.  Grant the backstage workload service account create database permissions.
+
+    a. In the Cloud Console, navigate to `SQL`
+
+    b. Select the database instance
+
+    c. In the left menu select `Cloud SQL Studio`
+
+    d. Choose the `postgres` database and login with the `postgres` user and
+    password you created in step 4.
+
+    e. Run the following sql commands, to grant create database permissions
+
+    ```sql
+    ALTER USER "backstage-qs-workload@[your_project_id].iam" CREATEDB
+    ```
+
+9.  Perform an initial deployment of Kubernetes resources.
+
+    ```bash
+    cd ../k8s
+    sed -i "s%CONTAINER_IMAGE%${IMAGE_PATH}%g" deployment.yaml
+    gcloud container clusters get-credentials backstage-qs --region us-central1 --dns-endpoint
+    kubectl apply -f .
+    ```
+
+10. Capture the IAP audience, the Backend Service may take a few minutes to
+    appear.
+
+    a. In the Cloud Console, navigate to `Security` > `Identity-Aware Proxy`
+
+    b. Verify the IAP option is set to enabled. If not enable it now.
+
+    b. Choose `Get JWT audience code` from the three dot menu on the right side
+    of your Backend Service.
+
+    c. The value will be in the format of:
+    `/projects/<your_project_number>/global/backendServices/<numeric_id>`. Using
+    that value create a new environment variable.
+
+    ```bash
+    export IAP_AUDIENCE_VALUE="<your_iap_audience_value>"
+    ```
+
+11. Redeploy the Kubernetes manifests with the IAP audience
+
+    ```bash
+    sed -i "s%IAP_AUDIENCE_VALUE%${IAP_AUDIENCE_VALUE}%g" deployment.yaml
+    kubectl apply -f .
+    ```
+
+12. In a browser navigate to you backstage endpoint. The URL will be similar to
+    `https://qs.endpoints.[your_project_id].cloud.goog`
 
 ## Cleanup
 

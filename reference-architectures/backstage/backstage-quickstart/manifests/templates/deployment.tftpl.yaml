@@ -1,0 +1,62 @@
+# Copyright 2025 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${deployment_name}
+  namespace: ${namespace}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ${deployment_name}
+  template:
+    metadata:
+      labels:
+        app: ${deployment_name}
+    spec:
+      serviceAccountName: ${service_account_name}
+      containers:
+        - name: cloud-sql-proxy-1
+          image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.14.1
+          args:
+            - "--structured-logs"
+            - "--port=5432"
+            - "--auto-iam-authn"
+            - "${cloud_sql_name}"
+            - "--psc"
+          securityContext:
+            runAsNonRoot: true
+          resources:
+            requests:
+              memory: "2Gi"
+              cpu: "1"
+        - name: backstage
+          image: CONTAINER_IMAGE
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 7007
+          env:
+            - name: POSTGRES_USER
+              value: "${postgres_user}"
+            - name: POSTGRES_HOST
+              value: "127.0.0.1"
+            - name: POSTGRES_PORT
+              value: "${postgres_port}"
+            - name: POSTGRES_DB
+              value: "${postgres_db}"
+            - name: IAP_AUDIENCE
+              value: IAP_AUDIENCE_VALUE

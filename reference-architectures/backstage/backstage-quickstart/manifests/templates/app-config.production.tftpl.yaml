@@ -1,0 +1,34 @@
+app:
+  baseUrl: https://${endpoint_url}
+
+backend:
+  baseUrl: https://${endpoint_url}
+  listen:
+    port: 7007
+  database:
+    client: pg
+    connection:
+      host: $${POSTGRES_HOST}
+      port: $${POSTGRES_PORT}
+      database: $${POSTGRES_DB}
+      user: $${POSTGRES_USER}
+      # ssl:
+      #   rejectUnauthorized: false
+      options:
+      requestTimeout: 60000
+
+auth:
+  environment: production
+  providers:
+    gcpIap:
+      audience: $${IAP_AUDIENCE}
+      #jwtHeader: 'x-goog-iap-jwt-assertion' # Optional: Only if you are using a custom header for the IAP JWT
+      # signIn:
+      #   resolvers:
+      #     # See https://backstage.io/docs/auth/google/gcp-iap-auth#resolvers for more resolvers
+      #     - resolver: emailMatchingUserEntityProfileEmail
+      #     - resolver: emailMatchingUserEntityAnnotation
+
+catalog:
+  rules:
+    - allow: [Component, System, API, Resource, Location, Template, User, Group]
