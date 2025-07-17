@@ -20,6 +20,8 @@ resource "google_service_account" "hostingSa" {
   project      = var.environment_project_id
   account_id   = var.hosting_sa_id
   display_name = var.hosting_sa_display_name
+
+  depends_on = [time_sleep.wait_for_apis]
 }
 
 resource "google_project_iam_member" "repoReaderBinding" {

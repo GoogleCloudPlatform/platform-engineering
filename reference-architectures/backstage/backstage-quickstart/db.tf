@@ -48,6 +48,12 @@ resource "google_sql_database" "database" {
   instance = google_sql_database_instance.instance.name
 }
 
+resource "time_sleep" "wait_for_sql_iam" {
+  depends_on = [google_sql_database_instance.instance]
+
+  create_duration = "60s"
+}
+
 resource "google_sql_user" "iam_service_account_user" {
   # Note: for Postgres only, GCP requires omitting the ".gserviceaccount.com" suffix
   # from the service account email due to length limits on database usernames.
@@ -55,15 +61,8 @@ resource "google_sql_user" "iam_service_account_user" {
   name     = trimsuffix(google_service_account.workloadSa.email, ".gserviceaccount.com")
   instance = google_sql_database_instance.instance.name
   type     = "CLOUD_IAM_SERVICE_ACCOUNT"
-}
 
-resource "null_resource" "sqlIamDelay" {
-  provisioner "local-exec" {
-    command = "sleep 60"
-  }
-  triggers = {
-    "before" = "${google_sql_database_instance.instance.id}"
-  }
+  depends_on = [time_sleep.wait_for_sql_iam]
 }
 
 resource "local_file" "app_config_production_yaml" {
