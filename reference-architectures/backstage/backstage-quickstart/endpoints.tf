@@ -26,6 +26,7 @@ resource "google_endpoints_service" "backstageQsEndpoint" {
   )
   project      = var.environment_project_id
   service_name = local.backstageExternalUrl
+  depends_on = [google_compute_global_address.backstageQsEndpointAddress]
 }
 
 resource "google_compute_managed_ssl_certificate" "backstageCert" {
