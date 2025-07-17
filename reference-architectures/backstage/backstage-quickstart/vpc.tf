@@ -21,7 +21,7 @@ resource "google_compute_network" "backstageHostingVpc" {
   name                    = var.backstage_hosting_project_vpc_name
   auto_create_subnetworks = false
 
-  depends_on = [time_sleep.wait_for_apis]
+  depends_on = [time_sleep.wait_for_apis, google_project_service.backstageHostingProjectServices]
 }
 
 resource "google_compute_subnetwork" "backstageHostingNodeSubnet" {
@@ -30,6 +30,7 @@ resource "google_compute_subnetwork" "backstageHostingNodeSubnet" {
   network       = google_compute_network.backstageHostingVpc.self_link
   name          = var.hosting_subnet_name
   ip_cidr_range = var.hosting_node_cidr
+  depends_on = [ google_compute_network.backstageHostingVpc ]
 }
 
 resource "google_compute_subnetwork" "pscConsumerSubnet" {
@@ -38,6 +39,7 @@ resource "google_compute_subnetwork" "pscConsumerSubnet" {
   network       = google_compute_network.backstageHostingVpc.self_link
   name          = var.psc_consumer_subnet_name
   ip_cidr_range = var.psc_consumer_cidr
+  depends_on = [ google_compute_network.backstageHostingVpc ]
 }
 
 resource "google_compute_address" "cloudSqlPscConsumerIp" {
@@ -47,6 +49,7 @@ resource "google_compute_address" "cloudSqlPscConsumerIp" {
   address_type = "INTERNAL"
   address      = var.cloudsql_psc_consumer_ip
   region       = var.region
+  depends_on = [ google_compute_network.backstageHostingVpc ]
 }
 
 resource "google_compute_router" "cloudRouter" {
@@ -58,6 +61,7 @@ resource "google_compute_router" "cloudRouter" {
   bgp {
     asn = 64514
   }
+  depends_on = [google_compute_subnetwork.backstageHostingNodeSubnet,google_compute_network.backstageHostingVpc]
 }
 
 resource "google_compute_router_nat" "nat" {
@@ -72,6 +76,7 @@ resource "google_compute_router_nat" "nat" {
     enable = true
     filter = "ERRORS_ONLY"
   }
+  depends_on = [ google_compute_router.cloudRouter ]
 }
 
 resource "google_dns_managed_zone" "cloudSqlPscZone" {
@@ -87,6 +92,7 @@ resource "google_dns_managed_zone" "cloudSqlPscZone" {
       network_url = google_compute_network.backstageHostingVpc.id
     }
   }
+  depends_on = [ google_compute_network.backstageHostingVpc]
 }
 
 resource "google_dns_record_set" "cloudSqlPscRecord" {
@@ -97,6 +103,7 @@ resource "google_dns_record_set" "cloudSqlPscRecord" {
   ttl          = 1
 
   rrdatas = [var.cloudsql_psc_consumer_ip]
+  depends_on = [google_sql_database_instance.instance, google_dns_managed_zone.cloudSqlPscZone]
 }
 
 resource "google_compute_forwarding_rule" "cloudSqlPscForwardingRule" {
@@ -107,6 +114,7 @@ resource "google_compute_forwarding_rule" "cloudSqlPscForwardingRule" {
   ip_address            = google_compute_address.cloudSqlPscConsumerIp.id
   load_balancing_scheme = ""
   target                = google_sql_database_instance.instance.psc_service_attachment_link
+  depends_on = [google_compute_address.cloudSqlPscConsumerIp, google_sql_database_instance.instance, google_compute_network.backstageHostingVpc]
 }
 
 # Firewall rule required to support IAM logins to Cloud SQL
@@ -122,6 +130,7 @@ resource "google_compute_firewall" "cloud_sql_auth" {
   direction               = "EGRESS"
   destination_ranges      = ["34.126.0.0/18"]
   target_service_accounts = [google_service_account.workloadSa.email]
+  depends_on = [ google_compute_network.backstageHostingVpc ]
 }
 
 resource "google_compute_global_address" "backstageQsEndpointAddress" {
@@ -133,7 +142,7 @@ resource "google_compute_global_address" "backstageQsEndpointAddress" {
 
 resource "local_file" "gateway_external_https_yaml" {
   depends_on = [
-    google_compute_global_address.backstageQsEndpointAddress
+    google_compute_global_address.backstageQsEndpointAddress, google_compute_managed_ssl_certificate.backstageCert
   ]
 
   content = templatefile(
