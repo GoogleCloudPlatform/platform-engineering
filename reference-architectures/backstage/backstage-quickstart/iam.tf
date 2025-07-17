@@ -60,16 +60,12 @@ resource "google_project_iam_member" "autoScalingMetricsWriterBinding" {
   member  = "serviceAccount:${google_service_account.hostingSa.email}"
 }
 
-resource "time_sleep" "wait_30_seconds" {
-  create_duration = "30s"
-}
-
 ###
 # Workload Service Account
 ###
 
 resource "google_service_account_iam_policy" "workloadIdentity" {
-  depends_on         = [google_sql_database.database, google_container_cluster.hostingCluster, time_sleep.wait_30_seconds]
+  depends_on         = [google_sql_database.database, google_container_cluster.hostingCluster]
   service_account_id = google_service_account.workloadSa.name
   policy_data        = data.google_iam_policy.workloadIdentity.policy_data
 }
