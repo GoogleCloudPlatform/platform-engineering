@@ -23,5 +23,5 @@ resource "google_artifact_registry_repository" "backstageHostingRepo" {
     immutable_tags = true
   }
 
-  depends_on = [time_sleep.wait_for_apis]
+  depends_on = [google_project_service.backstageHostingProjectServices]
 }
