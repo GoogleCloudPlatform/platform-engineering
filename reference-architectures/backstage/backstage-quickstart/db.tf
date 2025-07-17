@@ -40,12 +40,13 @@ resource "google_sql_database_instance" "instance" {
     delete = "30m"
   }
 
-  depends_on = [time_sleep.wait_for_apis]
+  depends_on = [google_project_service.backstageHostingProjectServices]
 }
 
 resource "google_sql_database" "database" {
   name     = "backstage"
   instance = google_sql_database_instance.instance.name
+  depends_on = [ google_sql_database_instance.instance ]
 }
 
 resource "time_sleep" "wait_for_sql_iam" {
@@ -62,7 +63,7 @@ resource "google_sql_user" "iam_service_account_user" {
   instance = google_sql_database_instance.instance.name
   type     = "CLOUD_IAM_SERVICE_ACCOUNT"
 
-  depends_on = [time_sleep.wait_for_sql_iam]
+  depends_on = [time_sleep.wait_for_sql_iam, google_sql_database_instance.instance]
 }
 
 resource "local_file" "app_config_production_yaml" {
