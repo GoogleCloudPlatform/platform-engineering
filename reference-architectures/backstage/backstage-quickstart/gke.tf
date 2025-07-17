@@ -63,4 +63,5 @@ resource "google_container_cluster" "hostingCluster" {
     update = "30m"
     delete = "30m"
   }
+  depends_on = [google_project_service.backstageHostingProjectServices]
 }
