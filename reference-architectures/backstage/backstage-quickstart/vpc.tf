@@ -20,6 +20,8 @@ resource "google_compute_network" "backstageHostingVpc" {
   project                 = var.environment_project_id
   name                    = var.backstage_hosting_project_vpc_name
   auto_create_subnetworks = false
+
+  depends_on = [time_sleep.wait_for_apis]
 }
 
 resource "google_compute_subnetwork" "backstageHostingNodeSubnet" {
@@ -122,10 +124,11 @@ resource "google_compute_firewall" "cloud_sql_auth" {
   target_service_accounts = [google_service_account.workloadSa.email]
 }
 
-
 resource "google_compute_global_address" "backstageQsEndpointAddress" {
   name    = var.backstageqs_endpoint_address_name
   project = var.environment_project_id
+
+  depends_on = [time_sleep.wait_for_apis]
 }
 
 resource "local_file" "gateway_external_https_yaml" {

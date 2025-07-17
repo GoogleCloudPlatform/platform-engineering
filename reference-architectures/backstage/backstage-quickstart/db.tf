@@ -39,6 +39,8 @@ resource "google_sql_database_instance" "instance" {
     update = "30m"
     delete = "30m"
   }
+
+  depends_on = [time_sleep.wait_for_apis]
 }
 
 resource "google_sql_database" "database" {

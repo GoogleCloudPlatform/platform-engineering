@@ -67,7 +67,7 @@ resource "time_sleep" "wait_30_seconds" {
 ###
 
 resource "google_service_account_iam_policy" "workloadIdentity" {
-  depends_on         = [google_container_cluster.hostingCluster, time_sleep.wait_30_seconds]
+  depends_on         = [google_sql_database.database, google_container_cluster.hostingCluster, time_sleep.wait_30_seconds]
   service_account_id = google_service_account.workloadSa.name
   policy_data        = data.google_iam_policy.workloadIdentity.policy_data
 }
@@ -86,6 +86,8 @@ resource "google_service_account" "workloadSa" {
   project      = var.environment_project_id
   account_id   = var.workload_sa_id
   display_name = var.workload_sa_display_name
+
+  depends_on = [time_sleep.wait_for_apis]
 }
 
 resource "google_project_iam_member" "cloudSqlBinding" {

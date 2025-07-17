@@ -20,3 +20,9 @@ resource "google_project_service" "backstageHostingProjectServices" {
   disable_on_destroy         = false
   disable_dependent_services = false
 }
+
+resource "time_sleep" "wait_for_apis" {
+  depends_on = [google_project_service.backstageHostingProjectServices]
+
+  create_duration = "60s"
+}

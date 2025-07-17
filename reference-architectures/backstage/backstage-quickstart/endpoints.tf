@@ -34,4 +34,6 @@ resource "google_compute_managed_ssl_certificate" "backstageCert" {
   managed {
     domains = [local.backstageExternalUrl]
   }
+
+  depends_on = [time_sleep.wait_for_apis]
 }
