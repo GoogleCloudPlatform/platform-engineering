@@ -51,7 +51,7 @@ resource "google_sql_database" "database" {
 resource "time_sleep" "wait_for_sql_iam" {
   depends_on = [google_sql_database_instance.instance]
 
-  create_duration = "60s"
+  create_duration = "120s"
 }
 
 resource "google_sql_user" "iam_service_account_user" {
