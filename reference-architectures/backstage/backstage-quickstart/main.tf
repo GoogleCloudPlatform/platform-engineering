@@ -13,10 +13,10 @@
 # limitations under the License.
 
 module "backstage" {
-    source = "./module"
+  source = "./module"
 
-    iap_user_domain        = var.iap_user_domain
-    iap_client_id          = var.iap_client_id
-    iap_client_secret      = var.iap_client_secret
-    environment_project_id = var.environment_project_id
+  iap_user_domain        = var.iap_user_domain
+  iap_client_id          = var.iap_client_id
+  iap_client_secret      = var.iap_client_secret
+  environment_project_id = var.environment_project_id
 }
