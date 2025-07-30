@@ -15,8 +15,8 @@
 module "backstage" {
     source = "./module"
 
-    iap_user_domain        = "YOUR_IAP_USER_DOMAIN"
-    iap_client_id          = "YOUR_IAP_CLIENT_ID"
-    iap_client_secret      = "YOUR_IAP_SECRET"
-    environment_project_id = "YOUR_PROJECT_ID"
+    iap_user_domain        = var.iap_user_domain
+    iap_client_id          = var.iap_client_id
+    iap_client_secret      = var.iap_client_secret
+    environment_project_id = var.environment_project_id
 }
