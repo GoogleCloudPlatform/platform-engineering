@@ -24,7 +24,7 @@ resource "google_iap_web_iam_member" "backstageIapPolicy" {
 
 resource "local_file" "route_https_yaml" {
   content = templatefile(
-    "${path.module}/manifests/templates/http-route-service.tftpl.yaml",
+    "${path.module}/templates/http-route-service.tftpl.yaml",
     {
       gateway_name    = local.gateway_name
       hostname        = local.backstageExternalUrl
@@ -34,7 +34,7 @@ resource "local_file" "route_https_yaml" {
       service_port    = 80
     }
   )
-  filename = "./manifests/k8s/http-route-service.yaml"
+  filename = "${path.root}/manifests/k8s/http-route-service.yaml"
 }
 
 ###############################################################################
@@ -43,7 +43,7 @@ resource "local_file" "route_https_yaml" {
 
 resource "local_file" "iap_secret_yaml" {
   content = templatefile(
-    "${path.module}/manifests/templates/oauth-secret.tftpl.yaml",
+    "${path.module}/templates/oauth-secret.tftpl.yaml",
     {
       name      = "backstage-oauth"
       namespace = "backstage"
@@ -51,12 +51,12 @@ resource "local_file" "iap_secret_yaml" {
       //secret    = base64encode(jsondecode(data.external.iap_client.result)[0].secret)
     }
   )
-  filename = "./manifests/k8s/oauth-secret.yaml"
+  filename = "${path.root}/manifests/k8s/oauth-secret.yaml"
 }
 
 resource "local_file" "policy_iap_backstage_yaml" {
   content = templatefile(
-    "${path.module}/manifests/templates/gcp-backend-policy-iap-service.tftpl.yaml",
+    "${path.module}/templates/gcp-backend-policy-iap-service.tftpl.yaml",
     {
       //oauth_client_id          = split("/", jsondecode(data.external.iap_client.result)[0].name)[4]
       oauth_client_id          = var.iap_client_id
@@ -66,5 +66,5 @@ resource "local_file" "policy_iap_backstage_yaml" {
       namespace                = "backstage"
     }
   )
-  filename = "./manifests/k8s/gcp-backend-policy-iap-service.yaml"
+  filename = "${path.root}/manifests/k8s/gcp-backend-policy-iap-service.yaml"
 }

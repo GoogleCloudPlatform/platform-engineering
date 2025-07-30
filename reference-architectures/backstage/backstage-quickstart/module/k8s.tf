@@ -14,17 +14,17 @@
 
 resource "local_file" "namespace_yaml" {
   content = templatefile(
-    "${path.module}/manifests/templates/namespace.tftpl.yaml",
+    "${path.module}/templates/namespace.tftpl.yaml",
     {
       namespace = "backstage"
     }
   )
-  filename = "./manifests/k8s/namespace.yaml"
+  filename = "${path.root}/manifests/k8s/namespace.yaml"
 }
 
 resource "local_file" "service_yaml" {
   content = templatefile(
-    "${path.module}/manifests/templates/service.tftpl.yaml",
+    "${path.module}/templates/service.tftpl.yaml",
     {
       deployment_name = "backstage"
       namespace       = "backstage"
@@ -32,12 +32,12 @@ resource "local_file" "service_yaml" {
       service_port    = 80
     }
   )
-  filename = "./manifests/k8s/service.yaml"
+  filename = "${path.root}/manifests/k8s/service.yaml"
 }
 
 resource "local_file" "deployment_yaml" {
   content = templatefile(
-    "${path.module}/manifests/templates/deployment.tftpl.yaml",
+    "${path.module}/templates/deployment.tftpl.yaml",
     {
       cloud_sql_name       = google_sql_database_instance.instance.connection_name
       deployment_name      = "backstage"
@@ -48,5 +48,5 @@ resource "local_file" "deployment_yaml" {
       service_account_name = "ksa-backstage"
     }
   )
-  filename = "./manifests/k8s/deployment.yaml"
+  filename = "${path.root}/manifests/k8s/deployment.yaml"
 }
