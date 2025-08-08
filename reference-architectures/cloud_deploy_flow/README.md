@@ -112,25 +112,26 @@ demo:
 
 To run this demo, follow these steps:
 
-1.  **Fork and Clone the Repository**: Start by forking *this* repository to your
-    GitHub account (So you can connect GCP to this repository), then clone it to
-    your local environment. After cloning, change your directory to the
+1.  **Fork and Clone the Repository**: Start by forking _this_ repository to
+    your GitHub account (So you can connect GCP to this repository), then clone
+    it to your local environment. After cloning, change your directory to the
     deployment demo:
 
     ```bash
     cd platform-engineering/reference-architectures/cloud_deploy_flow
     ```
 
-    Note: you can't use a repo inside an Organization, just use your personal
-    account for this demo.
+    Note: you can't use a repository inside an Organization, just use your
+    personal account for this demo.
 
-3.  **Set Up Environment Variables or Variables File**: You can set the
+2.  **Set Up Environment Variables or Variables File**: You can set the
     necessary variables either by exporting them as environment variables or by
     creating a `terraform.tfvars` file. Refer to `variables.tf` for more details
     on each variable. Ensure the values match your Google Cloud project and
     GitHub configuration.
 
-    For the repo-name and repo-owner here, use the repo you just cloned above.
+    For the repo-name and repo-owner here, use the repository you just cloned
+    above.
 
     - **Option 1**: Set environment variables manually in your shell:
 
@@ -151,7 +152,7 @@ To run this demo, follow these steps:
         github_repo = "your-github-repo-name"
         ```
 
-4.  **Initialize and Apply Terraform**: With the environment variables set,
+3.  **Initialize and Apply Terraform**: With the environment variables set,
     initialize and apply the Terraform configuration:
 
     ```bash
@@ -162,7 +163,7 @@ To run this demo, follow these steps:
     _Note_: Applying Terraform may take a few minutes as it creates the
     necessary resources.
 
-5.  **Connect GitHub Repository to Cloud Build**: Due to occasional issues with
+4.  **Connect GitHub Repository to Cloud Build**: Due to occasional issues with
     automatic connections, you may need to manually attach your GitHub
     repository to Cloud Build in the Google Cloud Console.
 
@@ -176,14 +177,14 @@ To run this demo, follow these steps:
 
     Re-run step 3 to ensure all resources are deployed
 
-6.  **Navigate to the Demo site**: Once the Terraform setup is complete, switch
+5.  **Navigate to the Demo site**: Once the Terraform setup is complete, switch
     to the Demo site directory:
 
     ```bash
     cd platform-engineering/reference-architectures/cloud-deploy-flow/WebsiteDemo
     ```
 
-7.  **Authenticate and Run the Demo site**:
+6.  **Authenticate and Run the Demo site**:
 
     - Ensure you are running these commands on a **local machine** or a machine
       with **GUI/web browser access**, as Cloud Shell may not fully support
@@ -211,7 +212,7 @@ To run this demo, follow these steps:
     - Open `http://localhost:8080` in your browser to observe the demo site in
       action.
 
-8.  **Trigger a Build in Cloud Build**:
+7.  **Trigger a Build in Cloud Build**:
 
     - Initiate a build in Cloud Build. As the build progresses, messages will
       display on the demo site, allowing you to follow each step in the
@@ -219,7 +220,7 @@ To run this demo, follow these steps:
     - You can also monitor the deployment rollout on
       [Google Cloud Console](https://console.cloud.google.com).
 
-9.  **Approve the Rollout**: When an approval message is received, you’ll need
+8.  **Approve the Rollout**: When an approval message is received, you’ll need
     to send a response to complete the deployment. Use the message data provided
     and add a `ManualApproval` field:
 
@@ -237,7 +238,7 @@ To run this demo, follow these steps:
     }
     ```
 
-10.  **Verify the Deployment**: Once the approval is processed, the deployment
+9.  **Verify the Deployment**: Once the approval is processed, the deployment
     should finish rolling out. Check the Cloud Deploy dashboard in the Google
     Cloud Console to confirm the deployment status.
 
