@@ -35,7 +35,8 @@ locals {
     "cloudresourcemanager.googleapis.com",
     "run.googleapis.com",
     "cloudfunctions.googleapis.com",
-    "eventarc.googleapis.com"
+    "eventarc.googleapis.com",
+    "artifactregistry.googleapis.com"
   ]
   # List of roles for Cloud Build SA
   sa_roles_list = [

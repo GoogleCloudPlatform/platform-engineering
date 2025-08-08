@@ -106,12 +106,13 @@ demo:
   event-driven functions.
 - `eventarc.googleapis.com`: Enables Eventarc for routing events from sources to
   targets.
+- `artifactregistry.googleapis.com`: Allows for image hosting for CI/CD.
 
 ## Getting Started
 
 To run this demo, follow these steps:
 
-1.  **Fork and Clone the Repository**: Start by forking this repository to your
+1.  **Fork and Clone the Repository**: Start by forking *this* repository to your
     GitHub account (So you can connect GCP to this repository), then clone it to
     your local environment. After cloning, change your directory to the
     deployment demo:
@@ -120,11 +121,15 @@ To run this demo, follow these steps:
     cd platform-engineering/reference-architectures/cloud_deploy_flow
     ```
 
+    *Note:* you can't use a repo inside an Organization, just use your personal account for this demo.
+
 2.  **Set Up Environment Variables or Variables File**: You can set the
     necessary variables either by exporting them as environment variables or by
     creating a `terraform.tfvars` file. Refer to `variables.tf` for more details
     on each variable. Ensure the values match your Google Cloud project and
     GitHub configuration.
+
+    For the repo-name and repo-owner here, use the repo you just cloned above.
 
     - **Option 1**: Set environment variables manually in your shell:
 

@@ -30,21 +30,26 @@ resource "google_storage_bucket_object" "functions" {
 }
 
 # Cloud Functions configuration map
+
 locals {
   cloud_functions = {
-    "create-release" = {
+    "createRelease" = {
+      name         = "create-release"
       entry_point  = "deployTrigger"
       pubsub_topic = google_pubsub_topic.topics["cloud-builds"].id
     }
-    "cloud-deploy-interactions" = {
+    "cloudDeployInteractions" = {
+      name         = "cloud-deploy-interactions"
       entry_point  = "cloudDeployInteractions"
       pubsub_topic = google_pubsub_topic.topics["deploy-commands"].id
     }
-    "cloud-deploy-operations" = {
+    "cloudDeployOperations" = {
+      name         = "cloud-deploy-operations"
       entry_point  = "cloudDeployOperations"
       pubsub_topic = google_pubsub_topic.topics["clouddeploy-operations"].id
     }
-    "cloud-deploy-approvals" = {
+    "cloudDeployApprovals" = {
+      name         = "cloud-deploy-approvals"
       entry_point  = "cloudDeployApprovals"
       pubsub_topic = google_pubsub_topic.topics["clouddeploy-approvals"].id
     }
@@ -53,9 +58,10 @@ locals {
 
 # Create Cloud Functions using for_each
 resource "google_cloudfunctions2_function" "functions" {
+  #for_each = local.cloud_functions
   for_each = local.cloud_functions
 
-  name     = each.key
+  name     = each.value.name
   project  = data.google_project.project.project_id
   location = var.region
 
