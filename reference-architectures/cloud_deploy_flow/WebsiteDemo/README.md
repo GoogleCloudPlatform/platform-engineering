@@ -30,8 +30,7 @@ demonstration purposes and is not intended for production use.
 
     npm install
 
-2.  Set your Google Cloud project ID and subscription names in the `index.js`
-    file.
+2.  Create a `.env` file and populate it with the environment variables found in `.env.sample`
 
 3.  Start the server:
 
