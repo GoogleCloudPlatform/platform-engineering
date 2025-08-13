@@ -137,7 +137,7 @@ resource "local_file" "gateway_external_https_yaml" {
   ]
 
   content = templatefile(
-    "${path.module}/manifests/templates/gateway-external-https.tftpl.yaml",
+    "${path.module}/templates/gateway-external-https.tftpl.yaml",
     {
       address_name         = google_compute_global_address.backstageQsEndpointAddress.name
       gateway_name         = local.gateway_name
@@ -145,5 +145,5 @@ resource "local_file" "gateway_external_https_yaml" {
       ssl_certificate_name = google_compute_managed_ssl_certificate.backstageCert.name
     }
   )
-  filename = "${path.module}/manifests/k8s/gateway-external-https.yaml"
+  filename = "${path.root}/manifests/k8s/gateway-external-https.yaml"
 }

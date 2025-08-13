@@ -26,18 +26,18 @@ demonstration purposes and is not intended for production use.
 
 ## Installation
 
-1.  Install the required dependencies:
+1. Install the required dependencies:
 
     npm install
 
-2.  Set your Google Cloud project ID and subscription names in the `index.js`
-    file.
+2. Create a `.env` file and populate it with the environment variables found in
+   `.env.sample`
 
-3.  Start the server:
+3. Start the server:
 
     node index.js
 
-4.  Open your web browser and go to `http://localhost:8080` to access the demo.
+4. Open your web browser and go to `http://localhost:8080` to access the demo.
 
 ## Usage
 
