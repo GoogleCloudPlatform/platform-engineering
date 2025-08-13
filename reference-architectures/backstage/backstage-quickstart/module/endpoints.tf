@@ -18,7 +18,7 @@ locals {
 
 resource "google_endpoints_service" "backstageQsEndpoint" {
   openapi_config = templatefile(
-    "${path.module}/manifests/templates/backstage-qs-endpoint-spec-tftpl.yaml",
+    "${path.module}/templates/backstage-qs-endpoint-spec-tftpl.yaml",
     {
       endpoint   = local.backstageExternalUrl,
       ip_address = google_compute_global_address.backstageQsEndpointAddress.address
