@@ -22,7 +22,7 @@ const pubsubClient = new PubSub({projectId});
 
 // Store messages per subscription
 let messages = {};
-subscriptionNames.forEach(name => {
+subscriptionNames.forEach((name) => {
   messages[name] = [];
 });
 
@@ -36,7 +36,7 @@ async function pullMessages(pubSubClient, subscriptionName) {
     console.log(`\tAttributes: ${JSON.stringify(message.attributes)}`);
 
     if (messages[subscriptionName]) {
-        messages[subscriptionName].push({
+      messages[subscriptionName].push({
         id: message.id,
         data: message.data.toString(),
         attributes: message.attributes,
