@@ -114,12 +114,12 @@ resource "google_project_iam_member" "cloudStorageBinding" {
 
 resource "local_file" "service_account_yaml" {
   content = templatefile(
-    "${path.module}/manifests/templates/service-account.tftpl.yaml",
+    "${path.module}/templates/service-account.tftpl.yaml",
     {
       service_account_name = "ksa-backstage"
       namespace            = "backstage"
       gcp_service_account  = google_service_account.workloadSa.email
     }
   )
-  filename = "./manifests/k8s/service-account.yaml"
+  filename = "${path.root}/manifests/k8s/service-account.yaml"
 }

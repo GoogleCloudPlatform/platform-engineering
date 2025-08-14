@@ -11,12 +11,22 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-module "backstage" {
-  source = "./module"
-
-  iap_user_domain        = var.iap_user_domain
-  iap_client_id          = var.iap_client_id
-  iap_client_secret      = var.iap_client_secret
-  environment_project_id = var.environment_project_id
-}
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: Gateway
+metadata:
+  name: ${gateway_name}
+  namespace: ${namespace}
+spec:
+  addresses:
+    - type: NamedAddress
+      value: ${address_name}
+  gatewayClassName: gke-l7-global-external-managed
+  listeners:
+    - name: https
+      protocol: HTTPS
+      port: 443
+      tls:
+        mode: Terminate
+        options:
+          networking.gke.io/pre-shared-certs: ${ssl_certificate_name}

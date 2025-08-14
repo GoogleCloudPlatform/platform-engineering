@@ -1762,17 +1762,20 @@ demo:</p>
   event-driven functions.</li>
 <li><code>eventarc.googleapis.com</code>: Enables Eventarc for routing events from sources to
   targets.</li>
+<li><code>artifactregistry.googleapis.com</code>: Allows for image hosting for CI/CD.</li>
 </ul>
 <h2 id="getting-started">Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
 <p>To run this demo, follow these steps:</p>
 <ol>
 <li>
-<p><strong>Fork and Clone the Repository</strong>: Start by forking this repository to your
-    GitHub account (So you can connect GCP to this repository), then clone it to
-    your local environment. After cloning, change your directory to the
+<p><strong>Fork and Clone the Repository</strong>: Start by forking <em>this</em> repository to
+    your GitHub account (So you can connect GCP to this repository), then clone
+    it to your local environment. After cloning, change your directory to the
     deployment demo:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">cd</span><span class="w"> </span>platform-engineering/reference-architectures/cloud_deploy_flow
 </span></code></pre></div>
+<p>Note: you can't use a repository inside an Organization, just use your
+personal account for this demo.</p>
 </li>
 <li>
 <p><strong>Set Up Environment Variables or Variables File</strong>: You can set the
@@ -1780,6 +1783,8 @@ demo:</p>
     creating a <code>terraform.tfvars</code> file. Refer to <code>variables.tf</code> for more details
     on each variable. Ensure the values match your Google Cloud project and
     GitHub configuration.</p>
+<p>For the repo-name and repo-owner here, use the repository you just cloned
+above.</p>
 <ul>
 <li>
 <p><strong>Option 1</strong>: Set environment variables manually in your shell:</p>

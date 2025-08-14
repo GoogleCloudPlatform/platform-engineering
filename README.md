@@ -31,6 +31,8 @@ For more information, see
 
 ### Design Patterns
 
+- [How Google does it: Your guide to platform
+  engineering][guide-to-platform-eng]
 - [Platform Engineering: 5 Implemenation Myths][myths-webinar]
 - [Business continuity planning for CI/CD][cicd-business-continuity]
 
@@ -45,7 +47,9 @@ For more information, see
 
 #### Manage Developer Environments at Scale
 
+- [Backstage on Google Cloud Quickstart][backstage-quickstart]
 - [Backstage Plugin for Cloud Workstations][backstage-cloudworkstations]
+- [Developer Sandboxes][sandboxes]
 
 #### Self-service and Automation patterns
 
@@ -59,6 +63,10 @@ For more information, see
 
 - [Integrate Cloud Deploy with enterprise change management
   systems][cloud-deploy-flow]
+
+#### Application migrations and modernization
+
+- [Acclerating application migrations][accelerating-migrations]
 
 ### End-to-end Examples
 
@@ -96,10 +104,14 @@ Copyright 2024 Google LLC Code in this repository is licensed under the Apache
 
 <!-- LINKS: https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
+[accelerating-migrations]:
+    ./reference-architectures/accelerating-migrations/README.md
 [automatic-password-rotation]:
     ./reference-architectures/automated-password-rotation/README.md
 [backstage-cloudworkstations]:
     https://github.com/googlecloudplatform/google-cloud-backstage-plugins
+[backstage-quickstart]:
+    ./reference-architectures/backstage/backstage-quickstart/README.md
 [cicd-business-continuity]:
     https://cloud.google.com/architecture/business-continuity-with-cicd-on-google-cloud
 [enterprise-app-blueprint]:
@@ -111,7 +123,10 @@ Copyright 2024 Google LLC Code in this repository is licensed under the Apache
 [esg-platform-engineering-webinar]:
     https://cloudonair.withgoogle.com/events/mastering-platform-engineering-key-insights-from-industry-experts
 [github-runners-gke]: ./reference-architectures/github-runners-gke/README.md
+[guide-to-platform-eng]:
+    https://cloud.google.com/blog/products/application-modernization/a-guide-to-platform-engineering
 [cloud-deploy-flow]: ./reference-architectures/cloud_deploy_flow/README.md
 [myths-webinar]: https://www.youtube.com/watch?v=jDBOiYvXVZI&t=2s
+[sandboxes]: ./reference-architectures/sandboxes/README.md
 [software-delivery-blueprint]:
     https://github.com/GoogleCloudPlatform/software-delivery-blueprint

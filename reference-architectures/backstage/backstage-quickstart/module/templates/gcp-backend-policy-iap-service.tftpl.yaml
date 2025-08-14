@@ -11,12 +11,21 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-module "backstage" {
-  source = "./module"
-
-  iap_user_domain        = var.iap_user_domain
-  iap_client_id          = var.iap_client_id
-  iap_client_secret      = var.iap_client_secret
-  environment_project_id = var.environment_project_id
-}
+---
+apiVersion: networking.gke.io/v1
+kind: GCPBackendPolicy
+metadata:
+  name: ${policy_name}
+  namespace: ${namespace}
+spec:
+  default:
+    iap:
+      clientID: ${oauth_client_id}
+      enabled: true
+      oauth2ClientSecret:
+        name: ${oauth_client_secret_name}
+    timeoutSec: 3600
+  targetRef:
+    group: ""
+    kind: Service
+    name: ${service_name}

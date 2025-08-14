@@ -1,4 +1,4 @@
-# Copyright 2025 Google LLC
+# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,11 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-module "backstage" {
-  source = "./module"
+terraform {
+  required_providers {
+    google = {
+      source = "hashicorp/google"
+    }
+  }
 
-  iap_user_domain        = var.iap_user_domain
-  iap_client_id          = var.iap_client_id
-  iap_client_secret      = var.iap_client_secret
-  environment_project_id = var.environment_project_id
+  provider_meta "google" {
+    module_name = "cloud-solutions/platform-engineering-backstage-quickstart-deploy-v1"
+  }
 }

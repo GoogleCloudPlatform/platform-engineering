@@ -67,10 +67,10 @@ resource "google_sql_user" "iam_service_account_user" {
 
 resource "local_file" "app_config_production_yaml" {
   content = templatefile(
-    "${path.module}/manifests/templates/app-config.production.tftpl.yaml",
+    "${path.module}/templates/app-config.production.tftpl.yaml",
     {
       endpoint_url = local.backstageExternalUrl
     }
   )
-  filename = "${path.module}/manifests/cloudbuild/app-config.production.yaml"
+  filename = "${path.root}/manifests/cloudbuild/app-config.production.yaml"
 }
