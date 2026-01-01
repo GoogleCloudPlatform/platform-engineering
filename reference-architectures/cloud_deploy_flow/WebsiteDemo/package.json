@@ -1,8 +1,8 @@
 {
   "dependencies": {
     "@google-cloud/pubsub": "^4.8.0",
-    "body-parser": "^1.20.3",
+    "body-parser": "^1.20.4",
     "dotenv": "^17.2.1",
-    "express": "^4.21.2"
+    "express": "^4.22.1"
   }
 }
