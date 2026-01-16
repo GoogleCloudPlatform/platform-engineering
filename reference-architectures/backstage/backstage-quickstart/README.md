@@ -373,7 +373,8 @@ permissions.
     xargs) && \
     cp backend.tf.local backend.tf && \
     terraform init -force-copy -lock=false -migrate-state && \
-    gsutil -m rm -rf gs://${TERRAFORM_BUCKET_NAME}/* && \
+    gcloud storage rm --recursive \
+      --continue-on-error gs://${TERRAFORM_BUCKET_NAME}/* && \
     terraform init && \
     terraform destroy -auto-approve  && \
     rm -rf .terraform .terraform.lock.hcl state/
