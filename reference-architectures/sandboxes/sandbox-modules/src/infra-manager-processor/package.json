@@ -11,10 +11,10 @@
     "deploy": "gcloud run deploy cloudrun-service --source . --region us-central1"
   },
   "dependencies": {
-    "express": "^4.18.2",
+    "express": "^4.22.1",
     "@google-cloud/firestore": "^7.1.0",
     "@google-cloud/storage": "^7.7.0",
-    "axios": "^1.12.0",
+    "axios": "^1.13.5",
     "google-auth-library": "^9.4.1"
   },
   "devDependencies": {
