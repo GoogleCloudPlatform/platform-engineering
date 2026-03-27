@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en" class="no-js">
   <head>
@@ -2094,7 +2095,7 @@ permissions.</p>
 </span><span id="__span-29-3"><a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>xargs<span class="k">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-29-4"><a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>cp<span class="w"> </span>backend.tf.local<span class="w"> </span>backend.tf<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-29-5"><a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>terraform<span class="w"> </span>init<span class="w"> </span>-force-copy<span class="w"> </span>-lock<span class="o">=</span><span class="nb">false</span><span class="w"> </span>-migrate-state<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-29-6"><a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>gcloud<span class="w"> </span>storage<span class="w"> </span>rm<span class="w"> </span>--recursive<span class="w"> </span>--continue-on-error<span class="w"> </span>gs://<span class="si">${</span><span class="nv">TERRAFORM_BUCKET_NAME</span><span class="si">}</span>/*<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-29-6"><a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>gsutil<span class="w"> </span>-m<span class="w"> </span>rm<span class="w"> </span>-rf<span class="w"> </span>gs://<span class="si">${</span><span class="nv">TERRAFORM_BUCKET_NAME</span><span class="si">}</span>/*<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-29-7"><a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a>terraform<span class="w"> </span>init<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-29-8"><a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a>terraform<span class="w"> </span>destroy<span class="w"> </span>-auto-approve<span class="w">  </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-29-9"><a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a>rm<span class="w"> </span>-rf<span class="w"> </span>.terraform<span class="w"> </span>.terraform.lock.hcl<span class="w"> </span>state/
