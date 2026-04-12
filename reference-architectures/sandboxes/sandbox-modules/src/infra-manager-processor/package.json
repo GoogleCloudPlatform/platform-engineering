@@ -14,7 +14,7 @@
     "express": "^4.22.1",
     "@google-cloud/firestore": "^7.1.0",
     "@google-cloud/storage": "^7.19.0",
-    "axios": "^1.13.5",
+    "axios": "^1.15.0",
     "google-auth-library": "^9.4.1"
   },
   "devDependencies": {
